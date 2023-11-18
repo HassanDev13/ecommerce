@@ -7,39 +7,119 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
+/**
+ * @OA\Schema(
+ *      schema="User",
+ *      @OA\Property(
+ *          property="id",
+ *          type="integer",
+ *          format="int64",
+ *          description="User ID"
+ *      ),
+ *      @OA\Property(
+ *          property="email",
+ *          type="string",
+ *          description="User email"
+ *      ),
+ *      @OA\Property(
+ *          property="first_name",
+ *          type="string",
+ *          description="User first name"
+ *      ),
+ *      @OA\Property(
+ *          property="last_name",
+ *          type="string",
+ *          description="User last name"
+ *      ),
+ *      @OA\Property(
+ *          property="description",
+ *          type="string",
+ *          description="User description"
+ *      ),
+ *      @OA\Property(
+ *          property="adresse",
+ *          type="string",
+ *          description="User address"
+ *      ),
+ *      @OA\Property(
+ *          property="phone_number",
+ *          type="string",
+ *          description="User phone number"
+ *      ),
+ *      @OA\Property(
+ *          property="user_type",
+ *          type="string",
+ *          enum={"Artisan", "Consumer", "DeliveryPersonnel"},
+ *          description="User type"
+ *      ),
+ *      @OA\Property(
+ *          property="created_at",
+ *          type="string",
+ *          format="date-time",
+ *          description="User creation timestamp"
+ *      ),
+ *      @OA\Property(
+ *          property="updated_at",
+ *          type="string",
+ *          format="date-time",
+ *          description="User update timestamp"
+ *      ),
+ *      @OA\Property(
+ *          property="deliveryPersonnel",
+ *          type="object",
+ *          description="Related DeliveryPersonnel",
+ *          ref="#/components/schemas/DeliveryPersonnel"
+ *      ),
+ *      @OA\Property(
+ *          property="artisan",
+ *          type="object",
+ *          description="Related Artisan",
+ *          ref="#/components/schemas/Artisan"
+ *      ),
+ *      @OA\Property(
+ *          property="consumer",
+ *          type="object",
+ *          description="Related Consumer",
+ *          ref="#/components/schemas/Consumer"
+ *      ),
+ * )
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'name',
         'email',
-        'password',
+        'first_name',
+        'last_name',
+        'description',
+        'adresse',
+        'phone_number',
+        'user_type',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function deliveryPersonnel()
+    {
+        return $this->hasOne(DeliveryPersonnel::class);
+    }
+
+    public function artisan()
+    {
+        return $this->hasOne(Artisan::class);
+    }
+
+    public function consumer()
+    {
+        return $this->hasOne(Consumer::class);
+    }
 }

@@ -5,42 +5,609 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/login": {
+        "/register": {
             "post": {
-                "summary": "Authenticate user and generate JWT token",
-                "operationId": "bc76a9d52929cab7a147ca7b5c527430",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "User's email",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new user",
+                "operationId": "573de1fed352c1205a32c4d1b9877375",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "adresse": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "maxLength": 20
+                                    },
+                                    "user_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Consumers",
+                                            "Artisans",
+                                            "DeliveryPersonnel"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "User created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/ratings": {
+            "get": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Get list of ratings",
+                "description": "Returns list of ratings",
+                "operationId": "getRatingsList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Rating"
+                                }
+                            }
                         }
                     },
+                    "404": {
+                        "description": "No ratings found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Store a new rating",
+                "description": "Stores a new rating",
+                "operationId": "storeRating",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "rating": {
+                                        "description": "Numeric rating value",
+                                        "type": "integer",
+                                        "example": 4
+                                    },
+                                    "ratingType": {
+                                        "description": "Type of rating (DeliveryPersonnel, Product, Artisan)",
+                                        "type": "string",
+                                        "enum": [
+                                            "DeliveryPersonnel",
+                                            "Product",
+                                            "Artisan"
+                                        ],
+                                        "example": "Product"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Rating stored successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Rating"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/ratings/{id}": {
+            "get": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Get a rating by its ID",
+                "description": "Returns a rating",
+                "operationId": "getRatingById",
+                "parameters": [
                     {
-                        "name": "password",
-                        "in": "query",
-                        "description": "User's password",
+                        "name": "id",
+                        "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Login successful"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Rating"
+                                }
+                            }
+                        }
                     },
-                    "401": {
-                        "description": "Invalid credentials"
+                    "404": {
+                        "description": "Rating not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Update an existing rating",
+                "description": "Updates an existing rating",
+                "operationId": "updateRating",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "rating": {
+                                        "description": "Numeric rating value",
+                                        "type": "integer",
+                                        "example": 4
+                                    },
+                                    "ratingType": {
+                                        "description": "Type of rating (DeliveryPersonnel, Product, Artisan)",
+                                        "type": "string",
+                                        "enum": [
+                                            "DeliveryPersonnel",
+                                            "Product",
+                                            "Artisan"
+                                        ],
+                                        "example": "Product"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Rating updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Rating"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Rating not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Ratings"
+                ],
+                "summary": "Delete a rating",
+                "description": "Deletes a rating",
+                "operationId": "destroyRating",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rating deleted successfully"
+                    },
+                    "404": {
+                        "description": "Rating not found"
                     }
                 }
             }
         }
     },
     "components": {
+        "schemas": {
+            "Artisan": {
+                "properties": {
+                    "id": {
+                        "description": "Artisan ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "created_at": {
+                        "description": "Artisan creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Artisan update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "Consumer": {
+                "properties": {
+                    "id": {
+                        "description": "Consumer ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "created_at": {
+                        "description": "Consumer creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Consumer update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "order": {
+                        "$ref": "#/components/schemas/Order"
+                    }
+                },
+                "type": "object"
+            },
+            "DeliveryPersonnel": {
+                "properties": {
+                    "id": {
+                        "description": "DeliveryPersonnel ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "created_at": {
+                        "description": "DeliveryPersonnel creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "DeliveryPersonnel update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "Order": {
+                "properties": {
+                    "id": {
+                        "description": "Order ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "orderDate": {
+                        "description": "Order date",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "orderStatus": {
+                        "description": "Order status",
+                        "type": "string"
+                    },
+                    "deliveryAddress": {
+                        "description": "Delivery address",
+                        "type": "string"
+                    },
+                    "consumer_id": {
+                        "description": "ID of the associated consumer",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "created_at": {
+                        "description": "Order creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Order update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deliveryPersonnel": {
+                        "$ref": "#/components/schemas/DeliveryPersonnel"
+                    },
+                    "consumer": {
+                        "$ref": "#/components/schemas/Consumer"
+                    },
+                    "orderProducts": {
+                        "description": "Related OrderProducts",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderProduct"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "OrderProduct": {
+                "properties": {
+                    "id": {
+                        "description": "OrderProduct ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "quantity": {
+                        "description": "OrderProduct quantity",
+                        "type": "integer"
+                    },
+                    "order": {
+                        "$ref": "#/components/schemas/Order"
+                    },
+                    "product": {
+                        "$ref": "#/components/schemas/Product"
+                    },
+                    "created_at": {
+                        "description": "OrderProduct creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "OrderProduct update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Product": {
+                "properties": {
+                    "id": {
+                        "description": "Product ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "description": "Product name",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Product description",
+                        "type": "string"
+                    },
+                    "pricePerPiece": {
+                        "description": "Product price per piece",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "minOrder": {
+                        "description": "Minimum order quantity",
+                        "type": "integer"
+                    },
+                    "type": {
+                        "description": "Product type",
+                        "type": "string",
+                        "enum": [
+                            "Sugar",
+                            "Salt"
+                        ]
+                    },
+                    "childType": {
+                        "description": "Product child type",
+                        "type": "string"
+                    },
+                    "images": {
+                        "description": "Product images",
+                        "type": "json"
+                    },
+                    "ratings": {
+                        "description": "Related Ratings",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Rating"
+                        }
+                    },
+                    "artisan": {
+                        "$ref": "#/components/schemas/Artisan"
+                    },
+                    "orderProducts": {
+                        "description": "Related OrderProducts",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderProduct"
+                        }
+                    },
+                    "created_at": {
+                        "description": "Product creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Product update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Rating": {
+                "properties": {
+                    "id": {
+                        "description": "Rating ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "rating": {
+                        "description": "Numeric rating value",
+                        "type": "integer"
+                    },
+                    "ratingType": {
+                        "description": "Type of rating (DeliveryPersonnel, Product, Artisan)",
+                        "type": "string",
+                        "enum": [
+                            "DeliveryPersonnel",
+                            "Product",
+                            "Artisan"
+                        ]
+                    },
+                    "created_at": {
+                        "description": "Rating creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Rating update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "delivery_personnel": {
+                        "$ref": "#/components/schemas/DeliveryPersonnel"
+                    },
+                    "product": {
+                        "$ref": "#/components/schemas/Product"
+                    },
+                    "artisan": {
+                        "$ref": "#/components/schemas/Artisan"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "id": {
+                        "description": "User ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "email": {
+                        "description": "User email",
+                        "type": "string"
+                    },
+                    "first_name": {
+                        "description": "User first name",
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "description": "User last name",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "User description",
+                        "type": "string"
+                    },
+                    "adresse": {
+                        "description": "User address",
+                        "type": "string"
+                    },
+                    "phone_number": {
+                        "description": "User phone number",
+                        "type": "string"
+                    },
+                    "user_type": {
+                        "description": "User type",
+                        "type": "string",
+                        "enum": [
+                            "Artisan",
+                            "Consumer",
+                            "DeliveryPersonnel"
+                        ]
+                    },
+                    "created_at": {
+                        "description": "User creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "User update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deliveryPersonnel": {
+                        "$ref": "#/components/schemas/DeliveryPersonnel"
+                    },
+                    "artisan": {
+                        "$ref": "#/components/schemas/Artisan"
+                    },
+                    "consumer": {
+                        "$ref": "#/components/schemas/Consumer"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
