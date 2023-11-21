@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+
 /**
  * @OA\Schema(
  *      schema="User",
@@ -15,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
  *          type="integer",
  *          format="int64",
  *          description="User ID"
- *      ),
+ *      ),   
  *      @OA\Property(
  *          property="email",
  *          type="string",
@@ -37,7 +38,7 @@ use Laravel\Sanctum\HasApiTokens;
  *          description="User description"
  *      ),
  *      @OA\Property(
- *          property="adresse",
+ *          property="address",
  *          type="string",
  *          description="User address"
  *      ),
@@ -49,7 +50,7 @@ use Laravel\Sanctum\HasApiTokens;
  *      @OA\Property(
  *          property="user_type",
  *          type="string",
- *          enum={"Artisan", "Consumer", "DeliveryPersonnel"},
+ *          enum={"Consumer", "Artisan", "DeliveryPersonnel"},
  *          description="User type"
  *      ),
  *      @OA\Property(
@@ -89,11 +90,13 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
+
         'email',
+        'password',
         'first_name',
         'last_name',
         'description',
-        'adresse',
+        'address',
         'phone_number',
         'user_type',
     ];

@@ -25,15 +25,15 @@ class RegisteredUserController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="name", type="string", maxLength=255),
      *             @OA\Property(property="email", type="string", format="email", maxLength=255),
      *             @OA\Property(property="password", type="string", format="password"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password"),
      *             @OA\Property(property="first_name", type="string", maxLength=255),
      *             @OA\Property(property="last_name", type="string", maxLength=255),
      *             @OA\Property(property="description", type="string", maxLength=255),
-     *             @OA\Property(property="adresse", type="string", maxLength=255),
+     *             @OA\Property(property="address", type="string", maxLength=255),
      *             @OA\Property(property="phone_number", type="string", maxLength=20),
-     *             @OA\Property(property="user_type", type="string", enum={"Consumers", "Artisans", "DeliveryPersonnel"}),
+     *             @OA\Property(property="user_type", type="string", enum={"Consumer", "Artisan", "DeliveryPersonnel"})
      *         )
      *     ),
      *    @OA\Response(
@@ -58,30 +58,30 @@ class RegisteredUserController extends Controller
 
 
             $request->validate([
-                'name' => ['required', 'string', 'max:255'],
+
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'description' => ['string', 'max:255'],
-                'adresse' => ['string', 'max:255'],
+                'address' => ['string', 'max:255'],
                 'phone_number' => ['string', 'max:20'],
-                'user_type' => ['string', 'in:Consumers,Artisans,DeliveryPersonnel'],
+                'user_type' => ['string', 'in:Consumer,Artisan,DeliveryPersonnel'],
             ]);
 
 
             // Mass assignment using only fillable attributes
-            $user = User::create($request->only([
-                'name',
-                'email',
-                'password',
-                'first_name',
-                'last_name',
-                'description',
-                'adresse',
-                'phone_number',
-                'user_type',
-            ]));
+            $user = User::create([
+
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'description' => $request->description,
+                'address' => $request->address,
+                'phone_number' => $request->phone_number,
+                'user_type' => $request->user_type,
+            ]);
             event(new Registered($user));
 
             Auth::login($user);

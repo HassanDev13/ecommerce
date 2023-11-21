@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\Model;
 class DeliveryPersonnel extends Model
 {
     use HasFactory;
-
+    protected $fillable = ['user_id','availability'];
     public function user()
     {
         return $this->belongsTo(User::class);

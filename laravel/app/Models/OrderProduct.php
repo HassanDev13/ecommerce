@@ -48,7 +48,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderProduct extends Model
 {
     use HasFactory;
-    protected $fillable = ['quantity'];
+    protected $fillable = ['orderStatus','orderStatus'];
 
     public function order()
     {
