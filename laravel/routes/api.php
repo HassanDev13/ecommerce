@@ -3,6 +3,19 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\ArtisanController;
+use App\Http\Controllers\ConsumerController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\DeliveryPersonnelController;
+use App\Http\Controllers\OrderProductController;
+
+
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,34 +34,30 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
       // sail php artisan make:controller RatingController --api
 Route::apiResource('ratings', RatingController::class);
 
+
+
 Route::apiResource('users', UserController::class);
 
 
-use App\Http\Controllers\ArtisanController;
 
 Route::apiResource('artisans', ArtisanController::class);
 
 
-use App\Http\Controllers\DeliveryPersonnelController;
 
 Route::apiResource('deliveryPersonnels', DeliveryPersonnelController::class);
 
 
-use App\Http\Controllers\ConsumerController;
 
 Route::apiResource('consumers', ConsumerController::class);
 
 
-use App\Http\Controllers\OrderController;
 
 Route::apiResource('orders', OrderController::class);
 
 
-use App\Http\Controllers\ProductController;
 
 Route::apiResource('products', ProductController::class);
 
 
-use App\Http\Controllers\OrderProductController;
 
 Route::apiResource('OrderProducts', OrderProductController::class);

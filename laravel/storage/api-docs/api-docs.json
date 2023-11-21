@@ -1304,16 +1304,14 @@
                         }
                     }
                 }
-            }
-        },
-        "/users": {
+            },
             "post": {
                 "tags": [
                     "User"
                 ],
                 "summary": "Create a new User",
                 "description": "Store a newly created resource in storage.",
-                "operationId": "a1fce870c566eb5fc0cf3178ec5d2fed",
+                "operationId": "592819a0265360b2014512d6dbfaf0e7",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1457,6 +1455,28 @@
                         "description": "Artisan ID",
                         "type": "integer",
                         "format": "int64"
+                    },
+                    "user_id": {
+                        "description": "ID of the associated user",
+                        "type": "integer"
+                    },
+                    "business_name": {
+                        "description": "Business name of the artisan",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description of the artisan",
+                        "type": "string"
+                    },
+                    "open_at": {
+                        "description": "Opening time",
+                        "type": "string",
+                        "format": "time"
+                    },
+                    "close_at": {
+                        "description": "Closing time",
+                        "type": "string",
+                        "format": "time"
                     },
                     "created_at": {
                         "description": "Artisan creation timestamp",
@@ -1619,12 +1639,12 @@
                         "description": "Product description",
                         "type": "string"
                     },
-                    "pricePerPiece": {
+                    "price_per_piece": {
                         "description": "Product price per piece",
                         "type": "number",
                         "format": "float"
                     },
-                    "minOrder": {
+                    "min_order": {
                         "description": "Minimum order quantity",
                         "type": "integer"
                     },
@@ -1640,9 +1660,25 @@
                         "description": "Product child type",
                         "type": "string"
                     },
+                    "user_id": {
+                        "description": "ID of the associated Artisan",
+                        "type": "integer"
+                    },
                     "images": {
                         "description": "Product images",
-                        "type": "json"
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "format": "int64"
+                                },
+                                "path": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
                     },
                     "ratings": {
                         "description": "Related Ratings",
