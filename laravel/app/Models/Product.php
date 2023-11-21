@@ -97,7 +97,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'price_per_piece', 'min_order', 'type', 'childType','user_id'];
+    protected $fillable = ['name', 'description', 'price_per_piece', 'min_order', 'type', 'child_type','user_id'];
 
 
     public function ratings()

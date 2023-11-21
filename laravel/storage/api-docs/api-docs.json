@@ -41,7 +41,26 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Artisan"
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "business_name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "open_at": {
+                                        "type": "string",
+                                        "format": "time"
+                                    },
+                                    "close_at": {
+                                        "type": "string",
+                                        "format": "time"
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
@@ -223,6 +242,29 @@
                                             "Artisan",
                                             "DeliveryPersonnel"
                                         ]
+                                    },
+                                    "business_name": {
+                                        "description": "Required if user_type is Artisan",
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Artisan Business Name"
+                                    },
+                                    "open_at": {
+                                        "description": "Required if user_type is Artisan",
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "9:00 AM"
+                                    },
+                                    "close_at": {
+                                        "description": "Required if user_type is Artisan",
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "5:00 PM"
+                                    },
+                                    "availability": {
+                                        "description": "Required if user_type is DeliveryPersonnel",
+                                        "type": "boolean",
+                                        "example": true
                                     }
                                 },
                                 "type": "object"
@@ -950,7 +992,51 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Product"
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "price_per_piece",
+                                    "min_order",
+                                    "type",
+                                    "childType",
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Product Name"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Product Description"
+                                    },
+                                    "price_per_piece": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10.99
+                                    },
+                                    "min_order": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Sugar",
+                                            "Salt"
+                                        ],
+                                        "example": "Sugar"
+                                    },
+                                    "child_type": {
+                                        "type": "string",
+                                        "example": "Child Type"
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
@@ -1458,6 +1544,28 @@
                         "type": "integer",
                         "format": "int64"
                     },
+                    "user_id": {
+                        "description": "ID of the associated user",
+                        "type": "integer"
+                    },
+                    "business_name": {
+                        "description": "Business name of the artisan",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description of the artisan",
+                        "type": "string"
+                    },
+                    "open_at": {
+                        "description": "Opening time",
+                        "type": "string",
+                        "format": "time"
+                    },
+                    "close_at": {
+                        "description": "Closing time",
+                        "type": "string",
+                        "format": "time"
+                    },
                     "created_at": {
                         "description": "Artisan creation timestamp",
                         "type": "string",
@@ -1619,12 +1727,12 @@
                         "description": "Product description",
                         "type": "string"
                     },
-                    "pricePerPiece": {
+                    "price_per_piece": {
                         "description": "Product price per piece",
                         "type": "number",
                         "format": "float"
                     },
-                    "minOrder": {
+                    "min_order": {
                         "description": "Minimum order quantity",
                         "type": "integer"
                     },
@@ -1640,9 +1748,25 @@
                         "description": "Product child type",
                         "type": "string"
                     },
+                    "user_id": {
+                        "description": "ID of the associated Artisan",
+                        "type": "integer"
+                    },
                     "images": {
                         "description": "Product images",
-                        "type": "json"
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "format": "int64"
+                                },
+                                "path": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
                     },
                     "ratings": {
                         "description": "Related Ratings",

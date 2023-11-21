@@ -31,7 +31,9 @@ class ArtisanController extends Controller
      */
     public function index()
     {
-        $artisans = Artisan::all();
+        // Fetch all products with their associated relationships
+        $artisans = Artisan::with(['user'])->get();
+
         return response()->json(['artisans' => $artisans]);
     }
 
@@ -44,7 +46,13 @@ class ArtisanController extends Controller
      *     tags={"Artisan"},
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/Artisan")
+     *         @OA\JsonContent(
+     *      @OA\Property(property="user_id", type="integer"),
+     *      @OA\Property(property="business_name", type="string"),
+     *      @OA\Property(property="description", type="string"),
+     *      @OA\Property(property="open_at", type="string", format="time"),
+     *      @OA\Property(property="close_at", type="string", format="time"),
+     * )
      *     ),
      *     @OA\Response(
      *         response=201,
@@ -55,7 +63,7 @@ class ArtisanController extends Controller
      */
     public function store(Request $request)
     {
-        $artisan = Artisan::create($request->all());
+        $artisans = Artisan::create($request->all());
         return response()->json(['artisans' => $artisans], 201);
     }
 
@@ -86,7 +94,7 @@ class ArtisanController extends Controller
      */
     public function show(string $id)
     {
-        $artisan = Artisan::findOrFail($id);
+        $artisans = Artisan::findOrFail($id);
         return response()->json(['artisans' => $artisans]);
     }
 
@@ -121,8 +129,8 @@ class ArtisanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $artisan = Artisan::findOrFail($id);
-        $artisan->update($request->all());
+        $artisans = Artisan::findOrFail($id);
+        $artisans->update($request->all());
         return response()->json(['artisans' => $artisans]);
     }
 

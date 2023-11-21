@@ -25,7 +25,9 @@ class ProductFactory extends Factory
             'min_order' => $this->faker->numberBetween(1, 100),
             'type' => $this->faker->randomElement(['Sugar', 'Salt']),
             'child_type' => $this->faker->randomElement(['childType1', 'childType2', 'childType3','childType3','childType4']),
-            'user_id' => Artisan::factory()
+            'user_id' => function () {
+                return Artisan::factory()->create()->id;
+            },
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -37,8 +38,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-        return response()->json(['products' => $products]);
+        // Fetch all products with their associated relationships
+        $products = Product::with(['images', 'ratings', 'artisan', 'orderProducts'])->get();
+        // Return the products with related data
+        return response()->json(['products' => $products], 200);
+        // $products = Product::all();
+        // return response()->json(['products' => $products]);
     }
 
     /**
@@ -55,7 +60,17 @@ class ProductController extends Controller
      *      description="Stores a new product",
      *      @OA\RequestBody(
      *          required=true,
-     *          @OA\JsonContent(ref="#/components/schemas/Product")
+     *          @OA\JsonContent(
+     *         required={"name", "description", "price_per_piece", "min_order", "type", "childType", "user_id"},
+     *         @OA\Property(property="name", type="string", example="Product Name"),
+     *         @OA\Property(property="description", type="string", example="Product Description"),
+     *         @OA\Property(property="price_per_piece", type="number", format="float", example=10.99),
+     *         @OA\Property(property="min_order", type="integer", example=5),
+     *         @OA\Property(property="type", type="string", enum={"Sugar", "Salt"}, example="Sugar"),
+     *         @OA\Property(property="child_type", type="string", example="Child Type"),
+     *         @OA\Property(property="user_id", type="integer", example=1)
+     * 
+     *      )
      *      ),
      *      @OA\Response(
      *          response=201,
@@ -70,14 +85,19 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $user = User::find($request->user_id);
+
+        if (empty($user))
+            return response()->json(['message' => 'You try to insert a prodect with user not exist'], 404);
+
         $validatedData = $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
-            'pricePerPiece' => 'required|numeric',
-            'minOrder' => 'required|integer',
+            'price_per_piece' => 'required|numeric',
+            'min_order' => 'required|integer',
             'type' => 'required|string|in:Sugar,Salt',
-            'childType' => 'string',
-            'images' => 'json',
+            'child_type' => 'required|string',
+            'user_id' => 'required|integer'
         ]);
 
         $product = Product::create($validatedData);
