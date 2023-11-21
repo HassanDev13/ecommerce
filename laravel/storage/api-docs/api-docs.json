@@ -1390,16 +1390,14 @@
                         }
                     }
                 }
-            }
-        },
-        "/users": {
+            },
             "post": {
                 "tags": [
                     "User"
                 ],
                 "summary": "Create a new User",
                 "description": "Store a newly created resource in storage.",
-                "operationId": "a1fce870c566eb5fc0cf3178ec5d2fed",
+                "operationId": "592819a0265360b2014512d6dbfaf0e7",
                 "requestBody": {
                     "required": true,
                     "content": {
