@@ -16,7 +16,7 @@ class OrderProductController extends Controller
      * Display a listing of the resource.
      *
      * @OA\Get(
-     *     path="/order-products",
+     *     path="/api/OrderProducts",
      *     summary="Get all OrderProducts",
      *     tags={"OrderProduct"},
      *     @OA\Response(
@@ -32,14 +32,14 @@ class OrderProductController extends Controller
     public function index()
     {
         $orderProducts = OrderProduct::all();
-        return response()->json($orderProducts);
+        return response()->json(['OrderProducts' => $orderProducts]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @OA\Post(
-     *     path="/order-products",
+     *     path="/api/OrderProducts",
      *     summary="Create a new OrderProduct",
      *     tags={"OrderProduct"},
      *     @OA\RequestBody(
@@ -56,14 +56,14 @@ class OrderProductController extends Controller
     public function store(Request $request)
     {
         $orderProduct = OrderProduct::create($request->all());
-        return response()->json($orderProduct, 201);
+        return response()->json(['OrderProducts' => $orderProducts], 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @OA\Get(
-     *     path="/order-products/{id}",
+     *     path="/api/OrderProducts/{id}",
      *     summary="Get a specific OrderProduct by ID",
      *     tags={"OrderProduct"},
      *     @OA\Parameter(
@@ -87,14 +87,14 @@ class OrderProductController extends Controller
     public function show(string $id)
     {
         $orderProduct = OrderProduct::findOrFail($id);
-        return response()->json($orderProduct);
+        return response()->json(['OrderProducts' => $orderProducts]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @OA\Put(
-     *     path="/order-products/{id}",
+     *     path="/api/OrderProducts/{id}",
      *     summary="Update a specific OrderProduct by ID",
      *     tags={"OrderProduct"},
      *     @OA\Parameter(
@@ -123,14 +123,14 @@ class OrderProductController extends Controller
     {
         $orderProduct = OrderProduct::findOrFail($id);
         $orderProduct->update($request->all());
-        return response()->json($orderProduct);
+        return response()->json(['OrderProducts' => $orderProducts]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @OA\Delete(
-     *     path="/order-products/{id}",
+     *     path="/api/OrderProducts/{id}",
      *     summary="Delete a specific OrderProduct by ID",
      *     tags={"OrderProduct"},
      *     @OA\Parameter(
@@ -154,6 +154,6 @@ class OrderProductController extends Controller
     {
         $orderProduct = OrderProduct::findOrFail($id);
         $orderProduct->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'OrderProduct deleted successfully'], 204);
     }
 }

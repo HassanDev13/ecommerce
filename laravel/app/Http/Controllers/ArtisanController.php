@@ -16,7 +16,7 @@ class ArtisanController extends Controller
      * Display a listing of the resource.
      *
      * @OA\Get(
-     *     path="/artisans",
+     *     path="/api/artisans",
      *     summary="Get all Artisans",
      *     tags={"Artisan"},
      *     @OA\Response(
@@ -32,14 +32,14 @@ class ArtisanController extends Controller
     public function index()
     {
         $artisans = Artisan::all();
-        return response()->json($artisans);
+        return response()->json(['artisans' => $artisans]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @OA\Post(
-     *     path="/artisans",
+     *     path="/api/artisans",
      *     summary="Create a new Artisan",
      *     tags={"Artisan"},
      *     @OA\RequestBody(
@@ -56,14 +56,14 @@ class ArtisanController extends Controller
     public function store(Request $request)
     {
         $artisan = Artisan::create($request->all());
-        return response()->json($artisan, 201);
+        return response()->json(['artisans' => $artisans], 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @OA\Get(
-     *     path="/artisans/{id}",
+     *     path="/api/artisans/{id}",
      *     summary="Get a specific Artisan by ID",
      *     tags={"Artisan"},
      *     @OA\Parameter(
@@ -87,14 +87,14 @@ class ArtisanController extends Controller
     public function show(string $id)
     {
         $artisan = Artisan::findOrFail($id);
-        return response()->json($artisan);
+        return response()->json(['artisans' => $artisans]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @OA\Put(
-     *     path="/artisans/{id}",
+     *     path="/api/artisans/{id}",
      *     summary="Update a specific Artisan by ID",
      *     tags={"Artisan"},
      *     @OA\Parameter(
@@ -123,14 +123,14 @@ class ArtisanController extends Controller
     {
         $artisan = Artisan::findOrFail($id);
         $artisan->update($request->all());
-        return response()->json($artisan);
+        return response()->json(['artisans' => $artisans]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @OA\Delete(
-     *     path="/artisans/{id}",
+     *     path="/api/artisans/{id}",
      *     summary="Delete a specific Artisan by ID",
      *     tags={"Artisan"},
      *     @OA\Parameter(
@@ -154,6 +154,6 @@ class ArtisanController extends Controller
     {
         $artisan = Artisan::findOrFail($id);
         $artisan->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Artisan deleted successfully'], 204);
     }
 }

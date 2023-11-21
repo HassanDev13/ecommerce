@@ -16,7 +16,7 @@ class DeliveryPersonnelController extends Controller
      * Display a listing of the resource.
      *
      * @OA\Get(
-     *     path="/delivery-personnel",
+     *     path="/api/deliveryPersonnels",
      *     summary="Get all Delivery Personnel",
      *     tags={"DeliveryPersonnel"},
      *     @OA\Response(
@@ -32,14 +32,14 @@ class DeliveryPersonnelController extends Controller
     public function index()
     {
         $deliveryPersonnel = DeliveryPersonnel::all();
-        return response()->json($deliveryPersonnel);
+        return response()->json(['deliveryPersonnels' => $deliveryPersonnel]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @OA\Post(
-     *     path="/delivery-personnel",
+     *     path="/api/deliveryPersonnels",
      *     summary="Create a new Delivery Personnel",
      *     tags={"DeliveryPersonnel"},
      *     @OA\RequestBody(
@@ -56,14 +56,14 @@ class DeliveryPersonnelController extends Controller
     public function store(Request $request)
     {
         $deliveryPersonnel = DeliveryPersonnel::create($request->all());
-        return response()->json($deliveryPersonnel, 201);
+        return response()->json(['deliveryPersonnels' => $deliveryPersonnel], 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @OA\Get(
-     *     path="/delivery-personnel/{id}",
+     *     path="/api/deliveryPersonnels/{id}",
      *     summary="Get a specific Delivery Personnel by ID",
      *     tags={"DeliveryPersonnel"},
      *     @OA\Parameter(
@@ -87,14 +87,14 @@ class DeliveryPersonnelController extends Controller
     public function show(string $id)
     {
         $deliveryPersonnel = DeliveryPersonnel::findOrFail($id);
-        return response()->json($deliveryPersonnel);
+        return response()->json(['deliveryPersonnels' => $deliveryPersonnel]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @OA\Put(
-     *     path="/delivery-personnel/{id}",
+     *     path="/api/deliveryPersonnels/{id}",
      *     summary="Update a specific Delivery Personnel by ID",
      *     tags={"DeliveryPersonnel"},
      *     @OA\Parameter(
@@ -123,14 +123,14 @@ class DeliveryPersonnelController extends Controller
     {
         $deliveryPersonnel = DeliveryPersonnel::findOrFail($id);
         $deliveryPersonnel->update($request->all());
-        return response()->json($deliveryPersonnel);
+        return response()->json(['deliveryPersonnels' => $deliveryPersonnel]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @OA\Delete(
-     *     path="/delivery-personnel/{id}",
+     *     path="/api/deliveryPersonnels/{id}",
      *     summary="Delete a specific Delivery Personnel by ID",
      *     tags={"DeliveryPersonnel"},
      *     @OA\Parameter(
@@ -154,6 +154,6 @@ class DeliveryPersonnelController extends Controller
     {
         $deliveryPersonnel = DeliveryPersonnel::findOrFail($id);
         $deliveryPersonnel->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'deliveryPersonnel deleted successfully'], 204);
     }
 }

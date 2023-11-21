@@ -18,5 +18,37 @@ use App\Http\Controllers\RatingController;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-// sail php artisan make:controller RatingController --api
+      // sail php artisan make:controller RatingController --api
 Route::apiResource('ratings', RatingController::class);
+
+Route::apiResource('users', UserController::class);
+
+
+use App\Http\Controllers\ArtisanController;
+
+Route::apiResource('artisans', ArtisanController::class);
+
+
+use App\Http\Controllers\DeliveryPersonnelController;
+
+Route::apiResource('deliveryPersonnels', DeliveryPersonnelController::class);
+
+
+use App\Http\Controllers\ConsumerController;
+
+Route::apiResource('consumers', ConsumerController::class);
+
+
+use App\Http\Controllers\OrderController;
+
+Route::apiResource('orders', OrderController::class);
+
+
+use App\Http\Controllers\ProductController;
+
+Route::apiResource('products', ProductController::class);
+
+
+use App\Http\Controllers\OrderProductController;
+
+Route::apiResource('OrderProducts', OrderProductController::class);

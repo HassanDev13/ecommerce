@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Consumer;
 
-/**
+/**    
  * @group Consumer
  *
  * APIs for managing Consumers
@@ -16,7 +16,7 @@ class ConsumerController extends Controller
      * Display a listing of the resource.
      *
      * @OA\Get(
-     *     path="/consumers",
+     *     path="/api/consumers",
      *     summary="Get all Consumers",
      *     tags={"Consumer"},
      *     @OA\Response(
@@ -32,14 +32,14 @@ class ConsumerController extends Controller
     public function index()
     {
         $consumers = Consumer::all();
-        return response()->json($consumers);
+        return response()->json(['consumers' => $consumers]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @OA\Post(
-     *     path="/consumers",
+     *     path="/api/consumers",
      *     summary="Create a new Consumer",
      *     tags={"Consumer"},
      *     @OA\RequestBody(
@@ -56,7 +56,7 @@ class ConsumerController extends Controller
     public function store(Request $request)
     {
         $consumer = Consumer::create($request->all());
-        return response()->json($consumer, 201);
+        return response()->json(['consumers' => $consumers], 201);
     }
 
     /**
@@ -87,14 +87,14 @@ class ConsumerController extends Controller
     public function show(string $id)
     {
         $consumer = Consumer::findOrFail($id);
-        return response()->json($consumer);
+        return response()->json(['consumers' => $consumers]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @OA\Put(
-     *     path="/consumers/{id}",
+     *     path="/api/consumers/{id}",
      *     summary="Update a specific Consumer by ID",
      *     tags={"Consumer"},
      *     @OA\Parameter(
@@ -123,14 +123,14 @@ class ConsumerController extends Controller
     {
         $consumer = Consumer::findOrFail($id);
         $consumer->update($request->all());
-        return response()->json($consumer);
+        return response()->json(['consumers' => $consumers]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @OA\Delete(
-     *     path="/consumers/{id}",
+     *     path="/api/consumers/{id}",
      *     summary="Delete a specific Consumer by ID",
      *     tags={"Consumer"},
      *     @OA\Parameter(
@@ -154,6 +154,6 @@ class ConsumerController extends Controller
     {
         $consumer = Consumer::findOrFail($id);
         $consumer->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Consumer deleted successfully'], 204);
     }
 }

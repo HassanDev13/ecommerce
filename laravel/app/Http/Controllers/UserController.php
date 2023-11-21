@@ -16,7 +16,7 @@ class UserController extends Controller
      * Display a listing of the resource.
      *
      * @OA\Get(
-     *     path="/users",
+     *     path="/api/users",
      *     summary="Get all Users",
      *     tags={"User"},
      *     @OA\Response(
@@ -32,7 +32,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return response()->json($users);
+        return response()->json(['users' => $users]);
     }
 
     /**
@@ -56,14 +56,14 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $user = User::create($request->all());
-        return response()->json($user, 201);
+        return response()->json(['users' => $users], 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @OA\Get(
-     *     path="/users/{id}",
+     *     path="/api/users/{id}",
      *     summary="Get a specific User by ID",
      *     tags={"User"},
      *     @OA\Parameter(
@@ -87,14 +87,14 @@ class UserController extends Controller
     public function show(string $id)
     {
         $user = User::findOrFail($id);
-        return response()->json($user);
+        return response()->json(['users' => $users]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @OA\Put(
-     *     path="/users/{id}",
+     *     path="/api/users/{id}",
      *     summary="Update a specific User by ID",
      *     tags={"User"},
      *     @OA\Parameter(
@@ -123,14 +123,14 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->update($request->all());
-        return response()->json($user);
+        return response()->json(['users' => $users]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @OA\Delete(
-     *     path="/users/{id}",
+     *     path="/api/users/{id}",
      *     summary="Delete a specific User by ID",
      *     tags={"User"},
      *     @OA\Parameter(
@@ -154,6 +154,6 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'user deleted successfully'], 204);
     }
 }

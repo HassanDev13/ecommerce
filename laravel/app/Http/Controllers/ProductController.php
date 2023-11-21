@@ -38,7 +38,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
-        return response()->json(['data' => $products]);
+        return response()->json(['products' => $products]);
     }
 
     /**
@@ -81,7 +81,7 @@ class ProductController extends Controller
         ]);
 
         $product = Product::create($validatedData);
-        return response()->json(['data' => $product], 201);
+        return response()->json(['products' => $product], 201);
     }
 
     /**
@@ -117,7 +117,7 @@ class ProductController extends Controller
     public function show(string $id)
     {
         $product = Product::findOrFail($id);
-        return response()->json(['data' => $product]);
+        return response()->json(['products' => $product]);
     }
 
     /**
@@ -174,7 +174,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->update($validatedData);
 
-        return response()->json(['data' => $product]);
+        return response()->json(['products' => $product]);
     }
 
     /**

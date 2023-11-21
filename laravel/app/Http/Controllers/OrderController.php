@@ -39,7 +39,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::all();
-        return response()->json(['data' => $orders]);
+        return response()->json(['orders' => $orders]);
     }
 
     /**
@@ -79,7 +79,7 @@ class OrderController extends Controller
         ]);
 
         $order = Order::create($validatedData);
-        return response()->json(['data' => $order], 201);
+        return response()->json(['orders' => $order], 201);
     }
 
     /**
@@ -115,7 +115,7 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $order = Order::findOrFail($id);
-        return response()->json(['data' => $order]);
+        return response()->json(['orders' => $order]);
     }
 
     /**
@@ -169,7 +169,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
         $order->update($validatedData);
 
-        return response()->json(['data' => $order]);
+        return response()->json(['orders' => $order]);
     }
 
     /**

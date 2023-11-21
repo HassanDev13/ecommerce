@@ -5,14 +5,14 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/artisans": {
+        "/api/artisans": {
             "get": {
                 "tags": [
                     "Artisan"
                 ],
                 "summary": "Get all Artisans",
                 "description": "Display a listing of the resource.",
-                "operationId": "185ec790a1c954d5ea4016bba15fd1f1",
+                "operationId": "4997942c6261ddbf23a4879bcf598e0e",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -35,7 +35,7 @@
                 ],
                 "summary": "Create a new Artisan",
                 "description": "Store a newly created resource in storage.",
-                "operationId": "aeb3219086b535202c74c4a3a3d72b04",
+                "operationId": "7a589e653b95179b9169cee7359a2ff9",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -60,14 +60,14 @@
                 }
             }
         },
-        "/artisans/{id}": {
+        "/api/artisans/{id}": {
             "get": {
                 "tags": [
                     "Artisan"
                 ],
                 "summary": "Get a specific Artisan by ID",
                 "description": "Display the specified resource.",
-                "operationId": "d74d4a9ad008d0e3263cd1803212f877",
+                "operationId": "0c08e1b4e8f3ba57f7778bcba63be4cf",
                 "parameters": [
                     {
                         "name": "id",
@@ -102,7 +102,7 @@
                 ],
                 "summary": "Update a specific Artisan by ID",
                 "description": "Update the specified resource in storage.",
-                "operationId": "a86b7900373e1930e519a327e6bc9c42",
+                "operationId": "a68d608734b30c4384a89627c88e0cb5",
                 "parameters": [
                     {
                         "name": "id",
@@ -147,7 +147,7 @@
                 ],
                 "summary": "Delete a specific Artisan by ID",
                 "description": "Remove the specified resource from storage.",
-                "operationId": "edd21e408c17310ba31e025fd3da95c0",
+                "operationId": "98ae49f03469266ed3a8f1df86414453",
                 "parameters": [
                     {
                         "name": "id",
@@ -243,14 +243,14 @@
                 }
             }
         },
-        "/consumers": {
+        "/api/consumers": {
             "get": {
                 "tags": [
                     "Consumer"
                 ],
                 "summary": "Get all Consumers",
                 "description": "Display a listing of the resource.",
-                "operationId": "d9e6fa1a10cc31155a18b8bb1484cbcd",
+                "operationId": "39606af6450e02dac37b094b7e141744",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -273,7 +273,7 @@
                 ],
                 "summary": "Create a new Consumer",
                 "description": "Store a newly created resource in storage.",
-                "operationId": "547ea100a1cae2ed47f693a653b3c6d0",
+                "operationId": "e89bd3292e20158fb85d8b85ed25cb90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -333,14 +333,16 @@
                         "description": "Consumer not found"
                     }
                 }
-            },
+            }
+        },
+        "/api/consumers/{id}": {
             "put": {
                 "tags": [
                     "Consumer"
                 ],
                 "summary": "Update a specific Consumer by ID",
                 "description": "Update the specified resource in storage.",
-                "operationId": "bd328e09723226d3ba876ceadeb95558",
+                "operationId": "034ae4e87f1bc77a755cd0bc37db0f0b",
                 "parameters": [
                     {
                         "name": "id",
@@ -385,7 +387,7 @@
                 ],
                 "summary": "Delete a specific Consumer by ID",
                 "description": "Remove the specified resource from storage.",
-                "operationId": "4ab404cd1177383f70ec57e42324bb19",
+                "operationId": "320b22d41bfc9d9102ad5f7fda3af395",
                 "parameters": [
                     {
                         "name": "id",
@@ -408,14 +410,14 @@
                 }
             }
         },
-        "/delivery-personnel": {
+        "/api/deliveryPersonnels": {
             "get": {
                 "tags": [
                     "DeliveryPersonnel"
                 ],
                 "summary": "Get all Delivery Personnel",
                 "description": "Display a listing of the resource.",
-                "operationId": "481805250290400577791c2439272fb3",
+                "operationId": "8b6686ba622cdce6f0afcf25c0ba3a41",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -438,7 +440,7 @@
                 ],
                 "summary": "Create a new Delivery Personnel",
                 "description": "Store a newly created resource in storage.",
-                "operationId": "6a574335584209335ed1a69dbd610862",
+                "operationId": "ee5983ffabf4f02c844c0bd01c470fba",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -463,14 +465,14 @@
                 }
             }
         },
-        "/delivery-personnel/{id}": {
+        "/api/deliveryPersonnels/{id}": {
             "get": {
                 "tags": [
                     "DeliveryPersonnel"
                 ],
                 "summary": "Get a specific Delivery Personnel by ID",
                 "description": "Display the specified resource.",
-                "operationId": "34d04e32c06108fc603a3c20172567c5",
+                "operationId": "0bfdfbcd59c5c38c37430da30c27cc82",
                 "parameters": [
                     {
                         "name": "id",
@@ -505,7 +507,7 @@
                 ],
                 "summary": "Update a specific Delivery Personnel by ID",
                 "description": "Update the specified resource in storage.",
-                "operationId": "c95bd565704f5fdfb461aaaba5688887",
+                "operationId": "c32e5e1b5db82a93be8fc6a9f3757af3",
                 "parameters": [
                     {
                         "name": "id",
@@ -550,7 +552,7 @@
                 ],
                 "summary": "Delete a specific Delivery Personnel by ID",
                 "description": "Remove the specified resource from storage.",
-                "operationId": "98decda29bbf39af060030cc08db4a55",
+                "operationId": "cbc3453513e2cc8b2fbe93b8832bb4c4",
                 "parameters": [
                     {
                         "name": "id",
@@ -744,14 +746,14 @@
                 }
             }
         },
-        "/order-products": {
+        "/api/OrderProducts": {
             "get": {
                 "tags": [
                     "OrderProduct"
                 ],
                 "summary": "Get all OrderProducts",
                 "description": "Display a listing of the resource.",
-                "operationId": "c9bf163ae7ae9bf4144cbed7ada5ca60",
+                "operationId": "d0c5d025ea7fff24b93d411d126bc0bc",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -774,7 +776,7 @@
                 ],
                 "summary": "Create a new OrderProduct",
                 "description": "Store a newly created resource in storage.",
-                "operationId": "41cb6c2b7e3dbf76383202d7cf405425",
+                "operationId": "d5dfdadb28304c0af03865895b6048d1",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -799,14 +801,14 @@
                 }
             }
         },
-        "/order-products/{id}": {
+        "/api/OrderProducts/{id}": {
             "get": {
                 "tags": [
                     "OrderProduct"
                 ],
                 "summary": "Get a specific OrderProduct by ID",
                 "description": "Display the specified resource.",
-                "operationId": "f02a091186d892f58fe1dcf66125688f",
+                "operationId": "a79df01ece44fda779970ad1f84562e7",
                 "parameters": [
                     {
                         "name": "id",
@@ -841,7 +843,7 @@
                 ],
                 "summary": "Update a specific OrderProduct by ID",
                 "description": "Update the specified resource in storage.",
-                "operationId": "aaf1b4b55f3813abf1a6f4e1168c3675",
+                "operationId": "5971c6cd3c22cbe3efc6ebb9e2f82977",
                 "parameters": [
                     {
                         "name": "id",
@@ -886,7 +888,7 @@
                 ],
                 "summary": "Delete a specific OrderProduct by ID",
                 "description": "Remove the specified resource from storage.",
-                "operationId": "7302efd234d1b32c0378c446ff669be4",
+                "operationId": "fe3e13b64933c6dd3ab7b60e4c9b6b3f",
                 "parameters": [
                     {
                         "name": "id",
@@ -1279,14 +1281,14 @@
                 }
             }
         },
-        "/users": {
+        "/api/users": {
             "get": {
                 "tags": [
                     "User"
                 ],
                 "summary": "Get all Users",
                 "description": "Display a listing of the resource.",
-                "operationId": "7e2f5799553ec93c9c43e2a58490d447",
+                "operationId": "c457726701591d1183b53aa71fc13441",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1302,7 +1304,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/users": {
             "post": {
                 "tags": [
                     "User"
@@ -1334,14 +1338,14 @@
                 }
             }
         },
-        "/users/{id}": {
+        "/api/users/{id}": {
             "get": {
                 "tags": [
                     "User"
                 ],
                 "summary": "Get a specific User by ID",
                 "description": "Display the specified resource.",
-                "operationId": "910a0c7cf580e1c605648d82a4e57f46",
+                "operationId": "36a33ff774d5cba33c039dec2c3e0287",
                 "parameters": [
                     {
                         "name": "id",
@@ -1376,7 +1380,7 @@
                 ],
                 "summary": "Update a specific User by ID",
                 "description": "Update the specified resource in storage.",
-                "operationId": "ddfe232db1870b82493bf8bd25596d37",
+                "operationId": "b9091397c8b25f12c6adb74be6ce3a5a",
                 "parameters": [
                     {
                         "name": "id",
@@ -1421,7 +1425,7 @@
                 ],
                 "summary": "Delete a specific User by ID",
                 "description": "Remove the specified resource from storage.",
-                "operationId": "43dd20becb1f47444e484cbb18ce345c",
+                "operationId": "fa56cffde745d3f152f95cbacd936c0b",
                 "parameters": [
                     {
                         "name": "id",
