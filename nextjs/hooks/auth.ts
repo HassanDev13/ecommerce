@@ -1,18 +1,20 @@
 import useSWR from 'swr'
-import axios  from 'axios'
+
 
 
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
+import axios from '../services/axios'
 
-declare type AuthMiddleware = 'auth' | 'guest'
 
-interface IUseAuth {
+export declare type AuthMiddleware = 'auth' | 'guest'
+
+export interface IUseAuth {
     middleware: AuthMiddleware
     redirectIfAuthenticated?: string
 }
 
-interface IApiRequest {
+export interface IApiRequest {
     setErrors: React.Dispatch<React.SetStateAction<never[]>>
     setStatus: React.Dispatch<React.SetStateAction<any | null>>
     [key: string]: any
@@ -70,45 +72,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
             })
     }
 
-    const forgotPassword = async (args: IApiRequest) => {
-        const { setErrors, setStatus, email } = args
-        setErrors([])
-        setStatus(null)
-
-        axios
-            .post('/forgot-password', { email })
-            .then(response => setStatus(response.data.status))
-            .catch(error => {
-                if (error.response.status !== 422) throw error
-
-                setErrors(error.response.data.errors)
-            })
-    }
-
-    const resetPassword = async (args: IApiRequest) => {
-        const { setErrors, setStatus, ...props } = args
-        setErrors([])
-        setStatus(null)
-
-        axios
-            .post('/reset-password', { token: router.query.token, ...props })
-            .then(response =>
-                router.push('/login?reset=' + btoa(response.data.status)),
-            )
-            .catch(error => {
-                if (error.response.status !== 422) throw error
-
-                setErrors(error.response.data.errors)
-            })
-    }
-
-    const resendEmailVerification = (args: IApiRequest) => {
-        const { setStatus } = args
-
-        axios
-            .post('/email/verification-notification')
-            .then(response => setStatus(response.data.status))
-    }
 
     const logout = async () => {
         if (!error) {
@@ -133,9 +96,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
         user,
         register,
         login,
-        forgotPassword,
-        resetPassword,
-        resendEmailVerification,
         logout,
     }
 }

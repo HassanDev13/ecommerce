@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('Name');
-            $table->text('Description');
-            $table->decimal('PricePerPiece', 8, 2);
-            $table->integer('MinOrder');
-            $table->enum('Type', ['Sugar', 'Salt']);
-            $table->string('ChildType');
-            $table->json('Images');
+            $table->string('name');
+            $table->foreignId('user_id')->constrained();
+            $table->text('description');
+            $table->decimal('price_per_piece', 8, 2);
+            $table->integer('min_order');
+            $table->enum('type', ['sugar', 'salt']);
+            $table->string('child_type');
             $table->timestamps();
         });
     }

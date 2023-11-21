@@ -183,16 +183,16 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
                                         "maxLength": 255
                                     },
                                     "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password_confirmation": {
                                         "type": "string",
                                         "format": "password"
                                     },
@@ -208,7 +208,7 @@
                                         "type": "string",
                                         "maxLength": 255
                                     },
-                                    "adresse": {
+                                    "address": {
                                         "type": "string",
                                         "maxLength": 255
                                     },
@@ -219,8 +219,8 @@
                                     "user_type": {
                                         "type": "string",
                                         "enum": [
-                                            "Consumers",
-                                            "Artisans",
+                                            "Consumer",
+                                            "Artisan",
                                             "DeliveryPersonnel"
                                         ]
                                     }
@@ -1739,7 +1739,7 @@
                         "description": "User description",
                         "type": "string"
                     },
-                    "adresse": {
+                    "address": {
                         "description": "User address",
                         "type": "string"
                     },
@@ -1751,8 +1751,8 @@
                         "description": "User type",
                         "type": "string",
                         "enum": [
-                            "Artisan",
                             "Consumer",
+                            "Artisan",
                             "DeliveryPersonnel"
                         ]
                     },

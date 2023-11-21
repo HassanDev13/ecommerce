@@ -25,13 +25,13 @@ use Illuminate\Database\Eloquent\Model;
  *          description="Product description"
  *      ),
  *      @OA\Property(
- *          property="pricePerPiece",
+ *          property="price_per_piece",
  *          type="number",
  *          format="float",
  *          description="Product price per piece"
  *      ),
  *      @OA\Property(
- *          property="minOrder",
+ *          property="min_order",
  *          type="integer",
  *          description="Minimum order quantity"
  *      ),
@@ -47,8 +47,18 @@ use Illuminate\Database\Eloquent\Model;
  *          description="Product child type"
  *      ),
  *      @OA\Property(
+ *          property="user_id",
+ *          type="integer",
+ *          description="ID of the associated Artisan"
+ *      ),
+ *      @OA\Property(
  *          property="images",
- *          type="json",
+ *          type="array",
+ *          @OA\Items(
+ *              type="object",
+ *              @OA\Property(property="id", type="integer", format="int64"),
+ *              @OA\Property(property="path", type="string"),
+ *          ),
  *          description="Product images"
  *      ),
  *      @OA\Property(
@@ -87,7 +97,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'pricePerPiece', 'minOrder', 'type', 'childType', 'images'];
+    protected $fillable = ['name', 'description', 'price_per_piece', 'min_order', 'type', 'childType','user_id'];
 
 
     public function ratings()
@@ -104,5 +114,9 @@ class Product extends Model
     public function orderProducts()
     {
         return $this->hasMany(OrderProduct::class);
+    }
+    public function images()
+    {
+        return $this->hasMany(Image::class);
     }
 }

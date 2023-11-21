@@ -62,7 +62,7 @@ use Illuminate\Database\Eloquent\Model;
 class Rating extends Model
 {
     use HasFactory;
-    protected $fillable = ['rating', 'ratingType'];
+    protected $fillable = ['rating', 'rating_type'];
     public function deliveryPersonnel()
     {
         return $this->belongsTo(DeliveryPersonnel::class);

@@ -9,13 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+  
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->date('OrderDate');
-            $table->enum('OrderStatus', ['unprocessed', 'accepted', 'refused', 'assigned to a delivery person', 'sent', 'delivered']);
-            $table->string('DeliveryAddress');
+            $table->enum('order_status', ['unprocessed', 'accepted', 'refused', 'assigned to a delivery person', 'sent', 'delivered']);
+            $table->string('delivery_address');
+            $table->foreignId('consumer_id')->constrained();
+            $table->foreignId('delivery_personnel_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
