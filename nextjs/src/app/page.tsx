@@ -1,15 +1,23 @@
+import Footer from "./_components/Footer";
+import CTASection from "./_components/_LandingPageComponents/CTASection";
+import FeaturesSection from "./_components/_LandingPageComponents/FeaturesSection";
+import HeroSection from "./_components/_LandingPageComponents/HeroSection";
+import LandPageNavBar from "./_components/_LandingPageComponents/LandPageNavBar";
 
-export default function Home() {
-
+const Home: React.FC = () => {
   return (
-    <>
-
-      <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none  lg:px-0">
-
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-            Landing page
-        </div>
+    <div className="flex flex-col min-h-screen">
+      <div className="flex-grow">
+          <LandPageNavBar />
+          <HeroSection />
+          <FeaturesSection />
+          <CTASection />
       </div>
-    </>
-  )
-}
+      
+      
+      <Footer />
+    </div>
+  );
+};
+
+export default Home;
