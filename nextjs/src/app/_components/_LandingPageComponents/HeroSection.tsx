@@ -1,10 +1,12 @@
 // components/landingpagecomponents/_components/HeroSection.tsx
 import Image from 'next/image';
-import heroSection from "/home/redaunix/ecommerce/nextjs/public/HeroSection.svg";
-import icon1 from "/home/redaunix/ecommerce/nextjs/public/Icon1.svg";
-import icon2 from "/home/redaunix/ecommerce/nextjs/public/Icon2.svg";
-import icon3 from "/home/redaunix/ecommerce/nextjs/public/Icon3.svg";
-import icon4 from "/home/redaunix/ecommerce/nextjs/public/Icon4.svg";
+import heroSection from "/public/HeroSection.svg";
+import icon1 from "/public/Icon1.svg";
+import icon2 from "/public/Icon2.svg";
+import icon3 from "/public/Icon3.svg";
+import icon4 from "/public/Icon4.svg";
+
+
 
 const HeroSection: React.FC = () => {
   return (
