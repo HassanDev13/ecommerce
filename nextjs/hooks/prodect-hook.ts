@@ -2,6 +2,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import productService from "../services/prodect-service";
 
 
+
 const useAllProducts = () => {
   return useQuery<Product[]>("products", productService.getAllProducts);
 };

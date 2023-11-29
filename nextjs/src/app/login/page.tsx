@@ -8,9 +8,7 @@ export default function Page() {
   return (
     <>
 
-      <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none  lg:px-0">
-
-
+      <div className="container relative  h-screen flex-col items-center justify-center md:grid lg:max-w-none  lg:px-0">
 
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px] divide-y">
           <div className="flex flex-col space-y-2 text-center">
