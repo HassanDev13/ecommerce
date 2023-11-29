@@ -11,7 +11,30 @@ use Illuminate\Support\Facades\Auth;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Handle an incoming authentication request.
+     * @OA\Post(
+     *     path="/login",
+     *     summary="Login",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", format="email", maxLength=255),
+     *             @OA\Property(property="password", type="string", format="password"),
+     *         )
+     *     ),
+     *    @OA\Response(
+     *         response=204,
+     *         description="User enter successfully",
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *     ),
+     * )
      */
     public function store(LoginRequest $request): Response
     {

@@ -55,7 +55,7 @@ class OrderProductController extends Controller
      */
     public function store(Request $request)
     {
-        $orderProduct = OrderProduct::create($request->all());
+        $orderProducts = OrderProduct::create($request->all());
         return response()->json(['OrderProducts' => $orderProducts], 201);
     }
 
@@ -87,7 +87,7 @@ class OrderProductController extends Controller
     public function show(string $id)
     {
         $orderProduct = OrderProduct::findOrFail($id);
-        return response()->json(['OrderProducts' => $orderProducts]);
+        return response()->json(['OrderProducts' => $orderProduct]);
     }
 
     /**
@@ -123,7 +123,7 @@ class OrderProductController extends Controller
     {
         $orderProduct = OrderProduct::findOrFail($id);
         $orderProduct->update($request->all());
-        return response()->json(['OrderProducts' => $orderProducts]);
+        return response()->json(['OrderProducts' => $orderProduct]);
     }
 
     /**

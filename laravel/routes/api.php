@@ -32,32 +32,13 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
       // sail php artisan make:controller RatingController --api
+
+
 Route::apiResource('ratings', RatingController::class);
-
-
-
 Route::apiResource('users', UserController::class);
-
-
-
 Route::apiResource('artisans', ArtisanController::class);
-
-
-
 Route::apiResource('deliveryPersonnels', DeliveryPersonnelController::class);
-
-
-
 Route::apiResource('consumers', ConsumerController::class);
-
-
-
 Route::apiResource('orders', OrderController::class);
-
-
-
 Route::apiResource('products', ProductController::class);
-
-
-
 Route::apiResource('OrderProducts', OrderProductController::class);

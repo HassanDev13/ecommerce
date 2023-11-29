@@ -1,17 +1,34 @@
-import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import Image from 'next/image'
-import Link from 'next/link'
-
+import { DataTable } from '@/app/artisan/[page]/prodects/components/data-table'
+import { ProductProvider } from '@/app/context/ProductContext'
+import { useAllProducts } from '@/app/hooks/prodect-hook'
+import { Toaster } from "@/components/ui/toaster"
+import { columns } from './components/columns'
+import CreateProduct from './components/create'
+import DeleteProduct from './components/delete'
+import UpdateProduct from './components/update'
 export default function Products() {
 
+  const { data: products, isLoading, isError } = useAllProducts();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading products</div>;
+  }
 
   return (
     <>
-      <div className="h-screen w-screen">
-
-        <p>Prodect</p>
-      </div>
+      <ProductProvider>
+        <div className="h-screen w-full">
+          <DataTable data={products!} columns={columns} />
+          <CreateProduct />
+          <UpdateProduct />
+          <DeleteProduct />
+       
+        </div>
+      </ProductProvider>
     </>
   )
 }

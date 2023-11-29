@@ -38,7 +38,8 @@ class OrderController extends Controller
     
     public function index()
     {
-        $orders = Order::all();
+       
+        $orders = Order::with(['consumer', 'products','products.images', 'deliveryPersonnel'])->get();
         return response()->json(['orders' => $orders]);
     }
 

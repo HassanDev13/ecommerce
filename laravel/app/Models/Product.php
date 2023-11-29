@@ -111,9 +111,9 @@ class Product extends Model
         return $this->belongsTo(Artisan::class);
     }
 
-    public function orderProducts()
+    public function orders()
     {
-        return $this->hasMany(OrderProduct::class);
+        return $this->belongsToMany(Order::class, 'order_products');
     }
     public function images()
     {

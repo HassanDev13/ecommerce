@@ -38,8 +38,8 @@ class RegisteredUserController extends Controller
      *             @OA\Property(property="phone_number", type="string", maxLength=20),
      *             @OA\Property(property="user_type", type="string", enum={"Consumer", "Artisan", "DeliveryPersonnel"}),
      *             @OA\Property(property="business_name", type="string", maxLength=255, example="Artisan Business Name", description="Required if user_type is Artisan"),
-     *             @OA\Property(property="open_at", type="string", maxLength=255, example="9:00 AM", description="Required if user_type is Artisan"),
-     *             @OA\Property(property="close_at", type="string", maxLength=255, example="5:00 PM", description="Required if user_type is Artisan"),
+     *             @OA\Property(property="open_at", type="string", maxLength=255, example="9:00", description="Required if user_type is Artisan"),
+     *             @OA\Property(property="close_at", type="string", maxLength=255, example="13:00", description="Required if user_type is Artisan"),
      *             @OA\Property(property="availability", type="boolean", example=true , description="Required if user_type is DeliveryPersonnel")
      *         )
      *     ),
@@ -60,10 +60,6 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         try {
-            Log::info('This is an informational message.');
-
-
-
             $request->validate([
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -74,15 +70,22 @@ class RegisteredUserController extends Controller
                 'phone_number' => ['string', 'max:20'],
                 'user_type' => ['string', 'in:Consumer,Artisan,DeliveryPersonnel'],
                 'business_name' => ['required_if:user_type,Artisan', 'string', 'max:255', 'nullable'],
-                'open_at' => ['required_if:user_type,Artisan', 'string', 'max:255', 'nullable'],
-                'close_at' => ['required_if:user_type,Artisan', 'string', 'max:255', 'nullable'],
+                'open_at' => [
+                    'required_if:user_type,Artisan',
+                    'date_format:H:i',
+                    'nullable'
+                ],
+                'close_at' => [
+                    'required_if:user_type,Artisan',
+                    'date_format:H:i',
+                    'nullable'
+                ],
                 'availability' => ['required_if:user_type,DeliveryPersonnel', 'boolean', 'nullable'],
             ]);
 
 
             // Mass assignment using only fillable attributes
             $user = User::create([
-
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'first_name' => $request->first_name,
@@ -91,8 +94,6 @@ class RegisteredUserController extends Controller
                 'address' => $request->address,
                 'phone_number' => $request->phone_number,
                 'user_type' => $request->user_type,
-
-
             ]);
             // 'user_type' => ['string', 'in:Consumer,Artisan,DeliveryPersonnel'],
             $userId = $user->id;

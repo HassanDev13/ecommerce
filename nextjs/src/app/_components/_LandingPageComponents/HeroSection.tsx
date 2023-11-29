@@ -1,10 +1,7 @@
 // components/landingpagecomponents/_components/HeroSection.tsx
 import Image from 'next/image';
-import heroSection from "/home/redaunix/ecommerce/nextjs/public/HeroSection.svg";
-import icon1 from "/home/redaunix/ecommerce/nextjs/public/Icon1.svg";
-import icon2 from "/home/redaunix/ecommerce/nextjs/public/Icon2.svg";
-import icon3 from "/home/redaunix/ecommerce/nextjs/public/Icon3.svg";
-import icon4 from "/home/redaunix/ecommerce/nextjs/public/Icon4.svg";
+
+
 
 const HeroSection: React.FC = () => {
   return (
@@ -12,10 +9,10 @@ const HeroSection: React.FC = () => {
       <div className="grid grid-cols-3 gap-4 mb-8">
         <div className="col-span-1">
           <div className="mb-2">
-            <Image className='ml-20' src={icon1} alt="Your Image" width={100} height={100} />
+            <Image className='ml-20' src={"Icon1.svg"} alt="Your Image" width={100} height={100} />
           </div>
           <div>
-            <Image className='ml-20 mt-20 ' src={icon2} alt="Your Image" width={100} height={100} />
+            <Image className='ml-20 mt-20 ' src={"Icon2.svg"} alt="Your Image" width={100} height={100} />
           </div>
         </div>
 
@@ -27,16 +24,16 @@ const HeroSection: React.FC = () => {
 
         <div className="col-span-1">
           <div className="mb-2 ">
-            <Image className='ml-20' src={icon3} alt="Your Image" width={100} height={100} />
+            <Image className='ml-20' src={"Icon3.svg"} alt="Your Image" width={100} height={100} />
           </div>
           <div>
-            <Image className='ml-20 mt-20 ' src={icon4} alt="Yummy!" width={100} height={100} />
+            <Image className='ml-20 mt-20 ' src={"Icon4.svg"} alt="Yummy!" width={100} height={100} />
           </div>
         </div>
       </div>
 
       <div className="flex justify-center items-center">
-        <Image src={heroSection} alt="yummy!" width={1000} height={1000} />
+        <Image src={"HeroSection.svg"} alt="yummy!" width={1000} height={1000} />
       </div>
     </section>
   );

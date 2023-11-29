@@ -1,14 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
-import CTAicon from '/home/redaunix/ecommerce/nextjs/public/CTAicon.svg';
-import CTAicon2 from '/home/redaunix/ecommerce/nextjs/public/CTAicon2.svg';
+
 
 const CTASection: React.FC = () => {
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-yellow-50	">
       <div className="hidden md:block p-6 ml-20">
         <Image
-          src={CTAicon}
+          src={"CTAicon.svg"}
           alt="Yummy!"
           width={300}
           height={200}
@@ -21,7 +20,7 @@ const CTASection: React.FC = () => {
         Embark on a savory journey, exploring rich and robust flavors in every bite. From traditional classics to global cuisines, discover the best in savory delights. Indulge your taste buds with carefully crafted dishes, each bite a symphony of culinary excellence. Uncover the secrets of savory perfection and savor the extraordinary in every culinary adventure
         </p>
         <Image
-          src={CTAicon2} 
+          src={"CTAicon2.svg"} 
           alt="Yummy!"
           width={300}
           height={200}

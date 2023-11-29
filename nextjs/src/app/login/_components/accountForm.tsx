@@ -47,7 +47,6 @@ interface FormData {
 interface ChildComponentProps {
     login: (loginData: any) => void;
     register: (registerData: any) => void;
-
 }
 
 export function AccountForm({ formType, accountType, redirectPath }: FormData) {

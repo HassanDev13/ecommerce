@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Image;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -39,7 +40,7 @@ class ProductController extends Controller
     public function index()
     {
         // Fetch all products with their associated relationships
-        $products = Product::with(['images', 'ratings', 'artisan', 'orderProducts'])->get();
+        $products = Product::with(['images', 'ratings', 'artisan', 'orders'])->get();
         // Return the products with related data
         return response()->json(['products' => $products], 200);
         // $products = Product::all();
@@ -232,5 +233,33 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->json(['message' => 'Product deleted successfully']);
+    }
+
+   
+    public function upload(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'productId' => 'required|integer',
+        ]);
+
+        $productId = $request->input('productId');
+
+        // Process and store the images
+        $uploadedImages = [];
+        foreach ($request->file('images') as $image) {
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('images', $imageName, 'public');
+            $uploadedImages[] = $imageName;
+
+            // Save the image information to the database
+            Image::create([
+                'product_id' => $productId,
+                'path' => $imageName,
+            ]);
+        }
+
+        return response()->json(['message' => 'Images uploaded successfully', 'images' => $uploadedImages]);
     }
 }

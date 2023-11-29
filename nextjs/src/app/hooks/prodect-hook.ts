@@ -1,0 +1,61 @@
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import productService from "../services/prodect-service";
+
+
+const useAllProducts = () => {
+  return useQuery<Product[]>("products", productService.getAllProducts);
+};
+
+const useProductById = (productId: string) => {
+  return useQuery<Product>(["products", productId], () => productService.getProductById(productId));
+};
+
+const useCreateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (InsertProduct: InsertProduct) => {
+      return productService.addProduct(InsertProduct);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("products");
+      },
+    }
+  );
+};
+
+const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ productId, updatedProductData }: { productId: string; updatedProductData: Partial<Product> }) => {
+      return productService.updateProduct(productId, updatedProductData);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("products");
+      },
+    }
+  );
+};
+
+const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (productId: string) => {
+      return productService.deleteProduct(productId);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("products");
+      },
+    }
+  );
+};
+
+export {
+  useCreateProduct,
+  useUpdateProduct,
+  useProductById,
+  useAllProducts,
+  useDeleteProduct,
+};
