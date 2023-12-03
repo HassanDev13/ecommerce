@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 
 import {
     Form,
@@ -57,7 +56,7 @@ export function AccountForm({ formType, accountType, redirectPath }: FormData) {
             {
                 formType === 'login' ?
                     <LoginForm login={login} register={register} /> :
-                    <Register login={login} register={register} />
+                    <Register login={login} register={register} /> 
             }
 
         </div>
@@ -94,15 +93,15 @@ function LoginForm({ login, register }: ChildComponentProps) {
 
     return (
         <Form {...formlogin}>
-            <form onSubmit={formlogin.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={formlogin.handleSubmit(onSubmit)} className="space-y-6 ">
                 <FormField
                     control={formlogin.control}
                     name="email"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="px-10 text-left">
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input placeholder="name@gmail.com" {...field} />
+                                <Input  placeholder="name@gmail.com" {...field} />
                             </FormControl>
 
 
@@ -114,10 +113,10 @@ function LoginForm({ login, register }: ChildComponentProps) {
                     control={formlogin.control}
                     name="password"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="px-10 text-left">
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input placeholder="*****" {...field} />
+                                <Input  placeholder="*****" {...field} />
                             </FormControl>
 
 
@@ -125,7 +124,7 @@ function LoginForm({ login, register }: ChildComponentProps) {
                         </FormItem>
                     )}
                 />
-                <Button className="w-full" type="submit">Submit</Button>
+                <button className="p-2 ml-10  w-[470px]     bg-yellow-400 text-black font-bold rounded-lg" type="submit">Login</button>
             </form>
         </Form>
     )
@@ -169,7 +168,7 @@ function Register({ login, register }: ChildComponentProps) {
 
     return (
         <Form {...formRegister}>
-            <form onSubmit={formRegister.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={formRegister.handleSubmit(onSubmit)} className="space-y-4 ">
                 <FormField
                     control={formRegister.control}
                     name="email"
@@ -272,7 +271,7 @@ function Register({ login, register }: ChildComponentProps) {
                     )}
                 />
 
-                <Button className="w-full" type="submit">Submit</Button>
+                <button className="w-full" type="submit">Register</button>
             </form>
         </Form>
 

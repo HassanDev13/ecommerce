@@ -29,7 +29,11 @@ use App\Http\Controllers\OrderProductController;
 */
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+    // Retrieve the authenticated user with relationships
+    $user = $request->user()->load(['deliveryPersonnel', 'artisan', 'consumer']);
+
+    // Return the user data along with related models
+    return $user;
 });
       // sail php artisan make:controller RatingController --api
 
