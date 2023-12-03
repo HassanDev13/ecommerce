@@ -1063,10 +1063,10 @@
                                     "type": {
                                         "type": "string",
                                         "enum": [
-                                            "Sugar",
-                                            "Salt"
+                                            "sugar",
+                                            "salt"
                                         ],
-                                        "example": "Sugar"
+                                        "example": "sugar"
                                     },
                                     "child_type": {
                                         "type": "string",
@@ -1095,6 +1095,34 @@
                     },
                     "422": {
                         "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/products/index_by_artisan": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get list of products by artisan",
+                "description": "Returns list of products by artisan",
+                "operationId": "getProductsListByArtisan",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No products found"
                     }
                 }
             }

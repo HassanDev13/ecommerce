@@ -26,10 +26,4 @@ sail php artisan make:seeder ProductSeeder
 sail php artisan make:factory ProductFactory
 sail php artisan db:seed --class=ProductSeeder
 
-  sail php artisan make:seeder ConsumerSeeder && sail php artisan make:factory  ConsumerFactory
-  sail php artisan make:seeder DeliveryPersonnelSeeder && sail php artisan make:factory  DeliveryPersonnelFactory
-   sail php artisan make:seeder ImageSeeder && sail php artisan make:factory ImageFactory
-    sail php artisan make:seeder OrderSeeder && sail php artisan make:factory  OrderFactory
-     sail php artisan make:seeder OrderProdectSeeder && sail php artisan make:factory  OrderProdectFactory
-      sail php artisan make:seeder RatingSeeder && sail php artisan make:factory  RatingFactory
   

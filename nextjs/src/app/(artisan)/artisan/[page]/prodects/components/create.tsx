@@ -1,5 +1,5 @@
 
-import { useProductContext } from "../../../../../../context/ProductContext";
+import { useProductContext } from "../../../../../../../context/ProductContext";
 import {
     Sheet,
     SheetContent,
@@ -12,7 +12,7 @@ import { z } from "zod";
 import {
     Form,
     FormControl,
-    FormDescription,
+  
     FormField,
     FormItem,
     FormLabel,
@@ -21,10 +21,19 @@ import {
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useAuth } from "../../../../../../hooks/auth";
+import { useAuth } from "../../../../../../../hooks/auth";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { toast } from "@/components/ui/use-toast";
+import { useState } from "react";
+import { toast, useToast } from "@/components/ui/use-toast";
+import { useCreateProduct } from "../../../../../../../hooks/prodect-hook";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
 
 const productSchema = z.object({
     name: z.string(),
@@ -35,32 +44,20 @@ const productSchema = z.object({
     child_type: z.string()
 });
 
-export default function UpdateProduct() {
+export default function CreateProduct() {
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
     const { user } = useAuth({ middleware: 'auth' });
-
-    const { isUpdateSheetOpen, setIsUpdateProductOpen, product } = useProductContext();
-
-    useEffect(() => {
-        formAct.reset({
-            name: product?.name || '',
-            description: product?.description || '',
-            price_per_piece: product?.price_per_piece || 0,
-            min_order: product?.min_order || 0,
-            type: product?.type || '',
-            child_type: product?.child_type || '',
-        })
-    }, [product]);
-
+    const craeteProduct = useCreateProduct();
+    const { isCreateSheetOpen, setIsCreateProductOpen } = useProductContext();
     const formAct = useForm<z.infer<typeof productSchema>>({
         resolver: zodResolver(productSchema),
         defaultValues: {
-            name: '',
-            description: '',
+            name: "",
+            description: "",
             price_per_piece: 0,
             min_order: 0,
-            type: '',
-            child_type: '',
+            type: "",
+            child_type: "",
         },
     });
 
@@ -70,24 +67,41 @@ export default function UpdateProduct() {
             // Convert FileList to array and update state
             const imagesArray = Array.from(files);
             setSelectedImages(imagesArray);
+
         }
     };
 
     async function onSubmit(values: z.infer<typeof productSchema>) {
-        console.log(values, user?.id);
-        console.log('Selected Images:', selectedImages);
-        toast({
-            title: "Product updated Successfully",
-            description: "Prodect updated Successfully",
-        })
+
+        if (user && user.id) {
+            console.log(values, user.id);
+            console.log('Selected Images:', selectedImages);
+
+            const formdata: InsertProduct = { ...values, user_id: user.id }
+            craeteProduct.mutate(formdata, {
+                onSuccess: () => {
+                    setIsCreateProductOpen(false);
+                    toast({
+                        title: "Product created Successfully",
+                        description: "Prodect created Successfully",
+                    })
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
+
+            });
+
+        }
+
     }
 
     return (
-        <Sheet open={isUpdateSheetOpen} onOpenChange={(open) => setIsUpdateProductOpen(open)}>
-            <SheetContent className="w-[600px]">
+        <Sheet open={isCreateSheetOpen} onOpenChange={(open) => setIsCreateProductOpen(open)}>
+            <SheetContent className="w-[800px]">
                 <SheetHeader >
-                    <SheetTitle>Update product</SheetTitle>
-                </SheetHeader>             
+                    <SheetTitle>Create new product</SheetTitle>
+                </SheetHeader>
                 <Form {...formAct}>
                     <form onSubmit={formAct.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
@@ -111,7 +125,11 @@ export default function UpdateProduct() {
                                 <FormItem>
                                     <FormLabel>Description</FormLabel>
                                     <FormControl>
-                                        <Input type="text" placeholder="Description" {...field} />
+                                        <Textarea
+                                            placeholder="Tell us a little bit about yourself"
+                                            className="resize-none"
+                                            {...field}
+                                        />
                                     </FormControl>
 
 
@@ -158,20 +176,63 @@ export default function UpdateProduct() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Type</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Type" {...field} />
-                                    </FormControl>
-
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a Type" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="sugar">Sugar</SelectItem>
+                                            <SelectItem value="salt">Salt</SelectItem>
+                            
+                                        </SelectContent>
+                                    </Select>
 
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        
+                         <FormField
+                            control={formAct.control}
+                            name="child_type"
+
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Type</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a Child type" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="sugar">Pizza</SelectItem>
+                                            <SelectItem value="salt">Pizza 2</SelectItem>
+                            
+                                        </SelectContent>
+                                    </Select>
+
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {/* Image upload field */}
+                        <FormItem>
+                            <FormLabel>Upload Images</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleImageChange}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
                         <Button className="w-full" type="submit">Submit</Button>
                     </form>
                 </Form>
-
             </SheetContent>
         </Sheet>
     )

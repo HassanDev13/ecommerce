@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->boolean('availability')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

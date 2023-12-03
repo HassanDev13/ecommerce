@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @OA\Schema(
  *      schema="DeliveryPersonnel",
@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DeliveryPersonnel extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $fillable = ['user_id','availability'];
     public function user()
     {

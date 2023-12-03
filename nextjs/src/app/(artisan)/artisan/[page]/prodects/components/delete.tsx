@@ -1,5 +1,5 @@
 
-import { useProductContext } from "../../../../../../context/ProductContext";
+import { useProductContext } from "../../../../../../../context/ProductContext";
 import {
     Sheet,
     SheetContent,
@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useAuth } from "../../../../../../hooks/auth";
+import { useAuth } from "../../../../../../../hooks/auth";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import {
@@ -36,17 +36,29 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { toast } from "@/components/ui/use-toast";
+import { useDeleteProduct } from "../../../../../../../hooks/prodect-hook";
 
 export default function DeleteProduct() {
     const { isDeleteDialogOpen, setIsDeleteDialogOpen } = useProductContext();
+    const deleteProduct = useDeleteProduct();
     const { product } = useProductContext();
-    const deleteProduct = () => {
+    const deleteBtn = () => {
         if (product) {
             console.log('delete product', product.id);
-            toast({
-                title: "Product deleted Successfully",
-                description: "Prodect deleted Successfully",
-            })
+            deleteProduct.mutate(product.id, {
+                onSuccess: () => {
+                    setIsDeleteDialogOpen(false);
+                    toast({
+                        title: "Product deleted Successfully",
+                        description: "Prodect deleted Successfully",
+                    })
+                }
+                , onError: () => {
+                    setIsDeleteDialogOpen(false);
+
+                }
+            });
+
         }
     }
     return (
@@ -61,7 +73,7 @@ export default function DeleteProduct() {
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        onClick={deleteProduct}
+                        onClick={deleteBtn}
                     >Continue</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

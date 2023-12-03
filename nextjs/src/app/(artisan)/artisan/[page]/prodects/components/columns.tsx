@@ -1,6 +1,5 @@
 "use client"
 
-import { useProductContext } from "../../../../../../context/ProductContext"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -15,6 +14,7 @@ import {
     ColumnDef
 } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { useProductContext } from "../../../../../../../context/ProductContext"
 
 
 export const columns: ColumnDef<Product>[] = [
@@ -45,6 +45,13 @@ export const columns: ColumnDef<Product>[] = [
         header: "Name",
         cell: ({ row }) => (
             <div className="capitalize">{row.getValue("name")}</div>
+        ),
+    },
+    {
+        accessorKey: "type",
+        header: "Type",
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue("type")}</div>
         ),
     },
     {

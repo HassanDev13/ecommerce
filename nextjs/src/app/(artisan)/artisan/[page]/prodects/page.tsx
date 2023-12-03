@@ -1,12 +1,14 @@
-import { DataTable } from '@/app/artisan/[page]/prodects/components/data-table'
-import { ProductProvider } from '../../../../../context/ProductContext'
+
 
 import { Toaster } from "@/components/ui/toaster"
 import { columns } from './components/columns'
 import CreateProduct from './components/create'
 import DeleteProduct from './components/delete'
 import UpdateProduct from './components/update'
-import { useAllProducts } from '../../../../../hooks/prodect-hook'
+import { useAllProducts } from "../../../../../../hooks/prodect-hook"
+import { ProductProvider } from "../../../../../../context/ProductContext"
+import { DataTable } from "./components/data-table"
+
 export default function Products() {
 
   const { data: products, isLoading, isError } = useAllProducts();

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->time('open_at');
             $table->time('close_at');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

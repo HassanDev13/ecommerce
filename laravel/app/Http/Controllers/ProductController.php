@@ -47,6 +47,43 @@ class ProductController extends Controller
         // return response()->json(['products' => $products]);
     }
 
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     *
+     * @OA\Get(
+     *      path="/api/products/index_by_artisan",
+     *      operationId="getProductsListByArtisan",
+     *      tags={"Products"},
+     *      summary="Get list of products by artisan",
+     *      description="Returns list of products by artisan",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Product"))
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="No products found"
+     *      )
+     * )
+     */
+    public function index_by_artisan(Request $request)
+    {
+        $artisan = $request->user();
+        
+        if (empty($artisan)) {
+            return response()->json(['message' => 'Artisan not found'], 404);
+        }
+    
+        // Use Laravel's Eloquent relationship to fetch products associated with an artisan
+        $products = $artisan->products()->with(['images', 'ratings', 'orders'])->get();
+    
+        return response()->json(['products' => $products], 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -67,7 +104,7 @@ class ProductController extends Controller
      *         @OA\Property(property="description", type="string", example="Product Description"),
      *         @OA\Property(property="price_per_piece", type="number", format="float", example=10.99),
      *         @OA\Property(property="min_order", type="integer", example=5),
-     *         @OA\Property(property="type", type="string", enum={"Sugar", "Salt"}, example="Sugar"),
+     *         @OA\Property(property="type", type="string", enum={"sugar", "salt"}, example="sugar"),
      *         @OA\Property(property="child_type", type="string", example="Child Type"),
      *         @OA\Property(property="user_id", type="integer", example=1)
      * 
@@ -96,7 +133,7 @@ class ProductController extends Controller
             'description' => 'required|string',
             'price_per_piece' => 'required|numeric',
             'min_order' => 'required|integer',
-            'type' => 'required|string|in:Sugar,Salt',
+            'type' => 'required|string|in:sugar,salt',
             'child_type' => 'required|string',
             'user_id' => 'required|integer'
         ]);
@@ -187,7 +224,7 @@ class ProductController extends Controller
             'description' => 'string',
             'pricePerPiece' => 'numeric',
             'minOrder' => 'integer',
-            'type' => 'string|in:Sugar,Salt',
+            'type' => 'string|in:sugar,salt',
             'childType' => 'string',
             'images' => 'json',
         ]);

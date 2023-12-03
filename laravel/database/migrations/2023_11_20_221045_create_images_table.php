@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained(); // Assuming a foreign key relationship with the products table
             $table->string('path');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

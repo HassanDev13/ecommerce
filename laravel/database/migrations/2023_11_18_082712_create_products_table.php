@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('type', ['sugar', 'salt']);
             $table->string('child_type');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

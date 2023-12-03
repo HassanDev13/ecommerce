@@ -1,7 +1,6 @@
 "use client"
 
-
-import { useAuth } from "../../../hooks/auth"
+import { useAuth } from "../../../../hooks/auth"
 
 
 

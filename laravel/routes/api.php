@@ -40,5 +40,6 @@ Route::apiResource('artisans', ArtisanController::class);
 Route::apiResource('deliveryPersonnels', DeliveryPersonnelController::class);
 Route::apiResource('consumers', ConsumerController::class);
 Route::apiResource('orders', OrderController::class);
+Route::get('/products/index_by_artisan', [ProductController::class, 'index_by_artisan']);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('OrderProducts', OrderProductController::class);

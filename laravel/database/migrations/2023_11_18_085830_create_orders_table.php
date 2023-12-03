@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('consumer_id')->constrained();
             $table->foreignId('delivery_personnel_id')->nullable()->constrained();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

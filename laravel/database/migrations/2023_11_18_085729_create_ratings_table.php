@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->foreignId('product_id')->nullable()->constrained();
             $table->foreignId('artisan_id')->nullable()->constrained();
             $table->timestamps();
+            $table->softDeletes();
 
             // // Foreign keys
             // $table->foreign('delivery_personnel_id')->references('id')->on('delivery_personnels')->onDelete('cascade');
