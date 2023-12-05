@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation'
 import axios from '../services/axios'
 
 
+
+
 export declare type AuthMiddleware = 'auth' | 'guest'
 
 export interface IUseAuth {
@@ -20,15 +22,6 @@ export interface IApiRequest {
     [key: string]: any
 }
 
-export interface User {
-    id?: number
-    name?: string
-    email?: string
-    email_verified_at?: string
-    must_verify_email?: boolean // this is custom attribute
-    created_at?: string
-    updated_at?: string
-}
 
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     const router = useRouter()
@@ -81,16 +74,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
         window.location.pathname = '/login'
     }
 
-    useEffect(() => {
-        if (middleware === 'guest' && redirectIfAuthenticated && user)
-            router.push(redirectIfAuthenticated)
-        if (
-            window.location.pathname === '/verify-email' &&
-            user?.email_verified_at
-        )
-            router.push(redirectIfAuthenticated!)
-        if (middleware === 'auth' && error) logout()
-    }, [user, error])
+   
 
     return {
         user,

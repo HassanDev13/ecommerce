@@ -1270,7 +1270,7 @@
                                         "type": "array",
                                         "items": {
                                             "description": "Image file (jpeg, png, jpg, gif, svg) - Max size: 2048 KB",
-                                            "type": "file",
+                                            "type": "string",
                                             "format": "binary"
                                         }
                                     }

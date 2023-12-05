@@ -31,10 +31,13 @@ use App\Http\Controllers\OrderProductController;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     // Retrieve the authenticated user with relationships
     $user = $request->user()->load(['deliveryPersonnel', 'artisan', 'consumer']);
-
+    //
     // Return the user data along with related models
     return $user;
 });
+// Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+//     return $request->user();
+// });
       // sail php artisan make:controller RatingController --api
 
 
@@ -44,7 +47,8 @@ Route::apiResource('artisans', ArtisanController::class);
 Route::apiResource('deliveryPersonnels', DeliveryPersonnelController::class);
 Route::apiResource('consumers', ConsumerController::class);
 Route::apiResource('orders', OrderController::class);
-Route::get('/products/index_by_artisan', [ProductController::class, 'index_by_artisan']);
-Route::post('/products/upload', [ProductController::class, 'upload']);
+// Route::get('/products/index_by_artisan', [ProductController::class, 'index_by_artisan']);
+// Route::post('/products/upload', [ProductController::class, 'upload']);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('OrderProducts', OrderProductController::class);
+

@@ -14,12 +14,13 @@ import {
 } from "@/components/ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
+import { useRouter } from 'next/navigation'
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 import * as z from "zod"
 import { IApiRequest, useAuth } from "../../../../../hooks/auth"
 import { Select } from "@/components/ui/select"
+import { useEffect } from "react"
 
 const userSchemaRegister = z.object({
     name: z.string().min(2).max(255),
@@ -48,38 +49,52 @@ interface ChildComponentProps {
     register: (registerData: any) => void;
 }
 
+
 export function AccountForm({ formType, accountType, redirectPath }: FormData) {
+    const router = useRouter();
+    const { login, register, user, logout } = useAuth({ middleware: 'guest'});
 
-    const { login, register } = useAuth({ middleware: 'guest', redirectIfAuthenticated: redirectPath })
-    return (
-        <div>
-            {
-                formType === 'login' ?
-                    <LoginForm login={login} register={register} /> :
-                    <Register login={login} register={register} /> 
+   // get user data in real time 
+    useEffect(() => {
+        userFlow();
+    }, [user])
+    const userFlow = () => {
+        if (user) {
+            if(user.user_type == 'Consumer'){
+                // router.push('/');
+                console.log("user", user?.consumer);
+                router.push('/');
+            }else if(user.user_type == 'Artisan'){
+                // router.push('/artisan');
+                console.log("user", user?.artisan);
+                router.push('/artisan/products');
+            }else if(user.user_type == 'DeliveryPersonnel'){
+                // router.push('/delivery');
+                router.push('/delivery');
+                console.log("user", user?.deliveryPersonnel);
             }
-
-        </div>
-    )
-}
-
-function LoginForm({ login, register }: ChildComponentProps) {
-
+        }
+    }
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const requestData: IApiRequest = {
+
             setErrors: (errors) => {
                 Object.values(errors).forEach((error) => {
                     console.log("errors when login ", error[0])
                 });
-
-            }, // You might need to handle errors here
+            },
+            // You might need to handle errors here
             setStatus: (status) => {
-                console.log("login good" + status)
+                console.log("login good" + status);
+                console.log("user", user?.address);
+                userFlow();
+
             }, // You might need to handle status here
             ...values,
             // Add other properties as needed by IApiRequest
         };
-        await login(requestData)
+        await login(requestData);
+
 
     }
 
@@ -92,43 +107,50 @@ function LoginForm({ login, register }: ChildComponentProps) {
     });
 
     return (
-        <Form {...formlogin}>
-            <form onSubmit={formlogin.handleSubmit(onSubmit)} className="space-y-6 ">
-                <FormField
-                    control={formlogin.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem className="px-10 text-left">
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input  placeholder="name@gmail.com" {...field} />
-                            </FormControl>
+        <div>
+            {
+                <Form {...formlogin}>
+                    <form onSubmit={formlogin.handleSubmit(onSubmit)} className="space-y-6 ">
+                        <FormField
+                            control={formlogin.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem className="px-10 text-left">
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="name@gmail.com" {...field} />
+                                    </FormControl>
 
 
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={formlogin.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem className="px-10 text-left">
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                                <Input  placeholder="*****" {...field} />
-                            </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={formlogin.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem className="px-10 text-left">
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="*****" {...field} />
+                                    </FormControl>
 
 
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <button className="p-2 ml-10  w-[470px]     bg-yellow-400 text-black font-bold rounded-lg" type="submit">Login</button>
-            </form>
-        </Form>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <button className="p-2 ml-10  w-[470px]     bg-yellow-400 text-black font-bold rounded-lg" type="submit">Login</button>
+                    </form>
+                </Form>
+            }
+
+        </div>
     )
 }
+
+
 
 function Register({ login, register }: ChildComponentProps) {
 
