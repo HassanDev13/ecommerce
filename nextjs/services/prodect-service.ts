@@ -26,6 +26,21 @@ const productService = {
   deleteProduct: async (productId: string): Promise<void> => {
     await axios.delete(`${API_BASE_URL}/${productId}`);
   },
+
+  uploadImages : async (productId: string, images: File[]): Promise<void> => {
+    const formData = new FormData();
+    images.forEach((image) => {
+      formData.append("images", image);
+    });
+
+    await axios.post(`${API_BASE_URL}/upload?productId=${productId}`, formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Set the content type for form data
+      }
+    });
+  }
+
 };
 
 export default productService;

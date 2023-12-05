@@ -25,7 +25,7 @@ import { useAuth } from "../../../../../../../hooks/auth";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast, useToast } from "@/components/ui/use-toast";
-import { useCreateProduct } from "../../../../../../../hooks/prodect-hook";
+import { useCreateProduct,useUploadImages } from "../../../../../../../hooks/prodect-hook";
 import { Textarea } from "@/components/ui/textarea";
 import {
     Select,
@@ -48,6 +48,7 @@ export default function CreateProduct() {
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
     const { user } = useAuth({ middleware: 'auth' });
     const craeteProduct = useCreateProduct();
+    const uploadImages = useUploadImages();
     const { isCreateSheetOpen, setIsCreateProductOpen } = useProductContext();
     const formAct = useForm<z.infer<typeof productSchema>>({
         resolver: zodResolver(productSchema),
@@ -81,6 +82,17 @@ export default function CreateProduct() {
             craeteProduct.mutate(formdata, {
                 onSuccess: () => {
                     setIsCreateProductOpen(false);
+                    uploadImages.mutate({ productId: "3", images: selectedImages }, {
+                        onSuccess: () => {
+                            toast({
+                                title: "Images uploaded Successfully",
+                                description: "Images uploaded Successfully",
+                            })
+                        },
+                        onError: (error) => {
+                            console.log(error);
+                        }
+                    });
                     toast({
                         title: "Product created Successfully",
                         description: "Prodect created Successfully",

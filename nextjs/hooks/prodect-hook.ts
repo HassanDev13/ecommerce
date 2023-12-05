@@ -53,10 +53,32 @@ const useDeleteProduct = () => {
   );
 };
 
+const useUploadImages = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (data: { productId: string; images: File[] }) => {
+      const { productId, images } = data;
+      return  await productService.uploadImages(productId, images);
+    },
+    {
+      onSuccess: () => { 
+        // Invalidate the "products" query on success
+        queryClient.invalidateQueries('products');
+      },
+      onError: (error) => {
+        // Handle errors here
+        console.error('Error uploading images:', error);
+      },
+    }
+  );
+};
+
 export {
   useCreateProduct,
   useUpdateProduct,
   useProductById,
   useAllProducts,
   useDeleteProduct,
+  useUploadImages
 };

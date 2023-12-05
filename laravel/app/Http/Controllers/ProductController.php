@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Image;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @group Products
@@ -73,14 +76,14 @@ class ProductController extends Controller
     public function index_by_artisan(Request $request)
     {
         $artisan = $request->user();
-        
+
         if (empty($artisan)) {
             return response()->json(['message' => 'Artisan not found'], 404);
         }
-    
+
         // Use Laravel's Eloquent relationship to fetch products associated with an artisan
         $products = $artisan->products()->with(['images', 'ratings', 'orders'])->get();
-    
+
         return response()->json(['products' => $products], 200);
     }
 
@@ -272,31 +275,98 @@ class ProductController extends Controller
         return response()->json(['message' => 'Product deleted successfully']);
     }
 
-   
+    /**
+     * Upload images for a specific product.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     *
+     * @OA\Post(
+     *      path="/api/products/upload",
+     *      operationId="uploadImages",
+     *      tags={"Upload"},
+     *      summary="Upload images for a specific product",
+     *      description="Uploads images for a specific product and saves information to the database.",
+     *      @OA\Parameter(
+     *          name="productId",
+     *          in="query",
+     *          required=true,
+     *          description="ID of the product for which images are being uploaded",
+     *          @OA\Schema(type="integer")
+     *      ),
+       *      @OA\RequestBody(
+     *          required=true,
+     *          description="Images to be uploaded",
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"images"},
+     *                  @OA\Property(
+     *                      property="images",
+     *                      type="array",
+     *                      @OA\Items(
+     *                          type="string",
+     *                          format="binary",
+     *                          description="Image file (jpeg, png, jpg, gif, svg) - Max size: 2048 KB"
+     *                      )
+     *                  ),
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Images uploaded successfully",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="message", type="string", example="Images uploaded successfully"),
+     *              @OA\Property(property="images", type="array", @OA\Items(type="string", example="timestamp_image.jpg"))
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="error", type="string", example="Validation error details")
+     *          )
+     *      ),
+     * )
+     */
     public function upload(Request $request)
     {
-        // Validate the request
-        $request->validate([
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'productId' => 'required|integer',
-        ]);
-
-        $productId = $request->input('productId');
-
-        // Process and store the images
-        $uploadedImages = [];
-        foreach ($request->file('images') as $image) {
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('images', $imageName, 'public');
-            $uploadedImages[] = $imageName;
-
-            // Save the image information to the database
-            Image::create([
-                'product_id' => $productId,
-                'path' => $imageName,
+       
+        try {
+            $validator = \Validator::make($request->all(), [
+                'images' => 'required'
+            ])->validate();
+    
+            $uploadFolder = 'images';
+            $productId = $request->query('productId'); // Retrieve productId from the query string
+          
+            foreach ($request->file('') as $imagefile) {
+                if ($imagefile) {
+                    $image_uploaded_path = $imagefile->store($uploadFolder, 'public');
+                    $image = new Image;
+                    $image->product_id = $productId;
+                    $image->path = $image_uploaded_path;
+                    $image->save();
+                } else {
+                    return response()->json([
+                        'message' => 'Images error',
+                    ], 422);
+                }
+            }
+    
+            return response()->json([
+                "success", " files uploaded successfully"    
             ]);
+    
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        return response()->json(['message' => 'Images uploaded successfully', 'images' => $uploadedImages]);
     }
+
 }
