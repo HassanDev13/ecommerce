@@ -294,7 +294,7 @@ class ProductController extends Controller
      *          description="ID of the product for which images are being uploaded",
      *          @OA\Schema(type="integer")
      *      ),
-       *      @OA\RequestBody(
+     *      @OA\RequestBody(
      *          required=true,
      *          description="Images to be uploaded",
      *          @OA\MediaType(
@@ -335,38 +335,50 @@ class ProductController extends Controller
      */
     public function upload(Request $request)
     {
-       
+
         try {
-            $validator = \Validator::make($request->all(), [
-                'images' => 'required'
-            ])->validate();
-    
-            $uploadFolder = 'images';
-            $productId = $request->query('productId'); // Retrieve productId from the query string
-          
-            foreach ($request->file('') as $imagefile) {
-                if ($imagefile) {
-                    $image_uploaded_path = $imagefile->store($uploadFolder, 'public');
-                    $image = new Image;
-                    $image->product_id = $productId;
-                    $image->path = $image_uploaded_path;
-                    $image->save();
-                } else {
-                    return response()->json([
-                        'message' => 'Images error',
-                    ], 422);
-                }
-            }
-    
-            return response()->json([
-                "success", " files uploaded successfully"    
+
+            $validatedData = $request->validate([
+                'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg', // Adjust validation rules for images
             ]);
-    
+
+            Log::info('Start');
+            $uploadFolder = 'images';
+
+            // Log the request
+            Log::info($request);
+
+            $productId = $request->query('productId'); // Retrieve productId from the query string
+            Log::info('Start ' . $productId);
+
+            // Ensure 'images' is present in the request and is an array
+            if ($request->hasFile('images') && is_array($request->file('images'))) {
+                foreach ($request->file('images') as $imagefile) {
+                    if ($imagefile) {
+                        $image_uploaded_path = $imagefile->store($uploadFolder, 'public');
+                        $image = new Image;
+                        $image->product_id = $productId;
+                        $image->path = $image_uploaded_path;
+                        $image->save();
+                    } else {
+                        return response()->json([
+                            'error' => 'Images error',
+                        ], 422);
+                    }
+                }
+
+                return response()->json([
+                    'success' => 'Files uploaded successfully',
+                ]);
+            } else {
+                return response()->json([
+                    'error' => 'Images not found in the request',
+                ], 422);
+            }
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 }

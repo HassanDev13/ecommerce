@@ -1,17 +1,14 @@
-'use client'
+"use client";
 
-import { Icons } from '@/components/ui/icons';
-import { useEffect, useState } from 'react';
-import Orders from './orders/page';
-import Products from './prodects/page';
+import { Icons } from "@/components/ui/icons";
+import { useEffect, useState } from "react";
+import Orders from "./orders/page";
+import Products from "./prodects/page";
 
-
-export default function page({ params }: { params: { page: string } }) {
- 
+export default function Page({ params }: { params: { page: string } }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-
     setIsLoading(false);
   }, []);
   const getChildren = (id: string): JSX.Element => {
@@ -37,5 +34,5 @@ export default function page({ params }: { params: { page: string } }) {
         )}
       </>
     </>
-  )
+  );
 }

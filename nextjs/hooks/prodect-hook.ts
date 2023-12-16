@@ -57,7 +57,7 @@ const useUploadImages = () => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (data: { productId: string; images: File[] }) => {
+    async (data: { productId: string; images: FileList }) => {
       const { productId, images } = data;
       return  await productService.uploadImages(productId, images);
     },

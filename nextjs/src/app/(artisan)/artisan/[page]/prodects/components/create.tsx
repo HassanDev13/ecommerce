@@ -45,7 +45,7 @@ const productSchema = z.object({
 });
 
 export default function CreateProduct() {
-    const [selectedImages, setSelectedImages] = useState<File[]>([]);
+    const [selectedImages, setSelectedImages] = useState<FileList>();
     const { user } = useAuth({ middleware: 'auth' });
     const craeteProduct = useCreateProduct();
     const uploadImages = useUploadImages();
@@ -64,12 +64,8 @@ export default function CreateProduct() {
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        if (files && files.length > 0) {
-            // Convert FileList to array and update state
-            const imagesArray = Array.from(files);
-            setSelectedImages(imagesArray);
-
-        }
+        if(!files) return;
+        setSelectedImages(files);
     };
 
     async function onSubmit(values: z.infer<typeof productSchema>) {
@@ -82,6 +78,14 @@ export default function CreateProduct() {
             craeteProduct.mutate(formdata, {
                 onSuccess: () => {
                     setIsCreateProductOpen(false);
+                    if(!selectedImages) {
+                        toast({
+                            title: "No Images uploaded",
+                            description: "Please Select images to upload",
+                        })
+                        return;
+                    
+                    };
                     uploadImages.mutate({ productId: "3", images: selectedImages }, {
                         onSuccess: () => {
                             toast({
