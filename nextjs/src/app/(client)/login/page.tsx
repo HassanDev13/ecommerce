@@ -5,12 +5,11 @@ import Image from 'next/image';
 import Ficon1 from '/public/Ficon1.svg';
 import { useAuth } from '../../../../hooks/auth';
 import React, { ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
 
-
-
-
+  
   return (
     <>
       <div className="grid grid-cols-2 gap-4 h-screen " >
@@ -24,7 +23,7 @@ export default function Page() {
 
             <div className='w-[550px]'>
               <p className="px-8 text-center text-sm text-muted-foreground">
-                Don't have an account yet?{" "}
+                Dont have an account yet?{" "}
                 <Link
                   href="/register"
                   className="underline underline-offset-4 hover:text-primary"

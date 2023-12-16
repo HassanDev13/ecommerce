@@ -1,211 +1,384 @@
-"use client"
-import React, { useState } from 'react';
-import Image from 'next/image';
-import Ficon1 from '/public/Ficon1.svg';
-import { AccountForm } from '../login/_components/accountForm';
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
+import Ficon1 from "/public/Ficon1.svg";
+import { Input } from "@/components/ui/input";
+//date-time-picker/time-picker
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
+import * as z from "zod";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useEffect } from "react";
+import { IApiRequest, useAuth } from "../../../../hooks/auth";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
-type Role = 'Artisan' | 'Consumer' | 'Delivery';
+const RegistrationPage = () => {
+  const router = useRouter();
+  const { login, register, user, logout } = useAuth({ middleware: "guest" });
 
-interface RegistrationFormProps {
-  role: Role;
-}
+  const userSchemaRegister = z.object({
+    name: z.string().min(2).max(255),
+    email: z.string().email().min(2).max(255),
+    password: z.string().min(8).max(255),
+    password_confirmation: z.string().min(8).max(255),
+    first_name: z.string().min(2).max(255),
+    last_name: z.string().min(2).max(255),
+    description: z.string().max(255),
+    address: z.string().max(255),
+    phone_number: z.string().max(20),
+    user_type: z.enum(["Consumer", "Artisan", "DeliveryPersonnel"]),
+    business_name: z.string().max(255),
+    open_at: z.string().max(255),
+    close_at: z.string().max(255),
+    availability: z.boolean(),
+  });
 
-const RegistrationForm: React.FC<RegistrationFormProps> = ({ role }) => {
-  const [formData, setFormData] = useState<any>({});
-
-  const handleChange = (field: string, value: string) => {
-    setFormData((prevData: any) => ({ ...prevData, [field]: value }));
+  useEffect(() => {
+    userFlow();
+  }, [user]);
+  const userFlow = () => {
+    if (user) {
+      if (user.user_type == "Consumer") {
+        // router.push('/');
+        console.log("user", user?.consumer);
+        router.push("/");
+      } else if (user.user_type == "Artisan") {
+        // router.push('/artisan');
+        console.log("user", user?.artisan);
+        router.push("/artisan/products");
+      } else if (user.user_type == "DeliveryPersonnel") {
+        // router.push('/delivery');
+        router.push("/delivery");
+        console.log("user", user?.deliveryPersonnel);
+      }
+    }
   };
 
-  const handleSubmit = () => {
-    // Handle form submission using formData
-    console.log(formData);
-  };
+  async function onSubmit(values: z.infer<typeof userSchemaRegister>) {
+    console.log("values", values);
 
-  const commonRows = [
-    // Row 1
-    <tr key="firstName">
-      <td>
-        <label className='ml-[11%]'>First Name:</label>
-        <input
-          type="text"
-          className="block ml-[10%] w-[85%] mb-2 border border-gray-300 rounded-md p-2"
-          onChange={(e) => handleChange('firstName', e.target.value)}
-        />
-      </td>
-      <td>
-        <label className='ml-[2%]'>Last Name:</label>
-        <input
-          type="text"
-          className="block mr-[10%] w-[85%] mb-2 border border-gray-300 rounded-md p-2"
-          onChange={(e) => handleChange('lastName', e.target.value)}
-        />
-      </td>
-    </tr>,
-    // Row 2
-    <tr key="emailPhone">
-      <td>
-        <label className='ml-[11%]'>Email:</label>
-        <input
-          type="email"
-          className="block ml-[10%] w-[85%] mb-2 border border-gray-300 rounded-md p-2"
-          onChange={(e) => handleChange('email', e.target.value)}
-        />
-      </td>
-      <td>
-        <label className='ml-[2%]'>Phone Number:</label>
-        <input
-          type="tel"
-          className="block mr-[10%] w-[85%] mb-2 border border-gray-300 rounded-md p-2"
-          onChange={(e) => handleChange('phoneNumber', e.target.value)}
-        />
-      </td>
-    </tr>,
-    // Row 3
-    <tr key="address">
-      <td colSpan={2}>
-        <label className='ml-[6%]'>Address:</label>
-        <input
-          type="text"
-          className="block ml-[5%] w-[87%] mb-2 border border-gray-300 rounded-md p-2"
-          onChange={(e) => handleChange('address', e.target.value)}
-        />
-      </td>
-    </tr>,
-  ];
+    const requestData: IApiRequest = {
+      setErrors: (errors) => {
+        Object.values(errors).forEach((error) => {
+          console.log("errors when login ", error[0]);
+        });
+      }, // You might need to handle errors here
+      setStatus: (status) => {
+        console.log("login good" + status);
+      }, // You might need to handle status here
+      ...values,
+      // Add other properties as needed by IApiRequest
+    };
+    await register(requestData);
+  }
 
-  const roleSpecificRows = {
-    Artisan: [
-      // Row 4
-      <tr key="businessName">
-        <td>
-          <label className='ml-[11%]'>Business Name:</label>
-          <input
-            type="text"
-            className="block ml-[10%] px-[40%]  mb-2 border border-gray-300 rounded-md p-2"
-            onChange={(e) => handleChange('businessName', e.target.value)}
-          />
-        </td>
-      </tr>,
-      // Row 5
-      <tr key="openedClosed">
-        <td>
-          <label className='ml-[11%]'>Opened At:</label>
-          <input
-            type="time"
-            className=" block ml-[10%] w-[85%] border border-gray-300 rounded-md p-2"
-            onChange={(e) => handleChange('openedAt', e.target.value)}
-          />
-        </td>
-        <td>
-          <label className='ml-[3%]'>Closed At:</label>
-          <input
-            type="time"
-            className="block mr-[10%] w-[80%] border border-gray-300 rounded-md p-2"
-            onChange={(e) => handleChange('closedAt', e.target.value)}
-          />
-        </td>
-      </tr>,
-      // Row 6
-      <tr key="description">
-        <td colSpan={2} className='pl-5 pr-3'>
-          <span className='block ml-[1%]'>Description:</span>
-          <textarea
-            onChange={(e) => handleChange('description', e.target.value)}
-            className="mb-2 border border-gray-300 rounded-md p-5 ml-[1%] w-[91%]"
-          ></textarea>
-        </td>
-      </tr>,
-    ],
-    Consumer: [], // No specific fields for Consumer
-    Delivery: [
-      // Row 4
-      <tr key="availability">
-        <td>
-          <label className='ml-[12%]'>Availability:</label>
-          <select
-            value={formData['availability'] || ''}
-            onChange={(e) => handleChange('availability', e.target.value)}
-            className="uppercase block ml-[10%] pr-[108%] mb-2 border border-gray-300 rounded-md p-2"
-          >
-            <option className='' value="1">Available</option>
-            <option value="0">Not Available</option>
-          </select>
-        </td>
-      </tr>,
-    ],
-  };
-
-  const selectedRows = roleSpecificRows[role];
+  const formRegister = useForm<z.infer<typeof userSchemaRegister>>({
+    resolver: zodResolver(userSchemaRegister),
+    defaultValues: {
+      name: "Test",
+      email: "test@gmail.com",
+      password: "12345678",
+      password_confirmation: "12345678",
+      first_name: "hacene",
+      last_name: "zerrouk",
+      description: "test desciprtion",
+      address: "fake address ",
+      phone_number: "0559326589",
+      user_type: "Consumer", // Set a default user_type if needed
+      availability: false,
+      business_name: "Beratna",
+      open_at: "13:51",
+      close_at: "01:51",
+    },
+  });
 
   return (
-    <>
-      {commonRows.map((row, index) => (
-        <React.Fragment key={`commonRow-${index}`}>{row}</React.Fragment>
-      ))}
-      {selectedRows.map((row, index) => (
-        <React.Fragment key={`${role}-specificRow-${index}`}>{row}</React.Fragment>
-      ))}
-      <tr>
-        <th colSpan={2} className='pb-5'>
-          <button
-            className="bg-yellow-400 px-4 mt-2 mr-[5%] py-2 w-[89%] rounded-lg"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-        </th>
-      </tr>
-    </>
-  );
-};
+    <section className="h-screen  w-screen">
+      <div className="flex justify-center items-center h-full bg-white ">
+        <div className="p-10">
+          <Form {...formRegister}>
+            <form
+              onSubmit={formRegister.handleSubmit(onSubmit)}
+              className="space-y-4 "
+            >
+              <FormField
+                control={formRegister.control}
+                name="user_type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>User Type</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="User type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Consumer">Consumer</SelectItem>
+                          <SelectItem value="Artisan">Artisan</SelectItem>
+                          <SelectItem value="DeliveryPersonnel">
+                            DeliveryPersonnel
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formRegister.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="name@gmail.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {formRegister.watch().user_type === "Artisan" && (
+                <FormField
+                  control={formRegister.control}
+                  name="business_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business name</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Enter your bessniss name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <div className="flex space-x-2">
+                <FormField
+                  control={formRegister.control}
+                  name="first_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your first name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-const RegistrationPage: React.FC = () => {
-  const [selectedRole, setSelectedRole] = useState<Role | null>('Artisan');
+                <FormField
+                  control={formRegister.control}
+                  name="last_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your last name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex space-x-2">
+                <FormField
+                  control={formRegister.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Address</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your address" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-  const handleRoleSelection = (role: Role) => {
-    setSelectedRole(role);
-  };
+                <FormField
+                  control={formRegister.control}
+                  name="phone_number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your phone number"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex space-x-2">
+                <FormField
+                  control={formRegister.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="Password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-  const roles: Role[] = ['Artisan', 'Consumer', 'Delivery'];
+                <FormField
+                  control={formRegister.control}
+                  name="password_confirmation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password Confirmation</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="Confirmation" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-  return (
-    <div className="grid grid-cols-2">
-      {/* Left Column */}
-      <div className="p-8 ml-[15%]">
-        <table className="mt-[10%] bg-red-50 p-4 rounded-xl">
-          <tbody className='w-fit'>
-            {/* Row 1 */}
-            <tr>
-              <th colSpan={2} className=''>
-                {roles.map((role) => (
-                  <button
-                    key={role}
-                    className={` mt-3 ${
-                      selectedRole === role ? 'bg-yellow-500  rounded-lg' : 'bg-yellow-400 rounded-lg'
-                    } w-[27%] mx-[2%] py-2 mb-2`}
-                    onClick={() => handleRoleSelection(role)}
-                    disabled={selectedRole === role}
-                  >
-                    {role}
-                  </button>
-                ))}
-              </th>
-            </tr>
-            {/* Render the selected registration form */}
-            {selectedRole && <RegistrationForm role={selectedRole} />}
-          </tbody>
-        </table>
+              {formRegister.watch().user_type === "Artisan" && (
+                <>
+                  <FormField
+                    control={formRegister.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Bio</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tell us a little bit about your bessniess"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex space-x-2">
+                    <FormField
+                      control={formRegister.control}
+                      name="open_at"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Open at</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="time" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={formRegister.control}
+                      name="close_at"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Close at</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="time" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+              {formRegister.watch().user_type === "DeliveryPersonnel" && (
+                // <FormField
+                //   control={formRegister.control}
+                //   name="availability"
+                //   render={({ field }) => (
+                //     <FormItem>
+                //       <FormLabel>Availability</FormLabel>
+                //       <FormControl>
+                //         <Switch
+                //           checked={field.value}
+                //           onCheckedChange={field.onChange}
+                //         />
+                //       </FormControl>
+                //       <FormMessage />
+                //     </FormItem>
+                //   )}
+                // />
+                <FormField
+                  control={formRegister.control}
+                  name="availability"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">
+                          Availability
+                        </FormLabel>
+                        <FormDescription>
+                          Your Default status will be available ?
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          aria-readonly
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              )}
+              <Button className="w-full" type="submit">
+                Register
+              </Button>
+            </form>
+          </Form>
+        </div>
+        <div className="hidden md:flex  items-center justify-center">
+          <Image
+            src={Ficon1} // Replace with your image path
+            alt="Yummy!"
+            width={350}
+            height={200}
+          />
+        </div>
       </div>
-
-      {/* Right Column */}
-      <div className="p-8 ">
-        <Image src={Ficon1} alt="Yummy!" width={400} height={200} className='mr-[30%]' />
-      </div>
-    </div>
+    </section>
   );
 };
 
 export default RegistrationPage;
-

@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from '@/app/_components/navbar';
 import Sidebar from '@/app/_components/sidebar';
 import type { Metadata } from 'next';
-import '../../../globals.css';
+import '../../../app/globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import Providers from '@/app/providers';
 
@@ -18,14 +18,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <body>
 
         <div className="flex h-screen">
-          {/* Sidebar */}
-          <div className="hidden sm:inline-block">
-            <Sidebar />
-          </div>
-          <div className="sm:hidden inline-block">
-            <Sidebar />
-          </div>
-
+         
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Navbar */}
             <Navbar />
