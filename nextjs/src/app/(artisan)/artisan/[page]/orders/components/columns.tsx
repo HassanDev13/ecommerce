@@ -11,10 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { useProductContext } from "../../../../../../../context/ProductContext";
+import { MoreHorizontal } from "lucide-react";
+import { useOrderContext } from "../../../../../../../context/OrderContext";
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<Order>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -38,28 +38,40 @@ export const columns: ColumnDef<Product>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "type",
-    header: "Type",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("type")}</div>,
-  },
-  {
-    accessorKey: "price_per_piece",
-    header: "Price Per Piece",
+    accessorKey: "order_status",
+    header: "Order status",
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("price_per_piece")}</div>
+      
+      <div className="capitalize">{row.getValue("order_status")}</div>
     ),
   },
   {
-    accessorKey: "min_order",
-    header: () => <div className="text-right">Min order</div>,
+    accessorKey: "id",
+    accessorFn: (row) => row.consumer.id,
+    header: "consumer Name",
+    cell: ({ row }) => (
+      
+      <div className="capitalize">{row.getValue("id")}</div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: "Order date",
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("created_at")}</div>
+    ),
+  },
+  {
+    accessorKey: "delivery_personnel",
+    accessorFn: (row) => row.delivery_personnel.id,
+    header: () => <div className="text-right">delivery Personnel</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("min_order"));
-      return <div className="text-right font-medium">{amount}</div>;
+
+      return (
+        <div className="text-right font-medium">
+          {row.getValue("id")}
+        </div>
+      );
     },
   },
   {
@@ -77,28 +89,21 @@ export const columns: ColumnDef<Product>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(row.id)}
-                        >
-                            Copy row ID
-                        </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                const { setIsUpdateProductOpen, setProduct } =
-                  useProductContext();
+                const { setIsUpdateOrderOpen, setOrder } = useOrderContext();
 
-                setProduct(rowData);
-                setIsUpdateProductOpen(true);
+                setOrder(rowData);
+                setIsUpdateOrderOpen(true);
               }}
             >
               Update
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
-                const { setIsDeleteDialogOpen, setProduct } =
-                  useProductContext();
-                setProduct(rowData);
+                const { setIsDeleteDialogOpen, setOrder } = useOrderContext();
+                setOrder(rowData);
                 setIsDeleteDialogOpen(true);
               }}
             >

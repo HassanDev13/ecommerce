@@ -25,7 +25,7 @@ export default function Products() {
     <>
       <ProductProvider>
         <div className="h-screen w-full">
-          <DataTable data={products!} columns={columns} />
+          <DataTable data={products!} columns={columns}/>
           <CreateProduct />
           <UpdateProduct />
           <DeleteProduct />

@@ -13,6 +13,7 @@ interface ProductContextType {
   setIsUpdateProductOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isDeleteDialogOpen: boolean;
   setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);

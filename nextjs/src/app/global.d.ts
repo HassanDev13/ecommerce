@@ -62,4 +62,18 @@ declare global {
         artisan: Artisan;
         consumer: Consumer;
       }
+      interface Order {
+        id: number;
+        order_status: string;
+        delivery_address: string;
+        consumer_id: number;
+        delivery_personnel_id: number;
+        created_at: string;
+        updated_at: string;
+        deleted_at: string | null;
+        consumer: Consumer;
+        products: Product[];
+        delivery_personnel: DeliveryPersonnel;
+      }
+      
 }
