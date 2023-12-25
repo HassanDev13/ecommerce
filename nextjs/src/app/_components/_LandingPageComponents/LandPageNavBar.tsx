@@ -23,12 +23,7 @@ const LandPageNavBar: React.FC = () => {
       </div>
 
       <div className="ml-20 text-black font-bold">
-<<<<<<< HEAD
-        <Link className='ml-20 p-2' href="/"> Home</Link>
-        <Link className='p-2' href="/explore"> Products </Link>
-        <Link className='p-2' href="/explore"> Artisans </Link>
-        <Link className='p-2' href="#"> Profile </Link>
-=======
+
         <Link className="ml-20 p-2" href="/">
           {" "}
           Home
@@ -41,7 +36,6 @@ const LandPageNavBar: React.FC = () => {
           {" "}
           Profile{" "}
         </Link>
->>>>>>> 0e3980c9fd37b8c117a1da50c98319c5ffa8970c
       </div>
 
       <div className="flex items-center space-x-4">
