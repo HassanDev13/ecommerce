@@ -93,6 +93,8 @@ const SearchBar = () => {
             />
 
             <FormField
+
+            
               control={formProduct.control}
               name="type"
               render={({ field }) => (
