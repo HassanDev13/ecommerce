@@ -46,7 +46,7 @@ const productSchema = z.object({
 export default function CreateProduct() {
   const [selectedImages, setSelectedImages] = useState<FileList>();
   const { user } = useAuth({ middleware: "auth" });
-  const craeteProduct = useCreateProduct();
+  const createProduct = useCreateProduct();
   const uploadImages = useUploadImages();
   const { isCreateSheetOpen, setIsCreateProductOpen } = useProductContext();
   const formAct = useForm<z.infer<typeof productSchema>>({
@@ -73,8 +73,8 @@ export default function CreateProduct() {
       console.log("Selected Images:", selectedImages);
 
       const formdata: InsertProduct = { ...values, user_id: user.id };
-      craeteProduct.mutate(formdata, {
-        onSuccess: () => {
+      createProduct.mutate(formdata, {
+        onSuccess: (data) => {
           setIsCreateProductOpen(false);
           if (!selectedImages) {
             toast({
@@ -84,7 +84,7 @@ export default function CreateProduct() {
             return;
           }
           uploadImages.mutate(
-            { productId: "3", images: selectedImages },
+            { productId: String(data.id), images: selectedImages },
             {
               onSuccess: () => {
                 toast({

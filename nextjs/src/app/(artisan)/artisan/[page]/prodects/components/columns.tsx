@@ -13,6 +13,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { useProductContext } from "../../../../../../../context/ProductContext";
+import Image from "next/image";
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -43,6 +44,30 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
+    accessorKey: "images",
+    accessorFn: (row) => row.images,
+    header: "Images",
+    cell: ({ row }) => (
+      <div className="capitalize">
+        {row.original.images.length > 0 ? (
+          <Image
+            className="rounded-md"
+            height={100}
+            width={100}
+            alt="image"
+            src={
+              process.env.NEXT_PUBLIC_URL_IMAGE +
+            
+              row.original.images[0].path
+            }
+          />
+        ) : (
+          "No Image"
+        )}
+      </div>
+    ),
+  },
+  {
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => <div className="capitalize">{row.getValue("type")}</div>,
@@ -66,6 +91,9 @@ export const columns: ColumnDef<Product>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const { setIsUpdateProductOpen, setProduct, setIsDeleteDialogOpen } =
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useProductContext();
       const rowData = row.original;
       return (
         <DropdownMenu>
@@ -77,17 +105,10 @@ export const columns: ColumnDef<Product>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(row.id)}
-                        >
-                            Copy row ID
-                        </DropdownMenuItem> */}
+
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                const { setIsUpdateProductOpen, setProduct } =
-                  useProductContext();
-
                 setProduct(rowData);
                 setIsUpdateProductOpen(true);
               }}
@@ -96,8 +117,6 @@ export const columns: ColumnDef<Product>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
-                const { setIsDeleteDialogOpen, setProduct } =
-                  useProductContext();
                 setProduct(rowData);
                 setIsDeleteDialogOpen(true);
               }}

@@ -40,7 +40,7 @@ const productSchema = z.object({
   child_type: z.string(),
 });
 
-export default function UpdateProduct() {
+export default function UpdateOrder() {
   const { user } = useAuth({ middleware: "auth" });
 
   const { isUpdateSheetOpen, setIsUpdateProductOpen, product } =
@@ -71,7 +71,7 @@ export default function UpdateProduct() {
   async function onSubmit(values: z.infer<typeof productSchema>) {
     if (user && user.id && product && product.id) {
       console.log(values, user?.id);
-      const productId = product?.id;
+      const productId = String(product?.id);
       const updatedProductData: Partial<Product> = { ...values };
       updateProduct.mutate(
         { productId, updatedProductData },
