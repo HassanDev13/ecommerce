@@ -22,9 +22,11 @@ const FeaturesSection = () => {
           className="mb-4 mt-5"
         />
         <div>
-            <button className=" bg-yellow-400 text-black font-bold py-2 px-5 mt-5 rounded-lg font-bold ">
-              Explore Savory Delights Now
-            </button>
+            <a href="/explore">
+              <button className=" bg-yellow-400 text-black font-bold py-2 px-5 mt-5 rounded-lg font-bold ">
+                Explore Savory Delights Now
+              </button>
+            </a>
         </div>
         
       </div>

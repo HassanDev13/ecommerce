@@ -20,8 +20,8 @@ const LandPageNavBar: React.FC = () => {
 
       <div className="ml-20 text-black font-bold">
         <Link className='ml-20 p-2' href="/"> Home</Link>
-        <Link className='p-2' href="#"> Products </Link>
-        <Link className='p-2' href="#"> Artisans </Link>
+        <Link className='p-2' href="/explore"> Products </Link>
+        <Link className='p-2' href="/explore"> Artisans </Link>
         <Link className='p-2' href="#"> Profile </Link>
       </div>
 

@@ -62,7 +62,7 @@ const RegistrationPage = () => {
       if (user.user_type == "Consumer") {
         // router.push('/');
         console.log("user", user?.consumer);
-        router.push("/");
+        router.push("/explore");
       } else if (user.user_type == "Artisan") {
         // router.push('/artisan');
         console.log("user", user?.artisan);
@@ -114,29 +114,35 @@ const RegistrationPage = () => {
   });
 
   return (
-    <section className="h-screen  w-screen">
+    
+    <section className="h-fit  w-screen">
       <div className="flex justify-center items-center h-full bg-white ">
         <div className="p-10">
+          <h1 className="text-3xl font-bold text-center mb-4">Create Your Account</h1>
+              <p className="text-center text-sm text-muted-foreground mb-5">
+                Enter your details below to create your account
+              </p>
           <Form {...formRegister}>
             <form
               onSubmit={formRegister.handleSubmit(onSubmit)}
-              className="space-y-4 "
+              className="space-y-4 bg-red-50 rounded-md p-[7%]"
             >
               <FormField
                 control={formRegister.control}
                 name="user_type"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem >
                     <FormLabel>User Type</FormLabel>
                     <FormControl>
-                      <Select
+                      <Select 
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-yellow-300">
                           <SelectValue placeholder="User type" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-yellow-200">
                           <SelectItem value="Consumer">Consumer</SelectItem>
                           <SelectItem value="Artisan">Artisan</SelectItem>
                           <SelectItem value="DeliveryPersonnel">
