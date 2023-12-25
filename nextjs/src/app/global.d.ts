@@ -3,13 +3,27 @@ export { };
 
 declare global {
     interface Product {
-        id: string;
-        name: string;
-        description: string;
-        price_per_piece: number;
-        min_order: number;
-        type: string;
-        child_type: string;
+      id: number;
+      name: string;
+      user_id: number;
+      description: string;
+      price_per_piece: number;
+      min_order: number;
+      type: string;
+      child_type: string;
+      created_at: string;
+      updated_at: string;
+      deleted_at: string | null;
+      images: Image[];
+
+    }
+    interface Image {
+      id: number;
+      product_id: number;
+      path: string;
+      created_at: string;
+      updated_at: string;
+      deleted_at: string | null;
     }
     interface InsertProduct {
         name: string;
@@ -62,4 +76,18 @@ declare global {
         artisan: Artisan;
         consumer: Consumer;
       }
+      interface Order {
+        id: number;
+        order_status: string;
+        delivery_address: string;
+        consumer_id: number;
+        delivery_personnel_id: number;
+        created_at: string;
+        updated_at: string;
+        deleted_at: string | null;
+        consumer: Consumer;
+        products: Product[];
+        delivery_personnel: DeliveryPersonnel;
+      }
+      
 }

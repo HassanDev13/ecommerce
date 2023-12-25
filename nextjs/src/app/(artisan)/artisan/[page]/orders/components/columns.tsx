@@ -11,11 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { useProductContext } from "../../../../../../../context/ProductContext";
-import Image from "next/image";
+import { MoreHorizontal } from "lucide-react";
+import { useOrderContext } from "../../../../../../../context/OrderContext";
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<Order>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -39,61 +38,46 @@ export const columns: ColumnDef<Product>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "images",
-    accessorFn: (row) => row.images,
-    header: "Images",
+    accessorKey: "order_status",
+    header: "Order status",
     cell: ({ row }) => (
-      <div className="capitalize">
-        {row.original.images.length > 0 ? (
-          <Image
-            className="rounded-md"
-            height={100}
-            width={100}
-            alt="image"
-            src={
-              process.env.NEXT_PUBLIC_URL_IMAGE +
-            
-              row.original.images[0].path
-            }
-          />
-        ) : (
-          "No Image"
-        )}
-      </div>
+      
+      <div className="capitalize">{row.getValue("order_status")}</div>
     ),
   },
   {
-    accessorKey: "type",
-    header: "Type",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("type")}</div>,
-  },
-  {
-    accessorKey: "price_per_piece",
-    header: "Price Per Piece",
+    accessorKey: "id",
+    accessorFn: (row) => row.consumer.id,
+    header: "consumer Name",
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("price_per_piece")}</div>
+      
+      <div className="capitalize">{row.getValue("id")}</div>
     ),
   },
   {
-    accessorKey: "min_order",
-    header: () => <div className="text-right">Min order</div>,
+    accessorKey: "created_at",
+    header: "Order date",
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("created_at")}</div>
+    ),
+  },
+  {
+    accessorKey: "delivery_personnel",
+    accessorFn: (row) => row.delivery_personnel.id,
+    header: () => <div className="text-right">delivery Personnel</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("min_order"));
-      return <div className="text-right font-medium">{amount}</div>;
+
+      return (
+        <div className="text-right font-medium">
+          {row.getValue("id")}
+        </div>
+      );
     },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const { setIsUpdateProductOpen, setProduct, setIsDeleteDialogOpen } =
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useProductContext();
       const rowData = row.original;
       return (
         <DropdownMenu>
@@ -105,19 +89,21 @@ export const columns: ColumnDef<Product>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                setProduct(rowData);
-                setIsUpdateProductOpen(true);
+                const { setIsUpdateOrderOpen, setOrder } = useOrderContext();
+
+                setOrder(rowData);
+                setIsUpdateOrderOpen(true);
               }}
             >
               Update
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
-                setProduct(rowData);
+                const { setIsDeleteDialogOpen, setOrder } = useOrderContext();
+                setOrder(rowData);
                 setIsDeleteDialogOpen(true);
               }}
             >

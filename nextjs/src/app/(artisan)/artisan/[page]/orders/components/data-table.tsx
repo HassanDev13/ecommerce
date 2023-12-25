@@ -32,6 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useProductContext } from "../../../../../../../context/ProductContext";
+import { useOrderContext } from "../../../../../../../context/OrderContext";
 
 
 interface DataTableProps<TData, TValue> {
@@ -42,9 +43,11 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
-  data
+  data,
+ 
 }: DataTableProps<TData, TValue>) {
-  const { setIsCreateProductOpen } = useProductContext();
+  
+  const { setIsCreateOrderOpen } = useOrderContext();
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -52,6 +55,7 @@ export function DataTable<TData, TValue>({
     []
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
+ 
   const table = useReactTable({
     data,
     columns,
@@ -115,10 +119,10 @@ export function DataTable<TData, TValue>({
 
           <Button
             onClick={() => {
-              setIsCreateProductOpen(true)
+              setIsCreateOrderOpen(true);
             }}
           >
-            Add Prodects
+            Add order
           </Button>
         </div>
       </div>
