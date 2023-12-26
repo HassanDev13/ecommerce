@@ -1,12 +1,10 @@
 "use client"
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,6 +13,12 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const SearchBar = () => {
   const productSchema = z.object({
@@ -54,29 +58,15 @@ const SearchBar = () => {
     console.log("Artisan Form Values", values);
     // Perform actions based on form data
   };
-  const [sectionOneVisible, setSectionOneVisible] = useState(false);
-  const [sectionTwoVisible, setSectionTwoVisible] = useState(false);
+ 
 
   return (
-    <aside className="flex-1 overflow-y-auto h-screen w-[20%] bg-amber-400 p-4 ">
-      <div className="text-5xl font-semibold  text-center border-b-2 border-b-black ">
-          <h1 >Search</h1>
-      </div>
-
-
-      <div className="mt-[10%]">
-        {/* Product Search Form */}
-        <div>
-          <button onClick={() => setSectionOneVisible(!sectionOneVisible)} 
-          className="flex items-center p-2 space-x-3 rounded-md cursor-pointer">
-              {sectionOneVisible ?
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15%" height="15%"><g id="_01_align_center" data-name="01 align center"><path d="M12,15.5a1.993,1.993,0,0,1-1.414-.585L5.293,9.621,6.707,8.207,12,13.5l5.293-5.293,1.414,1.414-5.293,5.293A1.993,1.993,0,0,1,12,15.5Z" /></g></svg> :
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="7%" height="7%"><g id="_01_align_center" data-name="01 align center"><path d="M7.412,24,6,22.588l9.881-9.881a1,1,0,0,0,0-1.414L6.017,1.431,7.431.017l9.862,9.862a3,3,0,0,1,0,4.242Z" /></g></svg>
-              }
-              <span className="text-md font-bold">Products</span>
-            </button>
-                {sectionOneVisible &&
-                  <Form {...formProduct}>
+    <aside className="flex-1 overflow-y-auto h-screen w-[20%]  400 p-4 border-r-2">
+      <Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Artisans</AccordionTrigger>
+    <AccordionContent>
+      <Form {...formProduct}>
           <form onSubmit={formProduct.handleSubmit(onSubmitProduct)}>
             <FormField
               control={formProduct.control}
@@ -246,25 +236,18 @@ const SearchBar = () => {
             <Button type="submit" className="mt-4 font-bold g-yellow-700">Search Products</Button>
           </form>
         </Form>
-                }
-        </div>
-        
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
 
 
 
 
-
-        {/* Artisan Search Form */}
-        <div>
-          <button onClick={() => setSectionTwoVisible(!sectionTwoVisible)} className="flex items-center p-2 space-x-3 rounded-md cursor-pointer">
-              {sectionTwoVisible ?
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15%" height="15%"><g id="_01_align_center" data-name="01 align center"><path d="M12,15.5a1.993,1.993,0,0,1-1.414-.585L5.293,9.621,6.707,8.207,12,13.5l5.293-5.293,1.414,1.414-5.293,5.293A1.993,1.993,0,0,1,12,15.5Z" /></g></svg> :
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="7%" height="7%"><g id="_01_align_center" data-name="01 align center"><path d="M7.412,24,6,22.588l9.881-9.881a1,1,0,0,0,0-1.414L6.017,1.431,7.431.017l9.862,9.862a3,3,0,0,1,0,4.242Z" /></g></svg>
-              }
-              <span className="text-md font-bold">Artisans</span>
-            </button>
-            {sectionTwoVisible &&
-              <Form {...formArtisan}>
+<Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Products</AccordionTrigger>
+    <AccordionContent>
+      <Form {...formArtisan}>
           <form onSubmit={formArtisan.handleSubmit(onSubmitArtisan)}>
             <FormField
               control={formArtisan.control}
@@ -312,10 +295,10 @@ const SearchBar = () => {
             <Button type="submit" className="mt-4 font-bold">Search Artisans</Button>
           </form>
         </Form>
-            }
-        </div>
-        
-      </div>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+
     </aside>
   );
 };

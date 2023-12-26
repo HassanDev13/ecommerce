@@ -7,6 +7,7 @@ import Footer from "../_components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { CardProvider } from "../../../context/CardContext";
 import CardGlobalProviders from "./providers";
+import SearchBar from "../_components/searchBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
         <CardGlobalProviders>
           <Providers>
             <LandPageNavBar />
+            <SearchBar/>
             <Providers>{children}</Providers>
           </Providers>
           <Footer />
