@@ -1,29 +1,15 @@
 "use client";
 
-import * as z from "zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useEffect } from "react";
-import { IApiRequest, useAuth } from "../../../../hooks/auth";
+import SearchBar from "@/app/_components/searchBar";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { useAllProducts } from "../../../../hooks/prodect-hook";
 import Image from "next/image";
 import {
   ProductProvider,
   useProductContext,
 } from "../../../../context/ProductClientContext";
-import { ProjectDetails } from "./components/project-details";
+import { useAllProducts } from "../../../../hooks/prodect-hook";
 import { CardList } from "./components/card-list";
-import Sidebar from "@/app/_components/sidebar";
-import SearchBar from "@/app/_components/searchBar";
+import { ProjectDetails } from "./components/project-details";
 
 const Products = () => {
   const products = useAllProducts();

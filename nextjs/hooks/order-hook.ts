@@ -12,7 +12,7 @@ const useOrderById = (orderId: string) => {
 const useCreateOrder = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    (newOrderData: Partial<Order>) => {
+    (newOrderData: SendOrder) => {
       return orderService.addOrder(newOrderData);
     },
     {

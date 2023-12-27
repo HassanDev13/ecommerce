@@ -2,7 +2,8 @@ import axios from "axios";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL + "/api/orders" || "";
-
+  const API_BASE_URL_SEND_ORDER =
+  process.env.NEXT_PUBLIC_BACKEND_URL + "/api/OrderProducts" || "";
 const orderService = {
   getAllOrders: async (): Promise<Order[]> => {
     const response = await axios.get(API_BASE_URL);
@@ -14,8 +15,8 @@ const orderService = {
     return response.data.orders;
   },
 
-  addOrder: async (newOrderData: Partial<Order>): Promise<Order> => {
-    const response = await axios.post(API_BASE_URL, newOrderData);
+  addOrder: async (newOrderData: SendOrder): Promise<SendOrder> => {
+    const response = await axios.post(API_BASE_URL_SEND_ORDER, newOrderData);
     return response.data.orders;
   },
 

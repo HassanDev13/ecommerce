@@ -10,12 +10,16 @@ import Image from "next/image";
 import { useCardContext } from "../../../../../context/CardContext";
 import { set } from "react-hook-form";
 import { XCircle } from "lucide-react";
+import { useAuth } from "../../../../../hooks/auth";
+import { toast } from "@/components/ui/use-toast";
+import { useCreateOrder } from "../../../../../hooks/order-hook";
 
 export const CardList = () => {
   const { product } = useProductContext();
-
+  const createOrderMutation = useCreateOrder();
   const { cardProducts, setCardOpen, isCardOpen, setCardProducts } =
     useCardContext();
+  const { user } = useAuth({ middleware: "guest" });
 
   const calculateTotal = () => {
     if (cardProducts === null) return null;
@@ -75,7 +79,7 @@ export const CardList = () => {
                   </div>
 
                   <div className="flex h-16 flex-col justify-between">
-                    <p>{product.price_per_piece } DA</p>
+                    <p>{product.price_per_piece} DA</p>
                     <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
                       <Button
                         onClick={() => {
@@ -152,7 +156,37 @@ export const CardList = () => {
             <Button
               className="w-full"
               onClick={() => {
-                setCardOpen(false);
+                if (!cardProducts) {
+                  toast({
+                    variant: "destructive",
+                    title: "No orders provided",
+                    description: "Select Order first",
+                  });
+                  return;
+                }
+                const transformedOrder: SendOrder | undefined =
+                  transformOrdersToSendOrder(cardProducts);
+                if (!transformedOrder) return;
+                createOrderMutation.mutate(transformedOrder, {
+                  onSuccess: () => {
+                    setCardProducts(null);
+                    setCardOpen(false);
+                    toast({
+                      title: "Success",
+                      description: "Order created successfully",
+                    });
+                  },
+                  onError: (error) => {
+                   
+                    toast({
+                      variant: "destructive",
+                      title: "Error",
+                      description: "Error while creating order",
+                    });
+                  }
+                });
+                console.log(transformedOrder);
+              
               }}
             >
               Order
@@ -162,4 +196,38 @@ export const CardList = () => {
       </SheetContent>
     </Sheet>
   );
+  function transformOrdersToSendOrder(
+    orderProducts: OrderProduct[]
+  ): SendOrder | undefined {
+    if (orderProducts.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "No orders provided",
+        description: "Select Order first",
+      });
+      return;
+    }
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Create account to order",
+        description: "Register or login to order",
+      });
+      return;
+    }
+    // Assuming order status and delivery address are the same for all orders
+    const orderStatus = "unprocessed";
+    const deliveryAddress = user.address;
+
+    const sendOrder: SendOrder = {
+      orderProducts: orderProducts.map((orderProduct) => ({
+        product_id: orderProduct.id,
+        quantity: orderProduct.quantity,
+      })),
+      orderStatus,
+      delivery_address: deliveryAddress,
+    };
+
+    return sendOrder;
+  }
 };

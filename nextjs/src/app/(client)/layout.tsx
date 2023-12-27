@@ -27,9 +27,10 @@ export default function RootLayout({
           <Providers>
             <LandPageNavBar />
             <Providers>{children}</Providers>
+            <Toaster />
           </Providers>
           <Footer />
-          <Toaster />
+         
         </CardGlobalProviders>
         
       </body>
