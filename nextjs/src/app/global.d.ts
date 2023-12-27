@@ -17,6 +17,9 @@ declare global {
       images: Image[];
 
     }
+    interface OrderProduct extends Product {
+      quantity: number;
+    }
     interface Image {
       id: number;
       product_id: number;

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\OrderProduct;
+use App\Models\Order;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 /**
  * @group OrderProduct
@@ -36,27 +39,68 @@ class OrderProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new order.
      *
      * @OA\Post(
      *     path="/api/OrderProducts",
-     *     summary="Create a new OrderProduct",
+     *     summary="Create a new order",
      *     tags={"OrderProduct"},
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/OrderProduct")
+     *         description="Order data",
+     *         @OA\JsonContent(
+     *             required={"orderProducts", "orderStatus", "deliveryAddress", "consumer_id"},
+     *             @OA\Property(property="orderProducts", type="array", @OA\Items(
+     *                 @OA\Property(property="product_id", type="integer"),
+     *                 @OA\Property(property="quantity", type="integer"),
+     *             )),
+     *             @OA\Property(property="orderStatus", type="string", enum={"unprocessed","accepted","refused","assigned to a delivery person","sent","delivered"}),
+     *             @OA\Property(property="delivery_address", type="string", example="123 Main St, City")
+     *         ),
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="OrderProduct created successfully",
-     *         @OA\JsonContent(ref="#/components/schemas/OrderProduct")
+     *         description="Order created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/Order"),
      *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *     )
      * )
      */
     public function store(Request $request)
     {
-        $orderProducts = OrderProduct::create($request->all());
-        return response()->json(['OrderProducts' => $orderProducts], 201);
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'orderProducts' => 'required|array',
+            'orderProducts.*.product_id' => 'required|integer',
+            'orderProducts.*.quantity' => 'required|integer',
+            'orderStatus' => ['required', 'string', Rule::in(['unprocessed', 'accepted', 'refused', 'assigned to a delivery person', 'sent', 'delivered'])],
+            'delivery_address' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+        //auth()->id(),
+        $order = Order::create([
+            'orderStatus' => $request->input('orderStatus'),
+            'delivery_address' => $request->input('delivery_address'),
+            'consumer_id' => 1,
+        ]);
+
+        if (!$order) {
+            return response()->json(['error' => 'Failed to create the order'], 500);
+        }
+
+        $orderProductsArray = collect($request->input('orderProducts'))->mapWithKeys(function ($productData) {
+            return [$productData['product_id'] => ['quantity' => $productData['quantity']]];
+        })->toArray();
+
+        $order->products()->sync($orderProductsArray);
+
+        return response()->json(['order' => $order], 201);
     }
 
     /**

@@ -51,15 +51,18 @@ export const ProjectDetails = () => {
             className="w-full"
             onClick={() => {
               if (product === null) return;
-
+              const orderProduct: OrderProduct = {
+                ...product,
+                quantity: product.min_order,
+              };
               setCardProducts((currentProducts) => {
                 // If currentProducts is null, return a new array with the productToAdd
                 if (currentProducts === null) {
-                  return [product];
+                  return [orderProduct];
                 }
 
                 // Otherwise, return a new array that includes all current products and the new one
-                return [...currentProducts, product];
+                return [...currentProducts, orderProduct];
               });
               setIsCreateProductOpen(false);
             }}

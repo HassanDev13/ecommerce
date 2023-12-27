@@ -48,7 +48,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OrderProduct extends Model
 {
     use HasFactory,SoftDeletes;
-    protected $fillable = ['orderStatus','orderStatus'];
+    protected $fillable = ['order_id','product_id','quantity'];
 
     public function order()
     {

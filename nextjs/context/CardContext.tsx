@@ -5,8 +5,8 @@ interface CardContextProps {
 }
 
 interface CardContextType {
-  cardProducts: Product[] | null;
-  setCardProducts: React.Dispatch<React.SetStateAction<Product[] | null>>;
+  cardProducts: OrderProduct[] | null;
+  setCardProducts: React.Dispatch<React.SetStateAction<OrderProduct[] | null>>;
   isCardOpen: boolean;
   setCardOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -16,7 +16,7 @@ const CardContext = createContext<CardContextType | undefined>(undefined);
 export const CardProvider: React.FC<CardContextProps> = ({
   children,
 }) => {
-  const [cardProducts, setCardProducts] = useState<Product[] | null>(null);
+  const [cardProducts, setCardProducts] = useState<OrderProduct[] | null>(null);
   const [isCardOpen, setCardOpen] = useState<boolean>(false);
 
   return (

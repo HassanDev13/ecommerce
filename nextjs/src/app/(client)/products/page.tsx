@@ -22,13 +22,16 @@ import {
 } from "../../../../context/ProductClientContext";
 import { ProjectDetails } from "./components/project-details";
 import { CardList } from "./components/card-list";
+import Sidebar from "@/app/_components/sidebar";
+import SearchBar from "@/app/_components/searchBar";
 
 const Products = () => {
   const products = useAllProducts();
 
   return (
-    <section className="h-fit  w-screen">
-      <div className="grid grid-cols-4 gap-4 p-4">
+    <section className="flex h-full  w-screen">
+      <SearchBar/>
+      <div className="w-[80%] grid grid-cols-4 gap-4 p-4">
         <ProductProvider>
           {products.data?.map((product, index) => (
             <div

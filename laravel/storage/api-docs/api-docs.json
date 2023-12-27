@@ -857,29 +857,70 @@
                 "tags": [
                     "OrderProduct"
                 ],
-                "summary": "Create a new OrderProduct",
-                "description": "Store a newly created resource in storage.",
+                "summary": "Create a new order",
+                "description": "Create a new order.",
                 "operationId": "d5dfdadb28304c0af03865895b6048d1",
                 "requestBody": {
+                    "description": "Order data",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/OrderProduct"
+                                "required": [
+                                    "orderProducts",
+                                    "orderStatus",
+                                    "deliveryAddress",
+                                    "consumer_id"
+                                ],
+                                "properties": {
+                                    "orderProducts": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "product_id": {
+                                                    "type": "integer"
+                                                },
+                                                "quantity": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "orderStatus": {
+                                        "type": "string",
+                                        "enum": [
+                                            "unprocessed",
+                                            "accepted",
+                                            "refused",
+                                            "assigned to a delivery person",
+                                            "sent",
+                                            "delivered"
+                                        ]
+                                    },
+                                    "delivery_address": {
+                                        "type": "string",
+                                        "example": "123 Main St, City"
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "OrderProduct created successfully",
+                        "description": "Order created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/OrderProduct"
+                                    "$ref": "#/components/schemas/Order"
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 }
             }
