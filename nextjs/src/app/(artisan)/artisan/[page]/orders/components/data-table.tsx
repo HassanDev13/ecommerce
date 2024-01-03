@@ -47,7 +47,6 @@ export function DataTable<TData, TValue>({
  
 }: DataTableProps<TData, TValue>) {
   
-  const { setIsCreateOrderOpen } = useOrderContext();
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -117,13 +116,7 @@ export function DataTable<TData, TValue>({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button
-            onClick={() => {
-              setIsCreateOrderOpen(true);
-            }}
-          >
-            Add order
-          </Button>
+          
         </div>
       </div>
       <div className="rounded-md border">

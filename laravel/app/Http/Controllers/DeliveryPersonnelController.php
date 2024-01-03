@@ -31,7 +31,7 @@ class DeliveryPersonnelController extends Controller
      */
     public function index()
     {
-        $deliveryPersonnel = DeliveryPersonnel::all();
+        $deliveryPersonnel = DeliveryPersonnel::with(['orders', 'orders.consumer', 'orders.consumer.user', 'orders.products', 'orders.products.images', 'orders.products.user', 'orders.products.user.artisan'])->get(['id', 'created_at', 'updated_at', 'user_id', 'availability']);
         return response()->json(['deliveryPersonnels' => $deliveryPersonnel]);
     }
 

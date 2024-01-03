@@ -119,11 +119,19 @@ export const CardList = () => {
                         onClick={() => {
                           setCardProducts((currentProducts) => {
                             if (currentProducts === null) return null;
-
+                            if(product.min_order >= product.quantity){
+                              toast({
+                                variant: "destructive",
+                                title: "Error",
+                                description: "Minimum order is " + product.min_order,
+                              });
+                              return currentProducts;
+                            }
                             // Create a new array by mapping over the currentProducts
                             const newProducts = currentProducts.map(
                               (product, i) => {
                                 // If the current product is the one we want to update, return a new object
+                                
                                 if (i === index) {
                                   return {
                                     ...product,

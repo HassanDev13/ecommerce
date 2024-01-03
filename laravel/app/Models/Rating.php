@@ -62,7 +62,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Rating extends Model
 {
     use HasFactory,SoftDeletes;
-    protected $fillable = ['rating', 'rating_type'];
+    protected $fillable = ['rating', 'rating_type',"consumer_id","artisan_id","delivery_personnel_id","product_id"];
     public function deliveryPersonnel()
     {
         return $this->belongsTo(DeliveryPersonnel::class);
@@ -76,6 +76,10 @@ class Rating extends Model
     public function artisan()
     {
         return $this->belongsTo(Artisan::class);
+    }
+    public function consumer()
+    {
+        return $this->belongsTo(Consumer::class);
     }
 }
 

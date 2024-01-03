@@ -46,6 +46,9 @@ Route::apiResource('users', UserController::class);
 Route::apiResource('artisans', ArtisanController::class);
 Route::apiResource('deliveryPersonnels', DeliveryPersonnelController::class);
 Route::apiResource('consumers', ConsumerController::class);
+//assignDeliveryPerson
+Route::post('/orders/assignDeliveryPerson', [OrderController::class, 'assignDeliveryPerson']);
+Route::post('/orders/changeStatus/{id}', [OrderController::class, 'changeStatus']);
 Route::apiResource('orders', OrderController::class);
 // Route::get('/products/index_by_artisan', [ProductController::class, 'index_by_artisan']);
 Route::post('/products/upload', [ProductController::class, 'upload']);

@@ -55,7 +55,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::create($request->all());
+        $users = User::create($request->all());
         return response()->json(['users' => $users], 201);
     }
 
@@ -86,7 +86,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::findOrFail($id);
+        $users = User::findOrFail($id);
         return response()->json(['users' => $users]);
     }
 
@@ -106,12 +106,29 @@ class UserController extends Controller
      *     ),
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="email", type="string", format="email", maxLength=255),
+     *             @OA\Property(property="first_name", type="string", maxLength=255),
+     *             @OA\Property(property="last_name", type="string", maxLength=255),
+     *             @OA\Property(property="description", type="string", maxLength=255),
+     *             @OA\Property(property="address", type="string", maxLength=255),
+     *             @OA\Property(property="phone_number", type="string", maxLength=255),
+     *             @OA\Property(property="user_type", type="string", enum={"Consumer", "Artisan", "DeliveryPersonnel"}),
+     *             @OA\Property(property="business_name", type="string", maxLength=255),
+     *             @OA\Property(property="open_at", type="string", format="date-time"),
+     *             @OA\Property(property="close_at", type="string", format="date-time", example="after:open_at"),
+     *             @OA\Property(property="availability", type="boolean"),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="User updated successfully",
      *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input data",
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -121,10 +138,44 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = User::findOrFail($id);
-        $user->update($request->all());
-        return response()->json(['users' => $users]);
+        try {
+            $request->validate([
+                // Validation rules as before
+                'email' => 'string|email|max:255|unique:users,email,' . $id,
+                'first_name' => 'string|max:255',
+                'last_name' => 'string|max:255',
+                'description' => 'string|max:255',
+                'address' => 'string|max:255',
+                'phone_number' => 'string|max:255',
+                'user_type' => 'string|in:Consumer,Artisan,DeliveryPersonnel',
+                'business_name' => ($request->input('user_type') === 'Artisan') ? 'required|string|max:255' : '',
+                'open_at' => ($request->input('user_type') === 'Artisan') ? 'required|date_format:H:i:s' : '',
+                'close_at' => ($request->input('user_type') === 'Artisan') ? 'required|date_format:H:i:s|after:open_at' : '',
+                'availability' => ($request->input('user_type') === 'DeliveryPersonnel') ? 'boolean' : '',
+            ]);
+
+            $user = User::findOrFail($id);
+            $user->update($request->all());
+
+            // Update associated Artisan model
+            $artisan = $user->artisan;
+            if ($artisan && $request->input('user_type') === 'Artisan') {
+                $artisan->update($request->all());
+            }
+
+            // Update associated DeliveryPersonnel model
+            $deliveryPersonnel = $user->deliveryPersonnel;
+            if ($deliveryPersonnel && $request->input('user_type') === 'DeliveryPersonnel') {
+                $deliveryPersonnel->update($request->all());
+            }
+
+            return response()->json(['user' => $user]);
+        } catch (\Exception $e) {
+            // Handle exceptions here
+            return response()->json(['error' => 'An error occurred while updating the user.', 'message' => $e->getMessage()], 500);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.

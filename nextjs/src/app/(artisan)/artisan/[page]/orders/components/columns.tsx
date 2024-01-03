@@ -13,6 +13,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { useOrderContext } from "../../../../../../../context/OrderContext";
+import { useOrderArtisanContext } from "../../../../../../../context/OrderArtisanContext";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -41,18 +42,28 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "order_status",
     header: "Order status",
     cell: ({ row }) => (
-      
       <div className="capitalize">{row.getValue("order_status")}</div>
     ),
   },
   {
-    accessorKey: "id",
-    accessorFn: (row) => row.consumer.id,
+    accessorKey: "Name",
     header: "consumer Name",
-    cell: ({ row }) => (
-      
-      <div className="capitalize">{row.getValue("id")}</div>
-    ),
+    cell: ({ row }) => {
+      const rowData = row.original;
+      return (
+        <div className="capitalize">{rowData.consumer.user.first_name}</div>
+      );
+    },
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone ",
+    cell: ({ row }) => {
+      const rowData = row.original;
+      return (
+        <div className="capitalize">{rowData.consumer.user.phone_number}</div>
+      );
+    },
   },
   {
     accessorKey: "created_at",
@@ -63,13 +74,16 @@ export const columns: ColumnDef<Order>[] = [
   },
   {
     accessorKey: "delivery_personnel",
-    accessorFn: (row) => row.delivery_personnel.id,
     header: () => <div className="text-right">delivery Personnel</div>,
     cell: ({ row }) => {
-
+      const rowData = row.original;
       return (
         <div className="text-right font-medium">
-          {row.getValue("id")}
+          {rowData.delivery_personnel ? (
+            rowData.delivery_personnel.id
+          ) : (
+            <span className="text-red-500">Not assigned</span>
+          )}
         </div>
       );
     },
@@ -79,6 +93,15 @@ export const columns: ColumnDef<Order>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const rowData = row.original;
+      
+      const {
+        setIsAssignedOrderArtisanOpen,
+        setIsShowOrderProductOpen,
+        setOrderArtisan,
+        isDeleteDialogOpen,
+        setIsDeleteDialogOpen,
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      } = useOrderArtisanContext();
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -92,22 +115,27 @@ export const columns: ColumnDef<Order>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                const { setIsUpdateOrderOpen, setOrder } = useOrderContext();
-
-                setOrder(rowData);
-                setIsUpdateOrderOpen(true);
+                setOrderArtisan(rowData);
+                setIsAssignedOrderArtisanOpen(true);
               }}
             >
-              Update
+              Assigned
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
-                const { setIsDeleteDialogOpen, setOrder } = useOrderContext();
-                setOrder(rowData);
+                setOrderArtisan(rowData);
+                setIsShowOrderProductOpen(true);
+              }}
+            >
+              Show Products
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setOrderArtisan(rowData);
                 setIsDeleteDialogOpen(true);
               }}
             >
-              Delete
+              Cancel Order
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

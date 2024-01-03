@@ -10,30 +10,17 @@ import {
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/components/ui/use-toast";
-import { useProductContext } from "../../../../../../../context/ProductContext";
 import { useDeleteProduct } from "../../../../../../../hooks/prodect-hook";
+import { useOrderArtisanContext } from "../../../../../../../context/OrderArtisanContext";
 
-export default function DeleteProduct() {
-    const { isDeleteDialogOpen, setIsDeleteDialogOpen } = useProductContext();
+export default function DeleteOrder() {
+    const { isDeleteDialogOpen, setIsDeleteDialogOpen } = useOrderArtisanContext();
     const deleteProduct = useDeleteProduct();
-    const { product } = useProductContext();
+    const { order } = useOrderArtisanContext();
     const deleteBtn = () => {
-        if (product) {
-            console.log('delete product', product.id);
-            deleteProduct.mutate(product.id, {
-                onSuccess: () => {
-                    setIsDeleteDialogOpen(false);
-                    toast({
-                        title: "Product deleted Successfully",
-                        description: "Prodect deleted Successfully",
-                    })
-                }
-                , onError: () => {
-                    setIsDeleteDialogOpen(false);
-
-                }
-            });
-
+        if (order && order.id) {
+            console.log('delete order', order.id);
+            
         }
     }
     return (

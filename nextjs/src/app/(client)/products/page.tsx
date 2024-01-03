@@ -17,7 +17,7 @@ const Products = () => {
   return (
     <section className="flex h-full  w-screen">
       <SearchBar/>
-      <div className="w-[80%] grid grid-cols-4 gap-4 p-4">
+      <div className="w-[75%] grid grid-cols-4 gap-4 p-4">
         <ProductProvider>
           {products.data?.map((product, index) => (
             <div
@@ -36,7 +36,7 @@ const Products = () => {
                 />
                 <div className="px-4 text-left w-full">
                   <h1 className="text-lg font-bold">{product.name}</h1>
-                  <p className="text-sm">{product.description}</p>
+                  <p className="text-sm">{product.price_per_piece} DA</p>
                 </div>
 
                 <ButtonProduct product={product} />

@@ -50,7 +50,34 @@ const useDeleteOrder = () => {
     }
   );
 };
+const useAssignOrderToDeliveryPerson = (orderId: string,
+  deliveryPersonnelId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (orderId: string) => {
+      return orderService.assignOrderToDeliveryPerson(orderId,deliveryPersonnelId);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("useAssignOrderToDeliveryPerson");
+      },
+    }
+  );
+};
 
+const useUpdateStatus = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ orderId, orderStatus }: { orderId: string; orderStatus: string }) => {
+      return orderService.updateStatus(orderId, orderStatus);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("orders");
+      },
+    }
+  );
+};
 export {
   useCreateOrder,
   useUpdateOrder,

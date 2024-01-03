@@ -114,7 +114,18 @@ class ArtisanController extends Controller
      *     ),
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/Artisan")
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="business_name", type="string", maxLength=255),
+     *             @OA\Property(property="description", type="string", maxLength=255),
+     *             @OA\Property(property="open_at", type="string", format="time"),
+     *             @OA\Property(property="close_at", type="string", format="time", description="Should be after 'open_at'"),
+     *             @OA\Property(property="first_name", type="string", maxLength=255),
+     *             @OA\Property(property="last_name", type="string", maxLength=255),
+     *             @OA\Property(property="email", type="string", format="email", maxLength=255, description="Must be unique"),
+     *             @OA\Property(property="address", type="string", maxLength=255),
+     *             @OA\Property(property="phone_number", type="string", maxLength=255),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -129,9 +140,36 @@ class ArtisanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $artisans = Artisan::findOrFail($id);
-        $artisans->update($request->all());
-        return response()->json(['artisans' => $artisans]);
+
+        try {
+            $request->validate([
+                'business_name' => 'string|max:255',
+                'description' => 'string|max:255',
+                'open_at' => 'date_format:H:i:s',
+                'close_at' => 'date_format:H:i:s|after:open_at',
+                'first_name' => 'string|max:255',
+                'last_name' => 'string|max:255',
+                'email' => 'string|email|max:255|unique:users,email,' . $id,
+                'address' => 'string|max:255',
+                'phone_number' => 'string|max:255',
+            ]);
+
+            $artisans = Artisan::findOrFail($id);
+
+            // Update Artisan model
+            $artisans->update($request->all());
+
+            // Update associated User model
+            $user = $artisans->user;
+            if ($user) {
+                $user->update($request->all());
+            }
+
+            return response()->json(['artisans' => $artisans]);
+        } catch (\Exception $e) {
+            // Handle exceptions here
+            return response()->json(['error' => 'An error occurred while updating the artisan.', 'message' => $e->getMessage()], 500);
+        }
     }
 
     /**

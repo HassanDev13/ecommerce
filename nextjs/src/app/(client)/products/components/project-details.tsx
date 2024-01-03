@@ -8,6 +8,7 @@ import {
 import { useProductContext } from "../../../../../context/ProductClientContext";
 import Image from "next/image";
 import { useCardContext } from "../../../../../context/CardContext";
+import Rating from "../../profile/rating";
 
 export const ProjectDetails = () => {
   const { isCreateSheetOpen, setIsCreateProductOpen, product } =
@@ -47,6 +48,14 @@ export const ProjectDetails = () => {
             <p className="text-sm">Min Order</p>
             <p className="text-sm text-bold">{product?.min_order}</p>
           </div>
+          <div className="w-full flex justify-between">
+            <h1>Rating </h1>
+            <div className="flex space-x-1">
+              <Rating initialValue={product?.averageRating} />
+              <p>({product?.ratings.length})</p>
+            </div>
+          </div>
+
           <Button
             className="w-full"
             onClick={() => {

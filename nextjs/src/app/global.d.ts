@@ -1,6 +1,14 @@
 export {};
 
 declare global {
+  interface SendRating {
+    rating: number;
+    ratingType: "DeliveryPersonnel" | "Product" | "Artisan";
+    delivery_personnel_id?: number;
+    product_id?: number;
+    artisan_id?: number;
+    consumer_id: number;
+  }
   interface SendOrder {
     orderProducts: {
       product_id: number;
@@ -10,19 +18,50 @@ declare global {
     delivery_address: string;
   }
 
+  interface Artisan {
+    id: number;
+    user_id: number;
+    business_name: string;
+    description: string;
+    open_at: string;
+    close_at: string;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+  }
+
+  interface User {
+    id: number;
+    first_name: string;
+    last_name: string;
+    description: string;
+    address: string;
+    email: string;
+    phone_number: string;
+    user_type: string;
+    email_verified_at: string | null;
+    deleted_at: string | null;
+    created_at: string;
+    updated_at: string;
+    artisan: Artisan;
+  }
   interface Product {
     id: number;
     name: string;
     user_id: number;
     description: string;
-    price_per_piece: number;
+    price_per_piece: string;
     min_order: number;
     type: string;
     child_type: string;
     created_at: string;
     updated_at: string;
     deleted_at: string | null;
+    averageRating: number;
     images: Image[];
+    ratings: Rating[];
+    user: User;
+    orders: Order[];
   }
   interface OrderProduct extends Product {
     quantity: number;
@@ -48,7 +87,7 @@ declare global {
     id: number;
     created_at: string;
     updated_at: string;
-    user: string;
+    user: User;
     order: Order;
   }
 
@@ -64,6 +103,14 @@ declare global {
     user: string;
   }
 
+  interface DeliveryPersonnel {
+    id: number;
+    created_at: string;
+    updated_at: string;
+    user_id: number;
+    availability: number;
+    orders: Order[];
+  }
   interface DeliveryPersonnel {
     id: number;
     created_at: string;

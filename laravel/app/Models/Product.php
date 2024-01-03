@@ -105,12 +105,10 @@ class Product extends Model
         return $this->hasMany(Rating::class);
     }
 
-   
-    public function artisan()
+    public function user()
     {
-        return $this->belongsTo(Artisan::class);
+        return $this->belongsTo(User::class);
     }
-
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_products');
@@ -118,5 +116,18 @@ class Product extends Model
     public function images()
     {
         return $this->hasMany(Image::class);
+    }
+    public function calculateAverageRating()
+    {
+        $ratings = $this->ratings;
+
+        if ($ratings->count() > 0) {
+            $totalRating = $ratings->sum('rating');
+            $averageRating = $totalRating / $ratings->count();
+
+            return $averageRating;
+        }
+
+        return 0; // Default rating if no ratings are available
     }
 }

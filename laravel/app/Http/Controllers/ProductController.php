@@ -21,6 +21,7 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return JsonResponse
      *
      * @OA\Get(
@@ -29,6 +30,54 @@ class ProductController extends Controller
      *      tags={"Products"},
      *      summary="Get list of products",
      *      description="Returns list of products",
+     *      @OA\Parameter(
+     *          name="search",
+     *          in="query",
+     *          description="Search term for products",
+     *          @OA\Schema(type="string")
+     *      ),
+     *      @OA\Parameter(
+     *          name="type",
+     *          in="query",
+     *          description="Filter products by type (sugar or salt)",
+     *          @OA\Schema(type="string", enum={"sugar", "salt"})
+     *      ),
+     *      @OA\Parameter(
+     *          name="child_type",
+     *          in="query",
+     *          description="Filter products by child type",
+     *          @OA\Schema(type="string")
+     *      ),
+     *      @OA\Parameter(
+     *          name="min_price",
+     *          in="query",
+     *          description="Filter products by minimum price_per_piece",
+     *          @OA\Schema(type="number")
+     *      ),
+     *      @OA\Parameter(
+     *          name="max_price",
+     *          in="query",
+     *          description="Filter products by maximum price_per_piece",
+     *          @OA\Schema(type="number")
+     *      ),
+     *      @OA\Parameter(
+     *          name="min_rating",
+     *          in="query",
+     *          description="Filter products by minimum average rating",
+     *          @OA\Schema(type="number")
+     *      ),
+     *      @OA\Parameter(
+     *          name="sort_by",
+     *          in="query",
+     *          description="Sort products by price or rating",
+     *          @OA\Schema(type="string", enum={"price_per_piece", "rating"})
+     *      ),
+     *      @OA\Parameter(
+     *          name="sort_order",
+     *          in="query",
+     *          description="Sort order (asc or desc)",
+     *          @OA\Schema(type="string", enum={"asc", "desc"})
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -40,15 +89,75 @@ class ProductController extends Controller
      *      )
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Product::with(['images', 'ratings', 'user', 'user.artisan', 'orders']);
+
+        // Apply search query if provided
+        $searchTerm = $request->input('search');
+        if ($searchTerm) {
+            $query->where(function ($query) use ($searchTerm) {
+                $query->where('name', 'like', "%$searchTerm%")
+                    ->orWhere('description', 'like', "%$searchTerm%");
+            });
+        }
+
+        // Apply type filter if provided
+        $type = $request->input('type');
+        if ($type) {
+            $query->where('type', $type);
+        }
+
+        // Apply child_type filter if provided
+        $childType = $request->input('child_type');
+        if ($childType) {
+            $query->where('child_type', $childType);
+        }
+
+        // Apply min_price filter if provided
+        $minPrice = $request->input('min_price');
+        if ($minPrice) {
+            $query->where('price_per_piece', '>=', $minPrice);
+        }
+
+        // Apply max_price filter if provided
+        $maxPrice = $request->input('max_price');
+        if ($maxPrice) {
+            $query->where('price_per_piece', '<=', $maxPrice);
+        }
+
+        // Apply min_rating filter if provided
+        $minRating = $request->input('min_rating');
+        if ($minRating) {
+            $query->withAvg('ratings', 'rating')
+                ->having('ratings_avg_rating', '>=', $minRating);
+        }
+
+        // Apply sorting if provided
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortOrder = $request->input('sort_order', 'desc');
+
+        if ($sortBy === 'rating') {
+            // Sort by average rating
+            $query->withAvg('ratings', 'rating')
+                ->orderBy('ratings_avg_rating', $sortOrder);
+        } else {
+            // Sort by other fields
+            $query->orderBy($sortBy, $sortOrder);
+        }
+
         // Fetch all products with their associated relationships
-        $products = Product::with(['images', 'ratings', 'artisan', 'orders'])->get();
-        // Return the products with related data
+        $products = $query->get();
+
+        // Calculate average rating for each product
+        $products->each(function ($product) {
+            $averageRating = $product->ratings->count() > 0 ? $product->ratings->avg('rating') : 0;
+            $product->averageRating = min(5, $averageRating); // Cap the value at 5
+        });
+
         return response()->json(['products' => $products], 200);
-        // $products = Product::all();
-        // return response()->json(['products' => $products]);
     }
+
 
 
     /**

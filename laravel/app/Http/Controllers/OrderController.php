@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\DeliveryPersonnel;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Validation\Rule;
 /**
  * @group Orders
  *
@@ -35,11 +36,11 @@ class OrderController extends Controller
      *      )
      * )
      */
-    
+
     public function index()
     {
-       
-        $orders = Order::with(['consumer', 'products','products.images', 'deliveryPersonnel'])->get();
+
+        $orders = Order::with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])->get();
         return response()->json(['orders' => $orders]);
     }
 
@@ -174,39 +175,107 @@ class OrderController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Assign a delivery person to an order.
      *
-     * @param string $id
-     * @return JsonResponse
-     *
-     * @OA\Delete(
-     *      path="/api/orders/{id}",
-     *      operationId="deleteOrder",
-     *      tags={"Orders"},
-     *      summary="Delete a specific order",
-     *      description="Deletes a specific order",
-     *      @OA\Parameter(
-     *          name="id",
-     *          in="path",
-     *          required=true,
-     *          description="ID of the order",
-     *          @OA\Schema(type="string")
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Order deleted successfully"
-     *      ),
-     *      @OA\Response(
-     *          response=404,
-     *          description="Order not found"
-     *      )
+     * @OA\Post(
+     *     path="/api/orders/assignDeliveryPerson",
+     *     summary="Assign a delivery person to an order",
+     *     tags={"Orders"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Provide order and delivery personnel IDs",
+     *         @OA\JsonContent(
+     *             required={"orderId", "deliveryPersonnelId"},
+     *             @OA\Property(property="orderId", type="integer"),
+     *             @OA\Property(property="deliveryPersonnelId", type="integer"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Delivery person assigned successfully",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order or delivery personnel not found",
+     *     ),
      * )
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(string $id)
+    public function assignDeliveryPerson(Request $request)
     {
-        $order = Order::findOrFail($id);
-        $order->delete();
+        // Validate the input
+        $request->validate([
+            'orderId' => ['required', 'exists:orders,id'],
+            'deliveryPersonnelId' => ['required', 'exists:delivery_personnels,id'],
+        ]);
 
-        return response()->json(['message' => 'Order deleted successfully']);
+        // Find the order
+        $order = Order::findOrFail($request->input('orderId'));
+
+        // Find the delivery personnel
+        $deliveryPersonnel = DeliveryPersonnel::findOrFail($request->input('deliveryPersonnelId'));
+
+        // Assign the delivery person to the order
+        $order->assignDeliveryPerson($deliveryPersonnel);
+
+        return response()->json(['success' => "Delivery person assigned successfully."]);
     }
+
+
+    /**
+     * Change the status of an order.
+     *
+     * @OA\Post(
+     *     path="/api/orders/changeStatus/{id}",
+     *     summary="Change the status of an order",
+     *     tags={"Orders"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the order",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Provide the new order status",
+     *         @OA\JsonContent(
+     *             required={"orderStatus"},
+     *             @OA\Property(property="orderStatus", type="string"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Order status changed successfully",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order not found",
+     *     ),
+     * )
+     *
+     * @param Request $request
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changeStatus(Request $request, string $id)
+{
+    try {
+        $request->validate([
+            'orderStatus' => ['required', 'string', Rule::in(['unprocessed', 'accepted', 'refused', 'assigned', 'sent', 'delivered'])],
+        ]);
+
+        $order = Order::findOrFail($id);
+
+        $order->changeStatus($request->input('orderStatus'));
+
+        return response()->json(['success' => 'Order status changed successfully']);
+    } catch (\Exception $e) {
+        // Handle exceptions here
+        return response()->json(['error' => 'An error occurred while changing the order status.', 'message' => $e->getMessage()], 500);
+    }
+}
+
 }

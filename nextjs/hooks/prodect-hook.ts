@@ -1,14 +1,14 @@
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import productService from "../services/prodect-service";
 
-
-
 const useAllProducts = () => {
   return useQuery<Product[]>("products", productService.getAllProducts);
 };
 
 const useProductById = (productId: string) => {
-  return useQuery<Product>(["products", productId], () => productService.getProductById(productId));
+  return useQuery<Product>(["products", productId], () =>
+    productService.getProductById(productId)
+  );
 };
 
 const useCreateProduct = () => {
@@ -24,11 +24,29 @@ const useCreateProduct = () => {
     }
   );
 };
-
+const useAddRating = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (sendRating: SendRating) => {
+      return productService.addRating(sendRating);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("ratings");
+      },
+    }
+  );
+};
 const useUpdateProduct = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ productId, updatedProductData }: { productId: string; updatedProductData: Partial<Product> }) => {
+    ({
+      productId,
+      updatedProductData,
+    }: {
+      productId: string;
+      updatedProductData: Partial<Product>;
+    }) => {
       return productService.updateProduct(productId, updatedProductData);
     },
     {
@@ -59,16 +77,16 @@ const useUploadImages = () => {
   return useMutation(
     async (data: { productId: string; images: FileList }) => {
       const { productId, images } = data;
-      return  await productService.uploadImages(productId, images);
+      return await productService.uploadImages(productId, images);
     },
     {
-      onSuccess: () => { 
+      onSuccess: () => {
         // Invalidate the "products" query on success
-        queryClient.invalidateQueries('products');
+        queryClient.invalidateQueries("products");
       },
       onError: (error) => {
         // Handle errors here
-        console.error('Error uploading images:', error);
+        console.error("Error uploading images:", error);
       },
     }
   );
@@ -80,5 +98,6 @@ export {
   useProductById,
   useAllProducts,
   useDeleteProduct,
-  useUploadImages
+  useUploadImages,
+  useAddRating,
 };

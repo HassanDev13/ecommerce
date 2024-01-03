@@ -41,7 +41,6 @@ class RatingController extends Controller
      *      description="Stores a new rating",
      *      @OA\RequestBody(
      *          required=true,
-     * 
      *          @OA\JsonContent(
      *              @OA\Property(
      *                  property="rating",
@@ -55,6 +54,30 @@ class RatingController extends Controller
      *                  enum={"DeliveryPersonnel", "Product", "Artisan"},
      *                  description="Type of rating (DeliveryPersonnel, Product, Artisan)",
      *                  example="Product"
+     *              ),
+     *              @OA\Property(
+     *                  property="delivery_personnel_id",
+     *                  type="integer",
+     *                  description="ID of the related DeliveryPersonnel",
+     *                  example=123
+     *              ),
+     *              @OA\Property(
+     *                  property="product_id",
+     *                  type="integer",
+     *                  description="ID of the related Product",
+     *                  example=456
+     *              ),
+     *              @OA\Property(
+     *                  property="artisan_id",
+     *                  type="integer",
+     *                  description="ID of the related Artisan",
+     *                  example=789
+     *              ),
+     *              @OA\Property(
+     *                  property="consumer_id",
+     *                  type="integer",
+     *                  description="ID of the related Consumer",
+     *                  example=987
      *              )
      *          )
      *      ),
@@ -74,10 +97,16 @@ class RatingController extends Controller
         $validator = Validator::make($request->all(), [
             'rating' => 'required|integer',
             'ratingType' => 'required|in:DeliveryPersonnel,Product,Artisan',
+            'delivery_personnel_id' => 'integer|required_without_all:product_id,artisan_id',
+            'product_id' => 'integer|required_without_all:delivery_personnel_id,artisan_id',
+            'artisan_id' => 'integer|required_without_all:delivery_personnel_id,product_id',
+            'consumer_id' => 'required|integer',
         ]);
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
+
         $rating = Rating::create($request->all());
 
         return response()->json(['rating' => $rating], 201);
@@ -227,5 +256,4 @@ class RatingController extends Controller
 
         return response()->json(['message' => 'Rating deleted successfully']);
     }
-
 }

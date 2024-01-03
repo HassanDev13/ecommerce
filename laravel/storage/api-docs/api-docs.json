@@ -139,7 +139,48 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Artisan"
+                                "properties": {
+                                    "business_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "open_at": {
+                                        "type": "string",
+                                        "format": "time"
+                                    },
+                                    "close_at": {
+                                        "description": "Should be after 'open_at'",
+                                        "type": "string",
+                                        "format": "time"
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "email": {
+                                        "description": "Must be unique",
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
@@ -800,14 +841,57 @@
                         "description": "Validation error"
                     }
                 }
-            },
-            "delete": {
+            }
+        },
+        "/api/orders/assignDeliveryPerson": {
+            "post": {
                 "tags": [
                     "Orders"
                 ],
-                "summary": "Delete a specific order",
-                "description": "Deletes a specific order",
-                "operationId": "deleteOrder",
+                "summary": "Assign a delivery person to an order",
+                "description": "Assign a delivery person to an order.",
+                "operationId": "4a3d59dd627092ba070e75343d841a5d",
+                "requestBody": {
+                    "description": "Provide order and delivery personnel IDs",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "orderId",
+                                    "deliveryPersonnelId"
+                                ],
+                                "properties": {
+                                    "orderId": {
+                                        "type": "integer"
+                                    },
+                                    "deliveryPersonnelId": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Delivery person assigned successfully"
+                    },
+                    "404": {
+                        "description": "Order or delivery personnel not found"
+                    }
+                }
+            }
+        },
+        "/api/orders/changeStatus/{id}": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Change the status of an order",
+                "description": "Change the status of an order.",
+                "operationId": "e90a1b0511907943647a0665708e0d38",
                 "parameters": [
                     {
                         "name": "id",
@@ -815,13 +899,32 @@
                         "description": "ID of the order",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
+                "requestBody": {
+                    "description": "Provide the new order status",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "orderStatus"
+                                ],
+                                "properties": {
+                                    "orderStatus": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "Order deleted successfully"
+                        "description": "Order status changed successfully"
                     },
                     "404": {
                         "description": "Order not found"
@@ -1043,6 +1146,84 @@
                 "summary": "Get list of products",
                 "description": "Returns list of products",
                 "operationId": "getProductsList",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search term for products",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filter products by type (sugar or salt)",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "sugar",
+                                "salt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "child_type",
+                        "in": "query",
+                        "description": "Filter products by child type",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "description": "Filter products by minimum price_per_piece",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "description": "Filter products by maximum price_per_piece",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "min_rating",
+                        "in": "query",
+                        "description": "Filter products by minimum average rating",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Sort products by price or rating",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "price_per_piece",
+                                "rating"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "description": "Sort order (asc or desc)",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1415,6 +1596,26 @@
                                             "Artisan"
                                         ],
                                         "example": "Product"
+                                    },
+                                    "delivery_personnel_id": {
+                                        "description": "ID of the related DeliveryPersonnel",
+                                        "type": "integer",
+                                        "example": 123
+                                    },
+                                    "product_id": {
+                                        "description": "ID of the related Product",
+                                        "type": "integer",
+                                        "example": 456
+                                    },
+                                    "artisan_id": {
+                                        "description": "ID of the related Artisan",
+                                        "type": "integer",
+                                        "example": 789
+                                    },
+                                    "consumer_id": {
+                                        "description": "ID of the related Consumer",
+                                        "type": "integer",
+                                        "example": 987
                                     }
                                 },
                                 "type": "object"
@@ -1678,7 +1879,58 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/User"
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "user_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Consumer",
+                                            "Artisan",
+                                            "DeliveryPersonnel"
+                                        ]
+                                    },
+                                    "business_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "open_at": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "close_at": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "after:open_at"
+                                    },
+                                    "availability": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
@@ -1693,6 +1945,9 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
                     },
                     "404": {
                         "description": "User not found"
