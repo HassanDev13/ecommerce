@@ -6,7 +6,9 @@ const useAllOrders = () => {
 };
 
 const useOrderById = (orderId: string) => {
-  return useQuery<Order>(["orders", orderId], () => orderService.getOrderById(orderId));
+  return useQuery<Order>(["orders", orderId], () =>
+    orderService.getOrderById(orderId)
+  );
 };
 
 const useCreateOrder = () => {
@@ -26,7 +28,13 @@ const useCreateOrder = () => {
 const useUpdateOrder = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    ({ orderId, updatedOrderData }: { orderId: string; updatedOrderData: Partial<Order> }) => {
+    ({
+      orderId,
+      updatedOrderData,
+    }: {
+      orderId: string;
+      updatedOrderData: Partial<Order>;
+    }) => {
       return orderService.updateOrder(orderId, updatedOrderData);
     },
     {
@@ -50,12 +58,23 @@ const useDeleteOrder = () => {
     }
   );
 };
-const useAssignOrderToDeliveryPerson = (orderId: string,
-  deliveryPersonnelId: string) => {
+const useAssignOrderToDeliveryPerson = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    (orderId: string) => {
-      return orderService.assignOrderToDeliveryPerson(orderId,deliveryPersonnelId);
+    ({
+      orderId,
+      deliveryPersonnelId,
+      orderStatus
+    }: {
+      orderId: string;
+      deliveryPersonnelId: string;
+      orderStatus : OrderStatus;
+    }) => {
+      return orderService.assignOrderToDeliveryPerson(
+        orderId,
+        deliveryPersonnelId,
+        orderStatus
+      );
     },
     {
       onSuccess: () => {
@@ -69,6 +88,7 @@ const useUpdateStatus = () => {
   const queryClient = useQueryClient();
   return useMutation(
     ({ orderId, orderStatus }: { orderId: string; orderStatus: string }) => {
+      console.log("orderId", orderId , "orderStatus", orderStatus);
       return orderService.updateStatus(orderId, orderStatus);
     },
     {
@@ -84,4 +104,6 @@ export {
   useOrderById,
   useAllOrders,
   useDeleteOrder,
+  useUpdateStatus,
+  useAssignOrderToDeliveryPerson,
 };

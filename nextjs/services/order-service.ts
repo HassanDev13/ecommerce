@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "./axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL + "/api/orders" || "";
 const API_BASE_URL_SEND_ORDER =
@@ -29,23 +29,28 @@ const orderService = {
     );
     return response.data.orders;
   },
+  ///api/orders/changeStatus/{id}
   updateStatus: async (
     orderId: string,
-    updatedOrderData: string
+    orderStatus: string
   ): Promise<any> => {
     const response = await axios.post(
-      `${API_BASE_URL}/${orderId}`,
-      updatedOrderData
+      `${API_BASE_URL}/changeStatus/${orderId}`,
+      {
+        orderStatus: orderStatus,
+      }
     );
     return response.data.orders;
-  },
+  }, 
   assignOrderToDeliveryPerson: async (
     orderId: string,
-    deliveryPersonnelId: string
+    deliveryPersonnelId: string,
+    orderStatus : OrderStatus
   ): Promise<Order> => {
-    const response = await axios.put(`${API_BASE_URL}/assignDeliveryPerson`, {
+    const response = await axios.post(`${API_BASE_URL}/assignDeliveryPerson`, {
       orderId: orderId,
       deliveryPersonnelId: deliveryPersonnelId,
+      orderStatus : orderStatus
     });
     return response.data.orders;
   },

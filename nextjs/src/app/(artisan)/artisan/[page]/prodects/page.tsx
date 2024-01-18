@@ -1,17 +1,22 @@
-
-
-import { Toaster } from "@/components/ui/toaster"
-import { columns } from './components/columns'
-import CreateProduct from './components/create'
-import DeleteProduct from './components/delete'
-import UpdateProduct from './components/update'
-import { useAllProducts } from "../../../../../../hooks/prodect-hook"
-import { ProductProvider } from "../../../../../../context/ProductContext"
-import { DataTable } from "./components/data-table"
+import { Toaster } from "@/components/ui/toaster";
+import { columns } from "./components/columns";
+import CreateProduct from "./components/create";
+import DeleteProduct from "./components/delete";
+import UpdateProduct from "./components/update";
+import { useAllProducts } from "../../../../../../hooks/prodect-hook";
+import { ProductProvider } from "../../../../../../context/ProductContext";
+import { DataTable } from "./components/data-table";
+import { useArtisanById } from "../../../../../../hooks/user-hook";
+import { useAuth } from "../../../../../../hooks/auth";
 
 export default function Products() {
+  const { logout, user } = useAuth({ middleware: "auth" });
 
-  const { data: products, isLoading, isError } = useAllProducts();
+  const {
+    data: products,
+    isLoading,
+    isError,
+  } = useArtisanById(Number(user?.artisan.id));
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -25,13 +30,13 @@ export default function Products() {
     <>
       <ProductProvider>
         <div className="h-screen w-full">
-          <DataTable data={products!} columns={columns}/>
+         
+          <DataTable data={products?.user.products ?? []} columns={columns} />
           <CreateProduct />
           <UpdateProduct />
           <DeleteProduct />
-       
         </div>
       </ProductProvider>
     </>
-  )
+  );
 }

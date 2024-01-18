@@ -54,10 +54,8 @@ const RegistrationPage = () => {
     availability: z.boolean(),
   });
 
+
   useEffect(() => {
-    userFlow();
-  }, [user]);
-  const userFlow = () => {
     if (user) {
       if (user.user_type == "Consumer") {
         // router.push('/');
@@ -70,11 +68,10 @@ const RegistrationPage = () => {
       } else if (user.user_type == "DeliveryPersonnel") {
         // router.push('/delivery');
         router.push("/delivery");
-        console.log("user", user?.deliveryPersonnel);
+        
       }
     }
-  };
-
+  }, [router, user]);
   async function onSubmit(values: z.infer<typeof userSchemaRegister>) {
     console.log("values", values);
 
@@ -328,22 +325,7 @@ const RegistrationPage = () => {
                 </>
               )}
               {formRegister.watch().user_type === "DeliveryPersonnel" && (
-                // <FormField
-                //   control={formRegister.control}
-                //   name="availability"
-                //   render={({ field }) => (
-                //     <FormItem>
-                //       <FormLabel>Availability</FormLabel>
-                //       <FormControl>
-                //         <Switch
-                //           checked={field.value}
-                //           onCheckedChange={field.onChange}
-                //         />
-                //       </FormControl>
-                //       <FormMessage />
-                //     </FormItem>
-                //   )}
-                // />
+             
                 <FormField
                   control={formRegister.control}
                   name="availability"

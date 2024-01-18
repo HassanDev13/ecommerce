@@ -1,3 +1,4 @@
+'use client';
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -25,7 +26,7 @@ export const CardList = () => {
     if (cardProducts === null) return null;
     let total = 0;
     cardProducts.forEach((product) => {
-      total += product.price_per_piece * product.quantity;
+      total += Number(product.price_per_piece )* product.quantity;
     });
     return total;
   };
@@ -231,6 +232,7 @@ export const CardList = () => {
       orderProducts: orderProducts.map((orderProduct) => ({
         product_id: orderProduct.id,
         quantity: orderProduct.quantity,
+        artisan_id : orderProduct.user.artisan.id
       })),
       orderStatus,
       delivery_address: deliveryAddress,

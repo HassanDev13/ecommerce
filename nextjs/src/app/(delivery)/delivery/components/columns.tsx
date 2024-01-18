@@ -1,151 +1,178 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import {
-    ColumnDef
-} from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import { useOrderArtisanContext } from "../../../../../context/OrderArtisanContext";
+import { toast } from "@/components/ui/use-toast";
 
+const getStatusColor = (status : OrderStatus) => {
+  const colorMap = {
+    unprocessed: 'bg-gray-500',
+    accepted: 'bg-green-500',
+    refused: 'bg-red-500',
+    assigned: 'bg-blue-500',
+    sent: 'bg-yellow-500',
+    delivered: 'bg-purple-500',
+  };
 
+  return colorMap[status] || 'bg-gray-500';
+};
 
-const data: Payment[] = [
-    {
-        id: "m5gr84i9",
-        amount: 316,
-        status: "success",
-        email: "ken99@yahoo.com",
-    },
-    {
-        id: "3u1reuv4",
-        amount: 242,
-        status: "success",
-        email: "Abe45@gmail.com",
-    },
-    {
-        id: "derv1ws0",
-        amount: 837,
-        status: "processing",
-        email: "Monserrat44@gmail.com",
-    },
-    {
-        id: "5kma53ae",
-        amount: 874,
-        status: "success",
-        email: "Silas22@gmail.com",
-    },
-    {
-        id: "bhqecj4p",
-        amount: 721,
-        status: "failed",
-        email: "carmella@hotmail.com",
-    },
-]
+export const columns: ColumnDef<Order>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
 
-export type Payment = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
-}
-
-
-
-export const columns: ColumnDef<Payment>[] = [
-    {
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
+  {
+    accessorKey: "name",
+    header: "consumer Name",
+    cell: ({ row }) => {
+      const rowData = row.original;
+      return (
+        <div className="capitalize">{rowData.consumer.user.first_name}</div>
+      );
     },
-    {
-        accessorKey: "status",
-        header: "Status",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("status")}</div>
-        ),
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone ",
+    cell: ({ row }) => {
+      const rowData = row.original;
+      return (
+        <div className="capitalize">{rowData.consumer.user.phone_number}</div>
+      );
     },
-    {
-        accessorKey: "email",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  },
+  {
+    accessorKey: "created_at",
+    header: "Order date",
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("created_at")}</div>
+    ),
+  },
+  {
+    accessorKey: 'order_status',
+    header: 'Order status',
+    cell: ({ row }) => (
+      <div
+        className={`capitalize w-fit font-bold p-2 text-white rounded-full ${getStatusColor(
+          row.getValue('order_status')
+        )}`}
+      >
+        {row.getValue('order_status')}
+      </div>
+    ),
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const rowData = row.original;
+
+      const {
+        setIsShowOrderProductOpen,
+        setOrderArtisan,
+        changeStatus,
+        setIsDeleteDialogOpen,
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+      } = useOrderArtisanContext();
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              onClick={() => {
+                setOrderArtisan(rowData);
+                setIsShowOrderProductOpen(true);
+              }}
+            >
+              Show Products
+            </DropdownMenuItem>
+
+            {
+              // eslint-disable-next-line no-nested-ternary
+              rowData.order_status === "accepted" ? (
+                <DropdownMenuItem
+                  onClick={() => {
+                    changeStatus(rowData, "sent");
+                    setIsDeleteDialogOpen(true);
+                  }}
                 >
-                    Email
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+                  Sent
+                </DropdownMenuItem>
+              ) : rowData.order_status === "sent" ? (
+                <DropdownMenuItem
+                onClick={() => {
+                  changeStatus(rowData, "delivered");
+                  setIsDeleteDialogOpen(true);
+                }}
+              >
+                Delivered
+              </DropdownMenuItem>
+              
+              ) : rowData.order_status === "refused" ||  rowData.order_status === "delivered" ? (
+                <></>
+              ) : (
+                <>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      changeStatus(rowData, "refused");
+                      setIsDeleteDialogOpen(true);
+                    }}
+                  >
+                    Refused
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      changeStatus(rowData, "accepted");
+                      setIsDeleteDialogOpen(true);
+                    }}
+                  >
+                    Accepted
+                  </DropdownMenuItem>
+                </>
+              )
+            }
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
-    {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"))
-
-            // Format the amount as a dollar amount
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount)
-
-            return <div className="text-right font-medium">{formatted}</div>
-        },
-    },
-    {
-        id: "actions",
-        enableHiding: false,
-        cell: ({ row }) => {
-            const payment = row.original
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
-                        >
-                            Copy payment ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
-        },
-    },
-]
+  },
+];

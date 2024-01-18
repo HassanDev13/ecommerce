@@ -7,6 +7,8 @@ import Footer from "../_components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { CardProvider } from "../../../context/CardContext";
 import CardGlobalProviders from "./providers";
+import { EditProfileSheet } from "@/components/ui/edit-profile-sheet";
+import { CardList } from "./products/components/card-list";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,15 +28,14 @@ export default function RootLayout({
         <CardGlobalProviders>
           <Providers>
             <LandPageNavBar />
-            <Providers>{children}</Providers>
+            {children}
             <Toaster />
+            <EditProfileSheet/>
+            <CardList/>
           </Providers>
           <Footer />
-         
         </CardGlobalProviders>
-        
       </body>
     </html>
   );
 }
-

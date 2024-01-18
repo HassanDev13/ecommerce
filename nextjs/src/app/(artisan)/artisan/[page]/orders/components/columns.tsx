@@ -15,6 +15,19 @@ import { MoreHorizontal } from "lucide-react";
 import { useOrderContext } from "../../../../../../../context/OrderContext";
 import { useOrderArtisanContext } from "../../../../../../../context/OrderArtisanContext";
 
+const getStatusColor = (status: OrderStatus) => {
+  const colorMap = {
+    unprocessed: "bg-gray-500",
+    accepted: "bg-green-500",
+    refused: "bg-red-500",
+    assigned: "bg-blue-500",
+    sent: "bg-yellow-500",
+    delivered: "bg-purple-500",
+  };
+
+  return colorMap[status] || "bg-gray-500";
+};
+
 export const columns: ColumnDef<Order>[] = [
   {
     id: "select",
@@ -42,7 +55,13 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "order_status",
     header: "Order status",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("order_status")}</div>
+      <div
+        className={`capitalize w-fit font-bold p-2 text-white rounded-full ${getStatusColor(
+          row.getValue("order_status")
+        )}`}
+      >
+        {row.getValue("order_status")}
+      </div>
     ),
   },
   {
@@ -80,7 +99,7 @@ export const columns: ColumnDef<Order>[] = [
       return (
         <div className="text-right font-medium">
           {rowData.delivery_personnel ? (
-            rowData.delivery_personnel.id
+            rowData.delivery_personnel_id
           ) : (
             <span className="text-red-500">Not assigned</span>
           )}
@@ -93,53 +112,78 @@ export const columns: ColumnDef<Order>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const rowData = row.original;
-      
+
       const {
+        changeStatus,
         setIsAssignedOrderArtisanOpen,
         setIsShowOrderProductOpen,
         setOrderArtisan,
         isDeleteDialogOpen,
         setIsDeleteDialogOpen,
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
       } = useOrderArtisanContext();
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+      switch (rowData.order_status) {
+        case "unprocessed":
+        case "refused":
+          return (
+            <div className="flex space-x-2">
+              <Button
+                className="w-full"
+                onClick={() => {
+                  setOrderArtisan(rowData);
+                  setIsAssignedOrderArtisanOpen(true);
+                }}
+              >
+                Assign
+              </Button>
+              <Button
+                className="w-full"
+                onClick={() => {
+                  setOrderArtisan(rowData);
+                  setIsShowOrderProductOpen(true);
+                }}
+              >
+                Show Products
+              </Button>
+              <Button
+                className="w-full"
+                onClick={() => {
+                  setOrderArtisan(rowData);
+                  setIsDeleteDialogOpen(true);
+                }}
+              >
+                Cancel Order
+              </Button>
+            </div>
+          );
+        case "accepted":
+        case "assigned":
+        case "sent":
+          return (
+            <Button
+              className="w-full"
+              onClick={() => changeStatus(rowData, "delivered")}
+            >
+              Deliver
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                setOrderArtisan(rowData);
-                setIsAssignedOrderArtisanOpen(true);
-              }}
-            >
-              Assigned
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setOrderArtisan(rowData);
-                setIsShowOrderProductOpen(true);
-              }}
-            >
-              Show Products
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setOrderArtisan(rowData);
-                setIsDeleteDialogOpen(true);
-              }}
-            >
-              Cancel Order
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+          );
+        case "delivered":
+          return (
+            <div className="flex justify-end">
+              <Button
+                className="w-fit"
+                onClick={() => {
+                  setOrderArtisan(rowData);
+                  setIsShowOrderProductOpen(true);
+                }}
+              >
+                Show Products
+              </Button>
+            </div>
+          );
+        default:
+          return <></>;
+      }
     },
   },
 ];

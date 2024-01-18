@@ -10,9 +10,55 @@
                 "tags": [
                     "Artisan"
                 ],
-                "summary": "Get all Artisans",
-                "description": "Display a listing of the resource.",
-                "operationId": "4997942c6261ddbf23a4879bcf598e0e",
+                "summary": "Search for Artisans",
+                "description": "Returns a list of Artisans based on provided filters.",
+                "operationId": "searchArtisans",
+                "parameters": [
+                    {
+                        "name": "business_name",
+                        "in": "query",
+                        "description": "Business name to filter Artisans",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Address to filter Artisans",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filter products by type (sugar or salt)",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "sugar",
+                                "salt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "child_type",
+                        "in": "query",
+                        "description": "Child type to filter Artisans",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "min_rating",
+                        "in": "query",
+                        "description": "Filter Artisans by minimum average rating",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -26,6 +72,9 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "No Artisans found"
                     }
                 }
             },
@@ -1918,13 +1967,16 @@
                                         "maxLength": 255
                                     },
                                     "open_at": {
+                                        "description": "Required if user_type is Artisan",
                                         "type": "string",
-                                        "format": "date-time"
+                                        "maxLength": 255,
+                                        "example": "9:00"
                                     },
                                     "close_at": {
+                                        "description": "Required if user_type is Artisan",
                                         "type": "string",
-                                        "format": "date-time",
-                                        "example": "after:open_at"
+                                        "maxLength": 255,
+                                        "example": "13:00"
                                     },
                                     "availability": {
                                         "type": "boolean"

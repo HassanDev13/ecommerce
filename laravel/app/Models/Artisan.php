@@ -70,13 +70,15 @@ class Artisan extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function prodects()
-    {
-        return $this->hasMany(Product::class);
-    }
+   
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }
 

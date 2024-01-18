@@ -20,7 +20,7 @@ const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider: React.FC<OrderContextProps> = ({ children }) => {
   const [order, setOrder] = useState<Order | null>(null);
-
+  
   const [isCreateSheetOpen, setIsCreateOrderOpen] = useState<boolean>(false);
   const [isUpdateSheetOpen, setIsUpdateOrderOpen] = useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
@@ -35,6 +35,7 @@ export const OrderProvider: React.FC<OrderContextProps> = ({ children }) => {
         setIsUpdateOrderOpen,
         isDeleteDialogOpen,
         setIsDeleteDialogOpen, 
+      
       }
     }>
       {children}

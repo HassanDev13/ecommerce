@@ -10,6 +10,10 @@ import {
   useProductContext,
 } from "../../../../context/ProductClientContext";
 import { useCardContext } from "../../../../context/CardContext";
+import { SlidersHorizontal } from "lucide-react";
+import { useEditProfileContext } from "../../../../context/EditProfileContext";
+import EditProfileIcon from "@/components/ui/edit-button-icon";
+
 
 const LandPageNavBar: React.FC = () => {
   const hiddenRoutes = ["/login", "/register"];
@@ -67,16 +71,14 @@ const LandPageNavBar: React.FC = () => {
         )}
 
         <CartIcon hiddenRoutes={hiddenRoutes} pathname={pathname} />
+        <EditProfileIcon hiddenRoutes={hiddenRoutes} pathname={pathname} />
       </div>
     </nav>
   );
 };
 
 export default LandPageNavBar;
-interface CartIconProps {
-  hiddenRoutes: string[];
-  pathname: string;
-}
+
 function CartIcon({ hiddenRoutes, pathname }: CartIconProps) {
   const { cardProducts, setCardOpen } = useCardContext();
   return (
@@ -97,3 +99,4 @@ function CartIcon({ hiddenRoutes, pathname }: CartIconProps) {
     </div>
   );
 }
+

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DeliveryPersonnel;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @group DeliveryPersonnel
@@ -31,7 +32,7 @@ class DeliveryPersonnelController extends Controller
      */
     public function index()
     {
-        $deliveryPersonnel = DeliveryPersonnel::with(['orders', 'orders.consumer', 'orders.consumer.user', 'orders.products', 'orders.products.images', 'orders.products.user', 'orders.products.user.artisan'])->get(['id', 'created_at', 'updated_at', 'user_id', 'availability']);
+        $deliveryPersonnel = DeliveryPersonnel::with(['user', 'orders', 'orders.consumer', 'orders.consumer.user', 'orders.products', 'orders.products.images', 'orders.products.user', 'orders.products.user.artisan'])->get(['id', 'created_at', 'updated_at', 'user_id', 'availability']);
         return response()->json(['deliveryPersonnels' => $deliveryPersonnel]);
     }
 
@@ -81,13 +82,31 @@ class DeliveryPersonnelController extends Controller
      *     @OA\Response(
      *         response=404,
      *         description="Delivery Personnel not found"
-     *     ),
+     *     )
      * )
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(string $id)
     {
-        $deliveryPersonnel = DeliveryPersonnel::findOrFail($id);
-        return response()->json(['deliveryPersonnels' => $deliveryPersonnel]);
+        Log::info('Showing Delivery Personnel with id: ' . $id);
+        try {
+            $deliveryPersonnel = DeliveryPersonnel::with([
+                'user',
+                'orders',
+                'orders.consumer',
+                'orders.consumer.user',
+                'orders.products',
+                'orders.products.images',
+                'orders.products.user',
+                'orders.products.user.artisan'
+            ])->findOrFail($id, ['id', 'created_at', 'updated_at', 'user_id', 'availability']);
+
+            return response()->json(['deliveryPersonnel' => $deliveryPersonnel]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'Delivery Personnel not found'], 404);
+        }
     }
 
     /**

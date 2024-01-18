@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\OrderProduct;
+use App\Models\Product;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -34,7 +36,7 @@ class OrderProductController extends Controller
      */
     public function index()
     {
-        $orderProducts = OrderProduct::all();
+        $orderProducts = OrderProduct::with('order', 'product')->get();
         return response()->json(['OrderProducts' => $orderProducts]);
     }
 
@@ -75,6 +77,7 @@ class OrderProductController extends Controller
         $validator = Validator::make($request->all(), [
             'orderProducts' => 'required|array',
             'orderProducts.*.product_id' => 'required|integer',
+            'orderProducts.*.artisan_id' => 'required|integer',
             'orderProducts.*.quantity' => 'required|integer',
             'orderStatus' => ['required', 'string', Rule::in(['unprocessed', 'accepted', 'refused', 'assigned to a delivery person', 'sent', 'delivered'])],
             'delivery_address' => 'required|string'
@@ -83,23 +86,44 @@ class OrderProductController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
+        // how to get the consumer_id and artisan_id
         //auth()->id(),
+        $user = auth()->user();
+
+        $userInfo = User::with('consumer')->find($user->id);
         $order = Order::create([
             'orderStatus' => $request->input('orderStatus'),
             'delivery_address' => $request->input('delivery_address'),
-            'consumer_id' => 1,
+            'consumer_id' => $userInfo->consumer->id,
         ]);
 
         if (!$order) {
             return response()->json(['error' => 'Failed to create the order'], 500);
         }
 
-        $orderProductsArray = collect($request->input('orderProducts'))->mapWithKeys(function ($productData) {
-            return [$productData['product_id'] => ['quantity' => $productData['quantity']]];
-        })->toArray();
+        // $orderProductsArray = collect($request->input('orderProducts'))->mapWithKeys(function ($productData) {
 
-        $order->products()->sync($orderProductsArray);
+        //     return [$productData['product_id'] => [
+        //         'quantity' => $productData['quantity'],
+        //         'artisan_id' => $productData['artisan_id'],
+        //     ]];
+        // })->toArray();
 
+
+        // $order->products()->sync($orderProductsArray);
+
+
+        // return response()->json(['order' => $order], 201);
+        // Associate each product with its artisan
+        foreach ($request->input('orderProducts') as $productData) {
+          
+            $order->products()->attach($productData['product_id'], [
+                'quantity' => $productData['quantity'],
+                'artisan_id' => $productData['artisan_id'],
+            ]);
+        }
+
+        // Return the response
         return response()->json(['order' => $order], 201);
     }
 

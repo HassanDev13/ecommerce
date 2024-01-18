@@ -23,6 +23,7 @@ export default function ShowOrderProduct() {
         <SheetHeader>
           <SheetTitle>Products</SheetTitle>
         </SheetHeader>
+       
         {order?.products.map((product) => (
           <div key={product.id} className="flex flex-row justify-between">
             <div className="flex flex-row">

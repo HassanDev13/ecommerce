@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "./axios";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL + "/api/products" || "";
@@ -6,8 +6,8 @@ const API_BASE_URL =
 const API_BASE_URL_RATING =
   process.env.NEXT_PUBLIC_BACKEND_URL + "/api/ratings" || "";
 const productService = {
-  getAllProducts: async (): Promise<Product[]> => {
-    const response = await axios.get(API_BASE_URL);
+  getAllProducts: async (params: ProductQueryParams = {}): Promise<Product[]> => {
+    const response = await axios.get(API_BASE_URL, { params });
     return response.data.products;
   },
 

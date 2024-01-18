@@ -50,7 +50,7 @@ export const RatingSheet = () => {
     
     const rating: SendRating = {
       rating: value,
-      product_id: product?.user.artisan.id,
+      artisan_id: product?.user.artisan.id,
       consumer_id: user.id,
       ratingType: "Artisan",
     };

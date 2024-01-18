@@ -25,11 +25,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useAllProducts } from "../../../hooks/prodect-hook";
+import { useProductContext } from "../../../context/ProductClientContext";
 
 const SearchBar = () => {
+  const { products, setProducts,setPrams , setFilterOn} = useProductContext();
   const productSchema = z.object({
-    search: z.string().min(2).max(255).optional(),
-    type: z.enum(["Sugary", "Salty"]).optional(),
+    search: z.string().max(255).optional(),
+    type: z.enum(["sugar", "salt"]).optional(),
     subtypeSugar: z
       .enum([
         "pastries",
@@ -57,7 +60,7 @@ const SearchBar = () => {
     minPrice: z.coerce.number().positive().optional(),
     maxPrice: z.coerce.number().positive().optional(),
     rating: z.coerce.number().lte(5, "Must be 5 or less").optional(),
-    sortBy: z.enum(["price", "rating"]).optional(),
+    sortBy: z.enum(["price_per_piece", "rating"]).optional(),
   });
 
   const artisanSchema = z.object({
@@ -67,18 +70,28 @@ const SearchBar = () => {
   });
 
   const formProduct = useForm<z.infer<typeof productSchema>>({
-    resolver: zodResolver(productSchema),
-    defaultValues: {
-      type: "Sugary",
-    },
+    resolver: zodResolver(productSchema)
   });
 
   const formArtisan = useForm<z.infer<typeof artisanSchema>>({
     resolver: zodResolver(artisanSchema),
   });
-
+ 
   const onSubmitProduct = (values: z.infer<typeof productSchema>) => {
-    console.log("Product Form Values", values);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    
+    console.log("filter values", values);
+    const prams = {
+      search: values.search,
+      type: values.type,
+      child_type: values.subtypeSugar,
+      max_price: values.maxPrice,
+      min_price: values.minPrice,
+      min_rating: values.rating,
+      sort_by: values.sortBy,
+    }
+    setPrams(prams)
+    setFilterOn(true);
     // Perform actions based on form data
   };
 
@@ -90,11 +103,14 @@ const SearchBar = () => {
   return (
     <aside className=" overflow-y-auto max-h-screen  w-[25%]  border-r-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300">
       <Accordion type="single" defaultValue="item-1" className="m-2">
-        <AccordionItem value="item-1" >
+        <AccordionItem value="item-1">
           <AccordionTrigger>Filter by product</AccordionTrigger>
           <AccordionContent>
             <Form {...formProduct}>
-              <form onSubmit={formProduct.handleSubmit(onSubmitProduct)} className="space-y-4 p-2">
+              <form
+                onSubmit={formProduct.handleSubmit(onSubmitProduct)}
+                className="space-y-4 p-2"
+              >
                 <FormField
                   control={formProduct.control}
                   name="search"
@@ -124,8 +140,9 @@ const SearchBar = () => {
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Sugary">Sugary</SelectItem>
-                            <SelectItem value="Salty">Salty</SelectItem>
+                          
+                            <SelectItem value="sugar">Sugary</SelectItem>
+                            <SelectItem value="salt">Salty</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -134,7 +151,7 @@ const SearchBar = () => {
                   )}
                 />
 
-                {formProduct.watch().type === "Sugary" ? (
+                {formProduct.watch().type === "sugar" ? (
                   <FormField
                     control={formProduct.control}
                     name="subtypeSugar"
@@ -294,7 +311,10 @@ const SearchBar = () => {
           <AccordionTrigger>Filter by artisan</AccordionTrigger>
           <AccordionContent>
             <Form {...formArtisan}>
-              <form onSubmit={formArtisan.handleSubmit(onSubmitArtisan)} className="space-y-4 p-2">
+              <form
+                onSubmit={formArtisan.handleSubmit(onSubmitArtisan)}
+                className="space-y-4 p-2"
+              >
                 <FormField
                   control={formArtisan.control}
                   name="search"

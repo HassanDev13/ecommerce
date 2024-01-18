@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\DeliveryPersonnel;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+
 /**
  * @group Orders
  *
@@ -39,9 +42,38 @@ class OrderController extends Controller
 
     public function index()
     {
+        // $user = auth()->user();
+        // $user->artisan->orders();
+        $user = Auth()->user();
+        Log::info("key45" . $user);
+        // there three type of users 
+        // 1. artisan
+        // 2. consumer
+        // 3. delivery personnel
 
-        $orders = Order::with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])->get();
-        return response()->json(['orders' => $orders]);
+        // artisan can see all orders
+        // consumer can see only his orders
+        // delivery personnel can see only his orders
+        $userInfo = User::where('id', $user->id)->first();
+
+
+        switch ($userInfo->user_type) {
+            case "Artisan":
+                $orders = Order::where('artisan_id', $user->id)
+                    ->with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])
+                    ->get();
+                return response()->json(['orders' => $orders]);
+            case "Consumer":
+                $orders = Order::where('consumer_id', $user->id)
+                    ->with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])
+                    ->get();
+                return response()->json(['orders' => $orders]);
+            default :
+                $orders = Order::where('delivery_personnel_id', $user->id)
+                    ->with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])
+                    ->get();
+                return response()->json(['orders' => $orders]);
+        }
     }
 
     /**
@@ -116,6 +148,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
+
         $order = Order::findOrFail($id);
         return response()->json(['orders' => $order]);
     }
@@ -209,11 +242,12 @@ class OrderController extends Controller
         $request->validate([
             'orderId' => ['required', 'exists:orders,id'],
             'deliveryPersonnelId' => ['required', 'exists:delivery_personnels,id'],
+            'orderStatus' => ['required', 'string', Rule::in(['unprocessed', 'accepted', 'refused', 'assigned', 'sent', 'delivered'])],
         ]);
 
         // Find the order
         $order = Order::findOrFail($request->input('orderId'));
-
+        $order->changeStatus($request->input('orderStatus'));
         // Find the delivery personnel
         $deliveryPersonnel = DeliveryPersonnel::findOrFail($request->input('deliveryPersonnelId'));
 
@@ -261,21 +295,20 @@ class OrderController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function changeStatus(Request $request, string $id)
-{
-    try {
-        $request->validate([
-            'orderStatus' => ['required', 'string', Rule::in(['unprocessed', 'accepted', 'refused', 'assigned', 'sent', 'delivered'])],
-        ]);
+    {
+        try {
+            $request->validate([
+                'orderStatus' => ['required', 'string', Rule::in(['unprocessed', 'accepted', 'refused', 'assigned', 'sent', 'delivered'])],
+            ]);
 
-        $order = Order::findOrFail($id);
+            $order = Order::findOrFail($id);
 
-        $order->changeStatus($request->input('orderStatus'));
+            $order->changeStatus($request->input('orderStatus'));
 
-        return response()->json(['success' => 'Order status changed successfully']);
-    } catch (\Exception $e) {
-        // Handle exceptions here
-        return response()->json(['error' => 'An error occurred while changing the order status.', 'message' => $e->getMessage()], 500);
+            return response()->json(['success' => 'Order status changed successfully'], 200);
+        } catch (\Exception $e) {
+            // Handle exceptions here
+            return response()->json(['error' => 'An error occurred while changing the order status.', 'message' => $e->getMessage()], 500);
+        }
     }
-}
-
 }

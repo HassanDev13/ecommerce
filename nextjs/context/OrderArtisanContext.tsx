@@ -1,12 +1,18 @@
 import React, { ReactNode, createContext, useContext, useState } from "react";
+import { useUpdateStatus } from "../hooks/order-hook";
+import { toast } from "@/components/ui/use-toast";
 
 interface OrderArtisanContextProps {
   children: ReactNode;
 }
 
 interface OrderArtisanContextType {
+  changeStatus: (status: Order , orderStatus : OrderStatus) => void; // Add this line
+
   order: Order | null;
   setOrderArtisan: React.Dispatch<React.SetStateAction<Order | null>>;
+  delivery: DeliveryPersonnel[] | null;
+  setDelivery: React.Dispatch<React.SetStateAction<DeliveryPersonnel[] | null>>;
 
   isAssignedSheetOpen: boolean;
   setIsAssignedOrderArtisanOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +35,7 @@ export const OrderArtisanProvider: React.FC<OrderArtisanContextProps> = ({
   children,
 }) => {
   const [order, setOrderArtisan] = useState<Order | null>(null);
+  const [delivery, setDelivery] = useState<DeliveryPersonnel[] | null>(null);
 
   const [isAssignedSheetOpen, setIsAssignedOrderArtisanOpen] =
     useState<boolean>(false);
@@ -36,11 +43,36 @@ export const OrderArtisanProvider: React.FC<OrderArtisanContextProps> = ({
     useState<boolean>(false);
   const [isShowProductOrderOpen, setIsShowProductOrderOpen] =
     useState<boolean>(false);
-    const [isDeleteDialogOpen, setIsDeleteDialogOpen] =
-    useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+  const change = useUpdateStatus();
+
+  const changeStatus = (order: Order , orderStatus : OrderStatus) => {
+   
+    change.mutate({
+      orderId: String(order.id),
+      orderStatus: orderStatus,
+    },{
+      onSuccess : () => {
+        toast({
+          title: "Order Status changed",
+          description: "Order Accepted Successfully",
+        });
+      },  
+      onError : () => {
+        toast({
+          title: "Error",
+          description: "Error changing order status",
+        });
+      }
+    });
+    
+  };
   return (
     <OrderArtisanContext.Provider
       value={{
+        changeStatus,
+        delivery,
+        setDelivery,
         order,
         setOrderArtisan,
         isAssignedSheetOpen,

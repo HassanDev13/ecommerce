@@ -38,20 +38,24 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-      // sail php artisan make:controller RatingController --api
+// sail php artisan make:controller RatingController --api
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('orders', OrderController::class);
+    Route::post('/products/upload', [ProductController::class, 'upload']);
+    Route::apiResource('OrderProducts', OrderProductController::class);
+    Route::post('/orders/assignDeliveryPerson', [OrderController::class, 'assignDeliveryPerson']);
+    Route::post('/orders/changeStatus/{id}', [OrderController::class, 'changeStatus']);
+    Route::apiResource('deliveryPersonnels', DeliveryPersonnelController::class);
+    Route::apiResource('consumers', ConsumerController::class);
+    Route::apiResource('ratings', RatingController::class);
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('artisans', ArtisanController::class);
+});
 
 
-Route::apiResource('ratings', RatingController::class);
-Route::apiResource('users', UserController::class);
-Route::apiResource('artisans', ArtisanController::class);
-Route::apiResource('deliveryPersonnels', DeliveryPersonnelController::class);
-Route::apiResource('consumers', ConsumerController::class);
 //assignDeliveryPerson
-Route::post('/orders/assignDeliveryPerson', [OrderController::class, 'assignDeliveryPerson']);
-Route::post('/orders/changeStatus/{id}', [OrderController::class, 'changeStatus']);
-Route::apiResource('orders', OrderController::class);
-// Route::get('/products/index_by_artisan', [ProductController::class, 'index_by_artisan']);
-Route::post('/products/upload', [ProductController::class, 'upload']);
-Route::apiResource('products', ProductController::class);
-Route::apiResource('OrderProducts', OrderProductController::class);
 
+// Route::apiResource('orders', OrderController::class);
+// Route::get('/products/index_by_artisan', [ProductController::class, 'index_by_artisan']);
+Route::apiResource('products', ProductController::class);

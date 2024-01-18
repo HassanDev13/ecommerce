@@ -10,6 +10,7 @@ const Home: React.FC = () => {
           <HeroSection />
           <FeaturesSection />
           <CTASection />
+          
       </div>
     </div>
   );

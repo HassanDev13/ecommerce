@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Artisan;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @group Artisan
@@ -13,12 +14,45 @@ use App\Models\Artisan;
 class ArtisanController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param Request $request
+     * @return JsonResponse
      *
      * @OA\Get(
      *     path="/api/artisans",
-     *     summary="Get all Artisans",
+     *     operationId="searchArtisans",
      *     tags={"Artisan"},
+     *     summary="Search for Artisans",
+     *     description="Returns a list of Artisans based on provided filters.",
+     *     @OA\Parameter(
+     *         name="business_name",
+     *         in="query",
+     *         description="Business name to filter Artisans",
+     *         @OA\Schema(type="string"),
+     *     ),
+     *     @OA\Parameter(
+     *         name="address",
+     *         in="query",
+     *         description="Address to filter Artisans",
+     *         @OA\Schema(type="string"),
+     *     ),
+     *      @OA\Parameter(
+     *          name="type",
+     *          in="query",
+     *          description="Filter products by type (sugar or salt)",
+     *          @OA\Schema(type="string", enum={"sugar", "salt"})
+     *      ),
+     *     @OA\Parameter(
+     *         name="child_type",
+     *         in="query",
+     *         description="Child type to filter Artisans",
+     *         @OA\Schema(type="string"),
+     *     ),
+     *     @OA\Parameter(
+     *         name="min_rating",
+     *         in="query",
+     *         description="Filter Artisans by minimum average rating",
+     *         @OA\Schema(type="number")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -27,15 +61,63 @@ class ArtisanController extends Controller
      *             @OA\Items(ref="#/components/schemas/Artisan")
      *         ),
      *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No Artisans found"
+     *     )
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Fetch all products with their associated relationships
-        $artisans = Artisan::with(['user'])->get();
+        $query = Artisan::with(['user',  'ratings']);
 
-        return response()->json(['artisans' => $artisans]);
+
+        // Apply business_name filter if provided
+        $businessName = $request->input('business_name');
+        if ($businessName) {
+            $query->where('business_name', 'like', "%$businessName%");
+        }
+
+        // Apply address filter if provided
+        $address = $request->input('address');
+        if ($address) {
+            $query->whereHas('user', function ($subQuery) use ($address) {
+                $subQuery->where('address', 'like', "%$address%");
+            });
+        }
+
+        // Apply type filter if provided
+        $type = $request->input('type');
+        if ($type) {
+            Log::info("Type Parameter: $type");
+            $query->whereHas('user.products', function ($subQuery) use ($type) {
+                $subQuery->where('type', $type);
+            });
+        }
+
+
+        // Apply child_type filter if provided
+        $childType = $request->input('child_type');
+        if ($childType) {
+            $query->whereHas('user.products', function ($subQuery) use ($childType) {
+                $subQuery->where('child_type', $childType);
+            });
+        }
+
+        // Apply min_rating filter if provided
+        $minRating = $request->input('min_rating');
+        if ($minRating) {
+            $query->withAvg('ratings', 'rating')
+                ->having('ratings_avg_rating', '>=', $minRating);
+        }
+
+        // Fetch all artisans based on the filters
+        $artisans = $query->get();
+        $result = $query->toSql();
+        Log::info("SQL Query: $result");
+        return response()->json(['artisans' => $artisans], 200);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -94,8 +176,25 @@ class ArtisanController extends Controller
      */
     public function show(string $id)
     {
-        $artisans = Artisan::findOrFail($id);
-        return response()->json(['artisans' => $artisans]);
+        Log::info('Showing Delivery Personnel with id: ' . $id);
+        try {
+            $artisan = Artisan::with([
+                'user',
+                'user.products',
+                'user.products.images',
+                'orders',
+                'orders.consumer',
+                'orders.consumer.user',
+                'orders.products',
+                'orders.products.images',
+                'orders.products.user',
+                'orders.products.user.artisan'
+            ])->findOrFail($id, ['id', 'created_at', 'updated_at', 'user_id']);
+
+            return response()->json(['artisan' => $artisan]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'Delivery Personnel not found'], 404);
+        }
     }
 
     /**

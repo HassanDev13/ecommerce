@@ -1,8 +1,25 @@
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import productService from "../services/prodect-service";
 
-const useAllProducts = () => {
-  return useQuery<Product[]>("products", productService.getAllProducts);
+const useAllProducts = (params: ProductQueryParams = {}) => {
+  return useQuery<Product[]>("products", () =>
+    productService.getAllProducts(params)
+  );
+};
+
+const useAllProductsWithMutation = (params: ProductQueryParams = {}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (params: ProductQueryParams = {}) => {
+      return productService.getAllProducts(params);
+    },
+    {
+      onSuccess: (data) => {
+        queryClient.setQueryData("products", data);
+      },
+    }
+  );
 };
 
 const useProductById = (productId: string) => {
@@ -100,4 +117,5 @@ export {
   useDeleteProduct,
   useUploadImages,
   useAddRating,
+  useAllProductsWithMutation
 };

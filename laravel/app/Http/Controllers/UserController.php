@@ -116,8 +116,8 @@ class UserController extends Controller
      *             @OA\Property(property="phone_number", type="string", maxLength=255),
      *             @OA\Property(property="user_type", type="string", enum={"Consumer", "Artisan", "DeliveryPersonnel"}),
      *             @OA\Property(property="business_name", type="string", maxLength=255),
-     *             @OA\Property(property="open_at", type="string", format="date-time"),
-     *             @OA\Property(property="close_at", type="string", format="date-time", example="after:open_at"),
+     *             @OA\Property(property="open_at", type="string", maxLength=255, example="9:00", description="Required if user_type is Artisan"),
+     *             @OA\Property(property="close_at", type="string", maxLength=255, example="13:00", description="Required if user_type is Artisan"),
      *             @OA\Property(property="availability", type="boolean"),
      *         )
      *     ),
@@ -149,8 +149,16 @@ class UserController extends Controller
                 'phone_number' => 'string|max:255',
                 'user_type' => 'string|in:Consumer,Artisan,DeliveryPersonnel',
                 'business_name' => ($request->input('user_type') === 'Artisan') ? 'required|string|max:255' : '',
-                'open_at' => ($request->input('user_type') === 'Artisan') ? 'required|date_format:H:i:s' : '',
-                'close_at' => ($request->input('user_type') === 'Artisan') ? 'required|date_format:H:i:s|after:open_at' : '',
+                'open_at' => [
+                    'required_if:user_type,Artisan',
+                    'date_format:H:i',
+                    'nullable'
+                ],
+                'close_at' => [
+                    'required_if:user_type,Artisan',
+                    'date_format:H:i',
+                    'nullable'
+                ],
                 'availability' => ($request->input('user_type') === 'DeliveryPersonnel') ? 'boolean' : '',
             ]);
 

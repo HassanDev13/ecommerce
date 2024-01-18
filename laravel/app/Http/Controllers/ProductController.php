@@ -158,7 +158,12 @@ class ProductController extends Controller
         return response()->json(['products' => $products], 200);
     }
 
-
+    public function index_by_consumer(Request $request)
+    {
+        $user = Auth()->user();
+        $products = $user->products;
+        return response()->json(['products' => $products], 200);
+    }
 
     /**
      * Display a listing of the resource.

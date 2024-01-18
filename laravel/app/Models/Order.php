@@ -73,7 +73,7 @@ class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['order_date', 'order_status', 'delivery_address', 'consumer_id'];
+    protected $fillable = ['order_date', 'order_status', 'delivery_address', 'consumer_id','artisan_id'];
 
 
 
@@ -86,9 +86,11 @@ class Order extends Model
     {
         return $this->belongsTo(Consumer::class);
     }
+ 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'order_products');
+        return $this->belongsToMany(Product::class, 'order_products')->withPivot('quantity', 'artisan_id');
+
     }
     // Method to assign a delivery person to the order
     public function assignDeliveryPerson(DeliveryPersonnel $deliveryPersonnel)

@@ -1,18 +1,28 @@
-"use client"
+"use client";
 
-import { useAuth } from "../../../../hooks/auth"
-
-
-
+import { useEffect, useState } from "react";
+import { useAuth } from "../../../../hooks/auth";
+import { useDeliveryById } from "../../../../hooks/user-hook";
+import { DataTable } from "./components/data-table";
+import { columns } from "./components/columns";
+import { OrderArtisanProvider } from "../../../../context/OrderArtisanContext";
+import ShowOrderProduct from "@/app/(artisan)/artisan/[page]/orders/components/showProduct";
 
 export default function Page() {
+  const { logout, user } = useAuth({ middleware: "auth" });
 
-  const { logout } = useAuth({ middleware: 'auth' })
+  const { data, isLoading } = useDeliveryById(
+    Number(user?.delivery_personnel.id)
+  );
 
+  if (!user || isLoading) return <div>Loading...</div>;
 
   return (
-   <div>
-      hellooo
-   </div>
-  )
+    <div>
+      <OrderArtisanProvider>
+        <DataTable data={data?.orders!} columns={columns} />
+        <ShowOrderProduct />
+      </OrderArtisanProvider>
+    </div>
+  );
 }
