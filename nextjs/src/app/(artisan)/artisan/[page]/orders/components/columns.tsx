@@ -91,22 +91,7 @@ export const columns: ColumnDef<Order>[] = [
       <div className="lowercase">{row.getValue("created_at")}</div>
     ),
   },
-  {
-    accessorKey: "delivery_personnel",
-    header: () => <div className="text-right">delivery Personnel</div>,
-    cell: ({ row }) => {
-      const rowData = row.original;
-      return (
-        <div className="text-right font-medium">
-          {rowData.delivery_personnel ? (
-            rowData.delivery_personnel_id
-          ) : (
-            <span className="text-red-500">Not assigned</span>
-          )}
-        </div>
-      );
-    },
-  },
+  
   {
     id: "actions",
     enableHiding: false,
@@ -159,14 +144,6 @@ export const columns: ColumnDef<Order>[] = [
         case "accepted":
         case "assigned":
         case "sent":
-          return (
-            <Button
-              className="w-full"
-              onClick={() => changeStatus(rowData, "delivered")}
-            >
-              Deliver
-            </Button>
-          );
         case "delivered":
           return (
             <div className="flex justify-end">

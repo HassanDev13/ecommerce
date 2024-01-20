@@ -60,7 +60,7 @@ export const EditProfileSheet = () => {
       business_name: user?.artisan?.business_name,
       open_at: user?.artisan?.open_at,
       close_at:  user?.artisan?.close_at,
-      availability: user?.deliveryPersonnel?.availability,
+      availability: user?.delivery_personnel?.availability,
     },
   });
 
@@ -77,7 +77,7 @@ export const EditProfileSheet = () => {
       business_name: user?.artisan?.business_name,
       open_at: user?.artisan?.open_at,
       close_at: user?.artisan?.close_at,
-      availability: user?.deliveryPersonnel?.availability,
+      availability: user?.delivery_personnel?.availability,
     });
   }, [form, user]);
 

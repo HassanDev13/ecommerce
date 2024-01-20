@@ -71,7 +71,11 @@ const LandPageNavBar: React.FC = () => {
         )}
 
         <CartIcon hiddenRoutes={hiddenRoutes} pathname={pathname} />
-        <EditProfileIcon hiddenRoutes={hiddenRoutes} pathname={pathname} />
+        {
+          user && 
+            <EditProfileIcon hiddenRoutes={hiddenRoutes} pathname={pathname} />
+          
+        }
       </div>
     </nav>
   );

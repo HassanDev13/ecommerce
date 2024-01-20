@@ -50,6 +50,8 @@ declare global {
     created_at: string;
     updated_at: string;
     artisan: Artisan;
+    consumer: Consumer;
+    delivery_personnel: DeliveryPersonnel;
   }
   interface Product {
     id: number;
@@ -117,7 +119,7 @@ declare global {
     created_at: string;
     updated_at: string;
     user_id: number;
-    availability: number;
+    availability: boolean;
     user: User;
     orders: Order[];
   }
