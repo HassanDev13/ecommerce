@@ -54,22 +54,42 @@ class OrderController extends Controller
         // artisan can see all orders
         // consumer can see only his orders
         // delivery personnel can see only his orders
-        $userInfo = User::where('id', $user->id)->first();
+      
 
+      
 
-        switch ($userInfo->user_type) {
+        switch ($user->user_type) {
             case "Artisan":
-                $orders = Order::where('artisan_id', $user->id)
-                    ->with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])
+                Log::info("key45 " . $user->user_type . " id user " . $user->id . " id user artisan " . $user->artisan->id);
+                $orders = Order::whereHas('products', function ($query) use ($user) {
+                    $query->where('artisan_id', $user->artisan->id);
+                })
+                    ->with([
+                        'consumer', 'consumer.user',
+                        'products' => function ($query) use ($user) {
+                            $query->where('artisan_id', $user->artisan->id)
+                                ->with([
+                                    'images',
+                                    'user',
+                                    'user.artisan' => function ($query) use ($user) {
+                                        $query->where('id', $user->artisan->id);
+                                    },
+                                ])->withPivot('quantity', 'artisan_id');
+                        },
+                        'deliveryPersonnel'
+                    ])
                     ->get();
+
+
+
                 return response()->json(['orders' => $orders]);
             case "Consumer":
-                $orders = Order::where('consumer_id', $user->id)
+                $orders = Order::where('consumer_id', $user->consumer->id)
                     ->with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])
                     ->get();
                 return response()->json(['orders' => $orders]);
-            default :
-                $orders = Order::where('delivery_personnel_id', $user->id)
+            default:
+                $orders = Order::where('delivery_personnel_id', $user->deliveryPersonnel->id)
                     ->with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])
                     ->get();
                 return response()->json(['orders' => $orders]);
