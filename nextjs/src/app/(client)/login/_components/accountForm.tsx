@@ -53,7 +53,7 @@ export function AccountForm({ formType, accountType, redirectPath }: FormData) {
             if(user.user_type == 'Consumer'){
                 // router.push('/');
                 console.log("user", user?.consumer);
-                router.push('/');
+                router.push('/profile');
             }else if(user.user_type == 'Artisan'){
                 // router.push('/artisan');
                 console.log("user", user?.artisan);

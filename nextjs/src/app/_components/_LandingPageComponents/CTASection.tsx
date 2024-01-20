@@ -7,7 +7,7 @@ import CTAicon2 from '/public/CTAicon2.svg';
 
 const FeaturesSection = () => {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-8	h-screen ">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-8	h-screen w-screen ">
       <div className="hidden md:block 	">
         <Image
           src={CTAicon} 
@@ -31,9 +31,12 @@ const FeaturesSection = () => {
           className="mb-1 mt-5"
         />
         <div>
+          <a href="/products">
             <button className=" bg-yellow-400 text-black font-bold py-2 px-5 mt-5 rounded-lg font-bold ">
               Explore Savory Delights Now
             </button>
+          </a>
+            
         </div>
         
       </div>

@@ -11,7 +11,6 @@ import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import DeleteOrder from "./components/delete";
 import ShowOrderProduct from "./components/showProduct";
-import UpdateOrder from "./components/showProduct";
 
 function Orders() {
   const { data: orders, isLoading, isError } = useAllOrders();

@@ -25,7 +25,7 @@ const HeroSection: React.FC = () => {
         <div className="col-span-1">
           <h2 className="text-3xl font-bold mb-2">Discover Best savory</h2>
           <p className="text-lg mb-4">Discover amazing tastes with us! Enjoy delicious flavors in every bite, from classic favorites to global treats crafted by talented artisans. Savor something extraordinary in every meal and join us in making your food journey special, where every bite is a tasty adventure!</p>
-            <a href="/explore">
+            <a href="/products">
               <button className=" bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg font-semibold">Explore Savory Delights Now</button>
             </a>
         </div>

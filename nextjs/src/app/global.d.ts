@@ -83,14 +83,40 @@ declare global {
     deleted_at: string | null;
   }
   interface InsertProduct {
-    name: string;
-    description: string;
-    price_per_piece: number;
-    min_order: number;
-    type: string;
-    child_type: string;
-    user_id: number;
-  }
+  name: string;
+  description: string;
+  price_per_piece: number;
+  min_order: number;
+  type: "sugar" | "salt";
+  child_type: string;
+  user_id: number;
+}
+
+// // Enum for Sugar Child Types
+// enum SugarChildType {
+//   PASTRIES = "pastries",
+//   FRENCH_PASTRIES = "French pastries(viennoiseries)",
+//   HONEY_DIPPED = "Honey-dipped",
+//   ROYAL_ICE_COATED = "Royal ice-coated",
+//   ICE_SUGAR_COATED = "Ice sugar coated",
+//   NO_BAKE = "No bake",
+//   MINI_OVEN = "Mini Oven",
+// }
+
+// // Enum for Salt Child Types
+// enum SaltChildType {
+  // MINI_PIZZA = "Mini Pizza",
+  // COKA = "Coka",
+  // MAEKOUDA = "Maekouda",
+  // MHADJEB = "Mhadjeb",
+  // BOUREK = "Bourek",
+  // SOUFFLE = "Soufflé",
+  // MINI_TACOS = "Mini Tacos",
+  // MINI_HAMBURGER = "Mini Hamburger",
+  // CHEESE_CONES = "Cheese cones",
+// }
+
+
   interface Consumer {
     id: number;
     created_at: string;

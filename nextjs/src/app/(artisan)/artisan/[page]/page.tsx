@@ -4,6 +4,7 @@ import { Icons } from "@/components/ui/icons";
 import { useEffect, useState } from "react";
 import Orders from "./orders/page";
 import Products from "./prodects/page";
+import Dashboard from "./dashboard/page";
 
 export default function Page({ params }: { params: { page: string } }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -17,6 +18,8 @@ export default function Page({ params }: { params: { page: string } }) {
         return <Products />;
       case "orders":
         return <Orders />;
+      case "dashboard":
+        return <Dashboard />;
 
       default:
         return <Products />;

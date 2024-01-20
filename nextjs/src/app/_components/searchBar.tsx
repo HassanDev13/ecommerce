@@ -157,7 +157,7 @@ const SearchBar = () => {
                     name="subtypeSugar"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>SubType</FormLabel>
+                        <FormLabel>SugarSubType</FormLabel>
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -194,10 +194,10 @@ const SearchBar = () => {
                 ) : (
                   <FormField
                     control={formProduct.control}
-                    name="subtypeSugar"
+                    name="subtypeSalt"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>SubType</FormLabel>
+                        <FormLabel>SaltSubType</FormLabel>
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}

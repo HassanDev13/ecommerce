@@ -7,7 +7,7 @@ import Ficon2 from '/public/Ficon2.svg';
 
 const FeaturesSection = () => {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-8 	">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-8 w-screen	">
       {/* Left Column */}
       <div className="flex flex-col justify-center text-left  mr-10 ml-40 ">
         <h2 className="text-4xl  font-bold mb-4">Discover Best savory</h2>
@@ -22,7 +22,7 @@ const FeaturesSection = () => {
           className="mb-4 mt-5"
         />
         <div>
-            <a href="/explore">
+<a href="/products  ">
               <button className=" bg-yellow-400 text-black font-bold py-2 px-5 mt-5 rounded-lg font-bold ">
                 Explore Savory Delights Now
               </button>

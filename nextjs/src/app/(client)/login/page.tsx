@@ -16,8 +16,11 @@ export default function Page() {
         {/* Left Column */}
         <div className="hidden md:flex flex-col items-center justify-center ">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px] divide-y">
-
             <section className='rounded-xl bg-red-50 pb-5 pt-5 w-[550px]  '>
+              <h1 className="text-3xl font-bold text-center mb-4 ">Create Your Account</h1>
+              <p className="text-center text-sm text-muted-foreground mb-5">
+                Enter your details below to create your account
+              </p>
             <AccountForm accountType='delivry' redirectPath='/delivry' formType='login' />
             </section>
 

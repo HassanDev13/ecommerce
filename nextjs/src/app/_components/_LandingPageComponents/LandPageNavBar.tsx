@@ -5,10 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../../../../hooks/auth";
 import { Button } from "@/components/ui/button";
-import {
-  ProductProvider,
-  useProductContext,
-} from "../../../../context/ProductClientContext";
+
 import { useCardContext } from "../../../../context/CardContext";
 import { SlidersHorizontal } from "lucide-react";
 import { useEditProfileContext } from "../../../../context/EditProfileContext";

@@ -34,16 +34,44 @@ import {
   useUploadImages,
 } from "../../../../../../../hooks/prodect-hook";
 
-const productSchema = z.object({
+
+export default function CreateProduct() {
+  enum SugarChildType {
+  PASTRIES = "pastries",
+  FRENCH_PASTRIES = "French pastries(viennoiseries)",
+  HONEY_DIPPED = "Honey-dipped",
+  ROYAL_ICE_COATED = "Royal ice-coated",
+  ICE_SUGAR_COATED = "Ice sugar coated",
+  NO_BAKE = "No bake",
+  MINI_OVEN = "Mini Oven",
+}
+
+enum SaltChildType {
+  MINI_PIZZA = "Mini Pizza",
+  COKA = "Coka",
+  MAEKOUDA = "Maekouda",
+  MHADJEB = "Mhadjeb",
+  BOUREK = "Bourek",
+  SOUFFLE = "Soufflé",
+  MINI_TACOS = "Mini Tacos",
+  MINI_HAMBURGER = "Mini Hamburger",
+  CHEESE_CONES = "Cheese cones",
+}
+
+type ChildType = SugarChildType | SaltChildType;
+
+  const productSchema = z.object({
   name: z.string(),
   description: z.string(),
   price_per_piece: z.coerce.number(),
   min_order: z.coerce.number(),
-  type: z.string(),
-  child_type: z.string(),
-});
+  type: z.enum(["sugar", "salt"]),
+ child_type: z.string().refine((value): value is SugarChildType | SaltChildType => {
+    return Object.values(SugarChildType).includes(value as SugarChildType) || Object.values(SaltChildType).includes(value as SaltChildType);
+  }),
 
-export default function CreateProduct() {
+  });
+
   const [selectedImages, setSelectedImages] = useState<FileList>();
   const { user } = useAuth({ middleware: "auth" });
   const createProduct = useCreateProduct();
@@ -56,17 +84,19 @@ export default function CreateProduct() {
       description: "",
       price_per_piece: 0,
       min_order: 0,
-      type: "",
-      child_type: "",
+      type: "sugar",
+      child_type: SugarChildType.PASTRIES,
     },
   });
+    console.log("Type Value:", formAct.watch().type);
+
+  
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
     setSelectedImages(files);
   };
-
   async function onSubmit(values: z.infer<typeof productSchema>) {
     if (user && user.id) {
       console.log(values, user.id);
@@ -101,6 +131,7 @@ export default function CreateProduct() {
             title: "Product created Successfully",
             description: "Prodect created Successfully",
           });
+          
         },
         onError: (error) => {
           console.log(error);
@@ -147,7 +178,7 @@ export default function CreateProduct() {
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Tell us a little bit about yourself"
+                        placeholder="Provide a description of the product"
                         className="resize-none"
                         {...field}
                       />
@@ -201,8 +232,8 @@ export default function CreateProduct() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="sugar">Sugar</SelectItem>
-                        <SelectItem value="salt">Salt</SelectItem>
+                        <SelectItem value="sugar">Sugary</SelectItem>
+                        <SelectItem value="salt">Salty</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -210,31 +241,58 @@ export default function CreateProduct() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={formAct.control}
-                name="child_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a Child type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="sugar">Pizza</SelectItem>
-                        <SelectItem value="salt">Pizza 2</SelectItem>
-                      </SelectContent>
-                    </Select>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+             {formAct.watch().type === "sugar" ? (
+      <FormField
+        control={formAct.control}
+        name="child_type"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>SugarSubType</FormLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a Child type" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {Object.values(SugarChildType).map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    ) : (
+      <FormField
+        control={formAct.control}
+        name="child_type"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>SaltSubType</FormLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a Child type" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {Object.values(SaltChildType).map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    )}
               {/* Image upload field */}
               <FormItem>
                 <FormLabel>Upload Images</FormLabel>
