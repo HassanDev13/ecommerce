@@ -27,6 +27,8 @@ export default function DeleteProduct() {
                         title: "Product deleted Successfully",
                         description: "Prodect deleted Successfully",
                     })
+                     window.location.reload();
+
                 }
                 , onError: () => {
                     setIsDeleteDialogOpen(false);

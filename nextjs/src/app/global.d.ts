@@ -58,7 +58,7 @@ declare global {
     name: string;
     user_id: number;
     description: string;
-    price_per_piece: string;
+    price_per_piece: number;
     min_order: number;
     type: string;
     child_type: string;

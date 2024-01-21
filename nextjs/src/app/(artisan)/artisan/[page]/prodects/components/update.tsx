@@ -203,40 +203,29 @@ export default function UpdateProduct() {
                     </FormControl>
 
                     {formAct.watch("type") === "sugar" ? (
-                      <SelectContent>
-                        <SelectItem value="brown_sugar">Brown Sugar</SelectItem>
-                        <SelectItem value="white_sugar">White Sugar</SelectItem>
-                        <SelectItem value="powdered_sugar">
-                          Powdered Sugar
-                        </SelectItem>
-                        <SelectItem value="organic_sugar">
-                          Organic Sugar
-                        </SelectItem>
-                        <SelectItem value="coconut_sugar">
-                          Coconut Sugar
-                        </SelectItem>
-                        <SelectItem value="raw_sugar">Raw Sugar</SelectItem>
-                        <SelectItem value="cane_sugar">Cane Sugar</SelectItem>
-                        <SelectItem value="maple_sugar">Maple Sugar</SelectItem>
-                        <SelectItem value="agave_syrup">Agave Syrup</SelectItem>
-                        <SelectItem value="honey">Honey</SelectItem>
-                      </SelectContent>
-                    ) : (
-                      <SelectContent>
-                        <SelectItem value="sea_salt">Sea Salt</SelectItem>
-                        <SelectItem value="table_salt">Table Salt</SelectItem>
-                        <SelectItem value="kosher_salt">Kosher Salt</SelectItem>
-                        <SelectItem value="pink_himalayan_salt">
-                          Pink Himalayan Salt
-                        </SelectItem>
-                        <SelectItem value="black_salt">Black Salt</SelectItem>
-                        <SelectItem value="celtic_salt">Celtic Salt</SelectItem>
-                        <SelectItem value="smoked_salt">Smoked Salt</SelectItem>
-                        <SelectItem value="garlic_salt">Garlic Salt</SelectItem>
-                        <SelectItem value="onion_salt">Onion Salt</SelectItem>
-                        <SelectItem value="rock_salt">Rock Salt</SelectItem>
-                      </SelectContent>
-                    )}
+                    <SelectContent>
+                      <SelectItem value="PASTRIES">PASTRIES</SelectItem>
+                      <SelectItem value="FRENCH_PASTRIES">French pastries(viennoiseries)</SelectItem>
+                      <SelectItem value="HONEY_DIPPED">Honey-dipped</SelectItem>
+                      <SelectItem value="ROYAL_ICE_COATED">Royal ice-coated</SelectItem>
+                      <SelectItem value="ICE_SUGAR_COATED">Ice sugar coated</SelectItem>
+                      <SelectItem value="NO_BAKE">No bake</SelectItem>
+                      <SelectItem value="MINI_OVEN">Mini Oven</SelectItem>
+                    </SelectContent>
+                  ) : (
+                    <SelectContent>
+                      <SelectItem value="MINI_PIZZA">Mini Pizza</SelectItem>
+                      <SelectItem value="COKA">Coka</SelectItem>
+                      <SelectItem value="MAEKOUDA">Maekouda</SelectItem>
+                      <SelectItem value="MHADJEB">Mhadjeb</SelectItem>
+                      <SelectItem value="BOUREK">Bourek</SelectItem>
+                      <SelectItem value="SOUFFLE">Soufflé</SelectItem>
+                      <SelectItem value="MINI_TACOS">Mini Tacos</SelectItem>
+                      <SelectItem value="MINI_HAMBURGER">Mini Hamburger</SelectItem>
+                      <SelectItem value="CHEESE_CONES">Cheese cones</SelectItem>
+                    </SelectContent>
+                  )}
+
                   </Select>
 
                   <FormMessage />

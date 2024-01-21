@@ -58,13 +58,12 @@ enum SaltChildType {
   CHEESE_CONES = "Cheese cones",
 }
 
-type ChildType = SugarChildType | SaltChildType;
 
   const productSchema = z.object({
   name: z.string(),
   description: z.string(),
   price_per_piece: z.coerce.number(),
-  min_order: z.coerce.number(),
+  min_order: z.coerce.number().min(1),
   type: z.enum(["sugar", "salt"]),
  child_type: z.string().refine((value): value is SugarChildType | SaltChildType => {
     return Object.values(SugarChildType).includes(value as SugarChildType) || Object.values(SaltChildType).includes(value as SaltChildType);
@@ -92,11 +91,22 @@ type ChildType = SugarChildType | SaltChildType;
 
   
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files) return;
-    setSelectedImages(files);
-  };
+ const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const files = event.target.files;
+  if (!files) return;
+
+  // Restrict to a maximum of 5 images
+  if (files.length > 5) {
+    toast({
+      title: "Too many images",
+      description: "Please select up to 5 images only.",
+    });
+    return;
+  }
+
+  setSelectedImages(files);
+};
+
   async function onSubmit(values: z.infer<typeof productSchema>) {
     if (user && user.id) {
       console.log(values, user.id);
@@ -121,6 +131,8 @@ type ChildType = SugarChildType | SaltChildType;
                   title: "Images uploaded Successfully",
                   description: "Images uploaded Successfully",
                 });
+                 window.location.reload();
+
               },
               onError: (error) => {
                 console.log(error);

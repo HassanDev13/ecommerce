@@ -27,6 +27,10 @@ import {
 } from "@/components/ui/accordion";
 import { useAllProducts } from "../../../hooks/prodect-hook";
 import { useProductContext } from "../../../context/ProductClientContext";
+import { Loader2Icon, LoaderIcon } from "lucide-react";
+import { debounce } from "lodash";
+
+
 
 const SearchBar = () => {
   const { products, setProducts,setPrams , setFilterOn} = useProductContext();
@@ -99,6 +103,31 @@ const SearchBar = () => {
     console.log("Artisan Form Values", values);
     // Perform actions based on form data
   };
+
+const resetProductForm = debounce(() => {
+  formProduct.reset({
+    search: "",
+    type: undefined,
+    subtypeSugar: undefined,
+    subtypeSalt: undefined,
+    minPrice: undefined,
+    maxPrice: undefined,
+    rating: undefined,
+    sortBy: undefined,
+  });
+
+  
+
+  setFilterOn(false);
+  setPrams({});
+  console.log("Product Form Values Reset:", formProduct.getValues()); // Log the reset values
+}, 100);
+
+
+  const resetArtisanForm = () => {
+    formArtisan.reset();
+  };
+
 
   return (
     <aside className=" overflow-y-auto max-h-screen  w-[25%]  border-r-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300">
@@ -300,9 +329,22 @@ const SearchBar = () => {
                   )}
                 />
 
-                <Button type="submit" className="mt-4 font-bold g-yellow-700">
-                  Search Products
-                </Button>
+                <Button type="submit" className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 ">
+              {formProduct.formState.isSubmitting ? (
+                <span className="flex items-center">
+                  Loading <LoaderIcon className="ml-2 animate-spin" />
+                </span>
+              ) : (
+                'Search Products'
+              )}
+            </Button>
+            <Button
+              type="button"
+              onClick={resetProductForm}
+              className="mt-4 ml-5 font-bold hover:bg-gray-200"
+            >
+              Reset
+            </Button>
               </form>
             </Form>
           </AccordionContent>
