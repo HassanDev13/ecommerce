@@ -28,6 +28,7 @@ import { useEditProfileContext } from "../../../context/EditProfileContext";
 import { useEffect } from "react";
 import { Switch } from "./switch";
 import { Textarea } from "./textarea";
+import { toast } from "./use-toast";
 
 export const EditProfileSheet = () => {
   const editProfile = useUpdateProfile();
@@ -89,6 +90,20 @@ export const EditProfileSheet = () => {
       {
         onSuccess: () => {
           console.log("Profile updated successfully");
+          toast({
+            title: "Success",
+            description: "Profile updated successfully",
+        
+          });
+          
+        },
+        onError: (error) => {
+          console.log("Error while updating profile", error);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Error while updating profile",
+          });
         },
       }
     );

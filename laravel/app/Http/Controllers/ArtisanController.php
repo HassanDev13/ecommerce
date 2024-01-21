@@ -110,9 +110,13 @@ class ArtisanController extends Controller
             $query->withAvg('ratings', 'rating')
                 ->having('ratings_avg_rating', '>=', $minRating);
         }
-
+        // Calculate average ratings for each artisan
+       
         // Fetch all artisans based on the filters
         $artisans = $query->get();
+        $artisans->each(function ($artisan) {
+            $artisan->average_rating = $artisan->ratings->avg('rating');
+        });
         $result = $query->toSql();
         Log::info("SQL Query: $result");
         return response()->json(['artisans' => $artisans], 200);
@@ -182,6 +186,7 @@ class ArtisanController extends Controller
                 'user',
                 'user.products',
                 'user.products.images',
+                'ratings',
                 'orders',
                 'orders.consumer',
                 'orders.consumer.user',

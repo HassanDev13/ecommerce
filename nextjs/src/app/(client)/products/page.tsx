@@ -14,10 +14,13 @@ import {
 import { CardList } from "./components/card-list";
 import { ProjectDetails } from "./components/project-details";
 import { date } from "zod";
+import { useAllOrders } from "../../../../hooks/order-hook";
+import { useAllArtisans } from "../../../../hooks/user-hook";
 
 const Products = () => {
   const { prams, filterOn, setFilterOn } = useProductContext();
   const { data: allProducts, isLoading, refetch } = useAllProducts(prams);
+  const {data : allArtisans} = useAllArtisans();
   const { mutate } = useAllProductsWithMutation(prams);
 
   if (isLoading)
@@ -43,7 +46,7 @@ const Products = () => {
     <section className="flex min-h-screen  w-screen">
       <SearchBar />
       <div className=" p-4 w-full  flex flex-col space-y-2">
-        <h1 className="text-xl font-bold">Products</h1>
+        <h1 className="text-xxl font-bold">Products</h1>
         <div className="w-full h-fit grid grid-cols-5 gap-4">
           {allProducts?.map((product, index) => (
             <div
@@ -71,6 +74,24 @@ const Products = () => {
           ))}
           <ProjectDetails />
         </div>
+        <h1>Artisans</h1>
+        <div className="w-full h-fit grid grid-cols-5 gap-4">
+          {allArtisans?.map((artisan, index) => (
+            <div
+              key={index}
+              className="border-2 border-gray-200 rounded-lg hover:border-primary"
+            >
+              <div className="flex flex-col justify-start items-center space-y-2">
+               
+                <div className="p-4 text-left w-full">
+                  <h1 className="text-lg font-bold">{artisan.business_name}</h1>
+                  <p className="text-sm">{artisan.description}</p>
+                </div>
+
+              </div>
+            </div>
+          ))}
+      </div>
       </div>
        
     </section>

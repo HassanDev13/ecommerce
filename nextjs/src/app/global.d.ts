@@ -70,6 +70,15 @@ declare global {
     ratings: Rating[];
     user: User;
     orders: Order[];
+    pivot : Pivot;
+  }
+
+
+  interface Pivot {
+    order_id: number;
+    product_id: number;
+    quantity: number;
+    artisan_id: string;
   }
   interface OrderProduct extends Product {
     quantity: number;

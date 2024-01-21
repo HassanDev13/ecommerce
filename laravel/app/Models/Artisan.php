@@ -75,7 +75,19 @@ class Artisan extends Model
     {
         return $this->hasMany(Rating::class);
     }
+    public function calculateAverageRating()
+    {
+        $ratings = $this->ratings;
 
+        if ($ratings->count() > 0) {
+            $totalRating = $ratings->sum('rating');
+            $averageRating = $totalRating / $ratings->count();
+
+            return $averageRating;
+        }
+
+        return 0; // Default rating if no ratings are available
+    }
     public function orders()
     {
         return $this->hasMany(Order::class);
