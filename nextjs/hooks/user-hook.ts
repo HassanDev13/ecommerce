@@ -7,7 +7,7 @@ const useAllDelivery = () => {
 
 const useDeliveryById = (params: number) => {
   return useQuery<DeliveryPersonnel>(
-    "delivery",
+    "orders",
     () => userService.getDeliveryById(params),
     {
       enabled: !!params,
@@ -16,7 +16,7 @@ const useDeliveryById = (params: number) => {
 };
 const useArtisanById = (params: number) => {
   return useQuery<Artisan>(
-    "artisan",
+    "products",
     () => userService.getArtisanById(params),
     {
       enabled: !!params,

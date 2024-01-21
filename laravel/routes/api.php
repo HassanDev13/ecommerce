@@ -50,7 +50,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('consumers', ConsumerController::class);
     Route::apiResource('ratings', RatingController::class);
     Route::apiResource('users', UserController::class);
-    Route::apiResource('artisans', ArtisanController::class);
+    
 });
 
 
@@ -58,4 +58,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 // Route::apiResource('orders', OrderController::class);
 // Route::get('/products/index_by_artisan', [ProductController::class, 'index_by_artisan']);
+Route::apiResource('artisans', ArtisanController::class);
 Route::apiResource('products', ProductController::class);

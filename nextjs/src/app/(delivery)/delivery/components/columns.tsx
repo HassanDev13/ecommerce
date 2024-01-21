@@ -58,13 +58,13 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => {
       const rowData = row.original;
       return (
-        <div className="capitalize">{rowData.consumer.user.first_name}</div>
+        <div className="capitalize">{rowData.consumer.user.first_name} {rowData.consumer.user.last_name}</div>
       );
     },
   },
   {
     accessorKey: "phone",
-    header: "Phone ",
+    header: "Consumer Phone ",
     cell: ({ row }) => {
       const rowData = row.original;
       return (
@@ -74,10 +74,13 @@ export const columns: ColumnDef<Order>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Order date",
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("created_at")}</div>
-    ),
+    header: "Consumer Address",
+    cell: ({ row }) => {
+      const rowData = row.original;
+      return (
+        <div className="capitalize">{rowData.consumer.user.address}</div>
+      );
+    },
   },
   {
     accessorKey: 'order_status',

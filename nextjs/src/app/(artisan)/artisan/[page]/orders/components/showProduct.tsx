@@ -36,9 +36,10 @@ export default function ShowOrderProduct() {
             />
             </div>
 
-            <div>
-              <h1>{product.name}</h1>
-              <p>Quantity {product.pivot.quantity}</p>
+            <div >
+             
+              <h1>{product.name} , Quantity {product.pivot.quantity}</h1>
+              <p>Artisan Location : {product.user.address}</p>
             </div>
           </div>
         ))}

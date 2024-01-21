@@ -78,7 +78,7 @@ const useAssignOrderToDeliveryPerson = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("useAssignOrderToDeliveryPerson");
+        queryClient.invalidateQueries("orders");
       },
     }
   );

@@ -141,6 +141,7 @@ declare global {
     description: string;
     open_at: string;
     close_at: string;
+    average_rating? : number;
     created_at: string;
     updated_at: string;
     user: User;

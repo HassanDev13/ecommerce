@@ -115,7 +115,7 @@ class ArtisanController extends Controller
         // Fetch all artisans based on the filters
         $artisans = $query->get();
         $artisans->each(function ($artisan) {
-            $artisan->average_rating = $artisan->ratings->avg('rating');
+            $artisan->average_rating = $artisan->ratings->avg('rating') ;
         });
         $result = $query->toSql();
         Log::info("SQL Query: $result");

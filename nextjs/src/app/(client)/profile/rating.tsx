@@ -3,12 +3,14 @@ import React, { useState } from "react";
 interface RatingProps {
   initialValue?: number;
   onChange?: (value: number) => void;
+  desabled?: boolean;
 }
 
-const Rating: React.FC<RatingProps> = ({ initialValue = 0, onChange }) => {
+const Rating: React.FC<RatingProps> = ({ initialValue = 0, onChange  , desabled}) => {
   const [rating, setRating] = useState(initialValue);
 
   const handleRatingClick = (value: number) => {
+    if(desabled) return;
     setRating(value);
     if (onChange) {
       onChange(value);
@@ -20,7 +22,7 @@ const Rating: React.FC<RatingProps> = ({ initialValue = 0, onChange }) => {
   return (
     <ul className="flex items-center justify-center">
       {stars.map((star) => (
-        <li key={star} onClick={() => handleRatingClick(star)}>
+        <li  key={star} onClick={() => handleRatingClick(star)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className={`mr-1 h-5 w-5 ${

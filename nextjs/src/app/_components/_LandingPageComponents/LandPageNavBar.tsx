@@ -11,7 +11,6 @@ import { SlidersHorizontal } from "lucide-react";
 import { useEditProfileContext } from "../../../../context/EditProfileContext";
 import EditProfileIcon from "@/components/ui/edit-button-icon";
 
-
 const LandPageNavBar: React.FC = () => {
   const hiddenRoutes = ["/login", "/register"];
   const pathname = usePathname();
@@ -24,7 +23,6 @@ const LandPageNavBar: React.FC = () => {
       </div>
 
       <div className="ml-20 text-black font-bold">
-
         <Link className="ml-20 p-2" href="/">
           {" "}
           Home
@@ -33,10 +31,12 @@ const LandPageNavBar: React.FC = () => {
           {" "}
           Products{" "}
         </Link>
-        <Link className="p-2" href="/profile">
-          {" "}
-          Profile{" "}
-        </Link>
+        {user && (
+          <Link className="p-2" href="/profile">
+            {" "}
+            Profile{" "}
+          </Link>
+        )}
       </div>
 
       <div className="flex items-center space-x-4">
@@ -68,11 +68,9 @@ const LandPageNavBar: React.FC = () => {
         )}
 
         <CartIcon hiddenRoutes={hiddenRoutes} pathname={pathname} />
-        {
-          user && 
-            <EditProfileIcon hiddenRoutes={hiddenRoutes} pathname={pathname} />
-          
-        }
+        {user && (
+          <EditProfileIcon hiddenRoutes={hiddenRoutes} pathname={pathname} />
+        )}
       </div>
     </nav>
   );
@@ -100,4 +98,3 @@ function CartIcon({ hiddenRoutes, pathname }: CartIconProps) {
     </div>
   );
 }
-

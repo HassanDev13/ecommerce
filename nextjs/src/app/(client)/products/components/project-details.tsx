@@ -51,7 +51,7 @@ export const ProjectDetails = () => {
           <div className="w-full flex justify-between">
             <h1>Rating </h1>
             <div className="flex space-x-1">
-              <Rating initialValue={product?.averageRating} />
+              <Rating initialValue={product?.averageRating} desabled={true}/>
               <p>({product?.ratings.length})</p>
             </div>
           </div>
