@@ -5,7 +5,7 @@ import CTAicon2 from '/public/CTAicon2.svg';
 
 const FeaturesSection = () => {
   return (
-    <section className="flex flex-col md:flex-row justify-center items-center w-screen">
+    <section className="flex flex-col md:flex-row justify-center items-center w-auto">
       {/* Left Column */}
       <div className="hidden md:block max-w-lg md:ml-10 md:mr-[10%]">
         <Image

@@ -131,7 +131,6 @@ enum SaltChildType {
                   title: "Images uploaded Successfully",
                   description: "Images uploaded Successfully",
                 });
-                 window.location.reload();
 
               },
               onError: (error) => {

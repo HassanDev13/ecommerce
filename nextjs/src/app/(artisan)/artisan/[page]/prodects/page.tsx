@@ -16,7 +16,7 @@ export default function Products() {
     data: products,
     isLoading,
     isError,
-  } = useArtisanById(Number(user?.artisan.id));
+} = useArtisanById(Number(user?.artisan?.id || 0)); // Provide a default value (0 in this case)
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -26,17 +26,16 @@ export default function Products() {
     return <div>Error loading products</div>;
   }
 
-  return (
-    <>
-      <ProductProvider>
-        <div className="h-screen w-full">
-         
-          <DataTable data={products?.user.products ?? []} columns={columns} />
-          <CreateProduct />
-          <UpdateProduct />
-          <DeleteProduct />
-        </div>
-      </ProductProvider>
-    </>
-  );
+ return (
+  <>
+    <ProductProvider>
+      <div className="h-screen w-full">
+        <DataTable data={products?.user?.products ?? []} columns={columns} />
+        <CreateProduct />
+        <UpdateProduct />
+        <DeleteProduct />
+      </div>
+    </ProductProvider>
+  </>
+);
 }

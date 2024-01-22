@@ -1,11 +1,8 @@
 import Link from 'next/link';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AccountForm } from './_components/accountForm';
 import Image from 'next/image';
 import Ficon1 from '/public/Ficon1.svg';
-import { useAuth } from '../../../../hooks/auth';
 import React, { ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function Page() {
 

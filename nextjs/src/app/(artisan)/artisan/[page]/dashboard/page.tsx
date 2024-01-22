@@ -33,9 +33,15 @@ const Dashboard: React.FC = () => {
     ],
   };
 
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth();
+  const yearsToShow = Array.from({ length: currentYear - 2010 + 1 }, (_, i) => currentYear - i).reverse(); // Years in reverse order
+
+  
+
   // Monthly and yearly product sales
   const monthlySales = new Array(12).fill(0);
-  const yearlySales = new Array(new Date().getFullYear() - 2010 + 1).fill(0);
+const yearlySales = new Array(currentYear - 2010 + 1).fill(0);
 
   // Revenue per month and year
   const monthlyRevenue = new Array(12).fill(0);
@@ -43,108 +49,137 @@ const Dashboard: React.FC = () => {
 
   // Extracting all "accepted" products from the orders
   const acceptedProducts = allOrders
-    ? allOrders
-        .filter((order) => order.order_status === 'delivered')
-        .reduce((products, order) => {
-          return products.concat(order.products);
-        }, [] as any[])
-    : [];
+  ? allOrders
+      .filter((order) => order.order_status === 'delivered')
+      .reduce((products, order) => {
+        const orderYear = new Date(order.created_at).getFullYear(); // Get the year from the order
+        return products.concat(
+          order.products.map((product) => {
+            const updatedProduct = { ...product, order_date: order.created_at, order_year: orderYear };
+            console.log('Order Year:', updatedProduct.order_year); // Log the order year
+            return updatedProduct;
+          })
+        );
+      }, [] as any[])
+  : [];
 
   acceptedProducts.forEach((product) => {
-    const date = new Date(product.created_at);
+    const orderDate = new Date(product.order_date);
 
     // Product Sales
-    monthlySales[date.getMonth()] += 1;
-    yearlySales[date.getFullYear() - 2010] += 1;
+    monthlySales[orderDate.getMonth()] += product.pivot.quantity || 1; 
+    yearlySales[orderDate.getFullYear() ] += 1; // Update starting year to 2023
+    
 
     // Product Revenue
     const pricePerPiece = product.price_per_piece || 0;
-    monthlyRevenue[date.getMonth()] += pricePerPiece;
-    yearlyRevenue[date.getFullYear() - 2010] += pricePerPiece;
+    const quantity = product.pivot.quantity || 1; 
+    monthlyRevenue[orderDate.getMonth()] += pricePerPiece * quantity;
+    yearlyRevenue[ 2024 -orderDate.getFullYear()] += pricePerPiece * quantity;
+    // Additional condition for the current year
+if (orderDate.getFullYear() === currentYear) {
+  yearlySales[0] += quantity;
+}
+
+    
+    
+
     console.log(
-    `Product: ${product.name}, Date: ${date.toLocaleDateString()}, Price per Piece: ${pricePerPiece}`
-  );
-  });
+      `Order Date: ${orderDate.toLocaleDateString()}, Product: ${product.name}, Price per Piece: ${pricePerPiece}, Quantity: ${quantity}`
+    );
+});
 
   // Bar chart data (number of products sold per month)
-  
-// Bar chart data (number of products sold per month)
+
 const monthlyBarData = {
-  labels: Array.from({ length: 12 }, (_, i) => `${new Date(2022, i).toLocaleString('default', { month: 'short' })}`), // Months
+  labels: Array.from({ length: 12 }, (_, i) => new Date(currentYear, i).toLocaleString('default', { month: 'short' })),
+
   datasets: [
     {
       label: 'Products Sold (Monthly)',
       backgroundColor: '#FCD34D',
       borderWidth: 1,
       hoverBackgroundColor: '#FCD34D',
-      data: monthlySales,
+      data: monthlySales.map((sales, index) => (index <= currentMonth ? sales : null)),
     },
   ],
 };
 
 // Bar chart data (total yearly products)
+
 const yearlyBarData = {
-  labels: ['Yearly'],
+  labels: [currentYear.toString()], // Single label for the current year
   datasets: [
     {
       label: 'Products Sold (Yearly)',
       backgroundColor: '#36A2EB',
       borderWidth: 1,
       hoverBackgroundColor: '#36A2EB',
-      data: [yearlySales.reduce((a, b) => a + b, 0)], // Total yearly products
+      data: [isNaN(yearlySales[0]) ? 0 : yearlySales[0]], // Display only the current year's data
     },
   ],
 };
 
-// Bar chart data (revenue per month)
+ // Bar chart data (revenue per month)
+
 const monthlyRevenueData = {
-  labels: Array.from({ length: 12 }, (_, i) => `${i + 1}`), // Months
+  labels: Array.from({ length: 12 }, (_, i) => new Date(currentYear, i).toLocaleString('default', { month: 'short' })),
   datasets: [
     {
-      label: 'Revenue (Monthly)',
+      label: 'Revenue (Monthly) in DZD',
       backgroundColor: '#FCD34D',
       borderWidth: 1,
       hoverBackgroundColor: '#FCD34D',
-      data: monthlyRevenue.map(revenue => isNaN(revenue) ? 0 : Number(revenue.toFixed(2))),
+      data: monthlyRevenue.map((revenue, index) => {
+        return index <= currentMonth ? (isNaN(revenue) ? 0 : Number(revenue.toFixed(4))) : null;
+      }),
     },
   ],
 };
 
-// Bar chart data (total yearly revenue)
+
+  // Bar chart data (total yearly revenue)
+
 const yearlyRevenueData = {
-  labels: Array.from({ length: new Date().getFullYear() - 2010 + 1 }, (_, i) => `${2010 + i}`), // Years
+  labels: yearsToShow.map((year) => year.toString()), 
   datasets: [
     {
-      label: 'Revenue (Yearly)',
+      label: 'Revenue (Yearly) in DZD',
       backgroundColor: '#36A2EB',
       borderWidth: 1,
       hoverBackgroundColor: '#36A2EB',
-      data: yearlyRevenue.map(revenue => isNaN(revenue) ? 0 : Number(revenue.toFixed(2))),
-      
+      data: yearsToShow.map((year) => {
+        const index = currentYear - year; 
+        
+        return index >= 0 ? (isNaN(yearlyRevenue[index]) ? 0 : Number(yearlyRevenue[index].toFixed(4))) : null;
+        
+        
+      }),
+
     },
-    
   ],
 };
 
+  const optionsWithoutGridLines = {
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          maxRotation: 0, // Rotate labels to be horizontal
+          minRotation: 0,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
 
-const optionsWithoutGridLines = {
-  scales: {
-    x: {
-      grid: {
-        display: false,
-      },
-      ticks: {
-        maxRotation: 0, // Rotate labels to be horizontal
-        minRotation: 0,
-      },
-    },
-    y: {
-      grid: {
-        display: false,
-      },
-    },
-  },
-};
+
 
   return (
     <div className="p-6 bg-white shadow-md rounded-md">

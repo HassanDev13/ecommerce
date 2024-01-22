@@ -17,7 +17,7 @@ const LandPageNavBar: React.FC = () => {
 
   const { login, register, user, logout } = useAuth({ middleware: "guest" });
   return (
-    <nav className="bg-yellow-400 p-4 flex justify-between items-center w-screen">
+    <nav className="bg-yellow-400 p-4 flex justify-between items-center ">
       <div>
         <p className="text-black font-bold">Brand Name</p>
       </div>

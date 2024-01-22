@@ -32,10 +32,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Icons } from "@/components/ui/icons";
 
 const RegistrationPage = () => {
   const router = useRouter();
   const { login, register, user, logout } = useAuth({ middleware: "guest" });
+    const [loading, setLoading] = useState(false);
+
 
   const userSchemaRegister = z.object({
     name: z.string().min(2).max(255),
@@ -60,7 +63,7 @@ const RegistrationPage = () => {
       if (user.user_type == "Consumer") {
         // router.push('/');
         console.log("user", user?.consumer);
-        router.push("/profile");
+        router.push("/products");
       } else if (user.user_type == "Artisan") {
         // router.push('/artisan');
         console.log("user", user?.artisan);
@@ -72,24 +75,31 @@ const RegistrationPage = () => {
       }
     }
   }, [router, user]);
-  async function onSubmit(values: z.infer<typeof userSchemaRegister>) {
-    console.log("values", values);
+  async function onSubmit(values : z.infer<typeof userSchemaRegister>) {
+    setLoading(true);
+    try {
+      // Simulate a 2-second delay
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    const requestData: IApiRequest = {
-      setErrors: (errors) => {
-        Object.values(errors).forEach((error) => {
-          console.log("errors when login ", error[0]);
-        });
-      }, // You might need to handle errors here
-      setStatus: (status) => {
-        console.log("login good" + status);
-      }, // You might need to handle status here
-      ...values,
-      // Add other properties as needed by IApiRequest
-    };
-    await register(requestData);
+      const requestData: IApiRequest = {
+        setErrors: (errors) => {
+          Object.values(errors).forEach((error) => {
+            console.log("errors when registering ", error[0]);
+          });
+        },
+        setStatus: (status) => {
+          console.log("registering good" + status);
+        },
+        ...values,
+      };
+
+      await register(requestData);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setLoading(false);
+    }
   }
-
   const formRegister = useForm<z.infer<typeof userSchemaRegister>>({
     resolver: zodResolver(userSchemaRegister),
     defaultValues: {
@@ -105,8 +115,8 @@ const RegistrationPage = () => {
       user_type: "Consumer", // Set a default user_type if needed
       availability: false,
       business_name: "Beratna",
-      open_at: "13:51",
-      close_at: "01:51",
+      open_at: "07:00",
+      close_at: "11:00",
     },
   });
 
@@ -350,9 +360,16 @@ const RegistrationPage = () => {
                   )}
                 />
               )}
-              <Button className="w-full" type="submit">
-                Register
-              </Button>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full"
+              >
+                {loading && (
+                    <Icons.spinner className=" h-6 w-4 animate-spin" />
+                )}
+                {!loading && "Register"}
+          </Button>
             </form>
           </Form>
         </div>

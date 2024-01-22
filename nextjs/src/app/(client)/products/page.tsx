@@ -44,7 +44,7 @@ const Products = () => {
   }
 
   return (
-    <section className="flex min-h-screen  w-screen">
+    <section className="flex min-h-screen  w-auto">
       <SearchBar />
       <div className=" p-4 w-full  flex flex-col space-y-2">
       <h1 className="text-xxl font-bold">Artisans</h1>

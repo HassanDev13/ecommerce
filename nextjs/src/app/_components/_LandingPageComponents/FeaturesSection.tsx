@@ -5,7 +5,7 @@ import Ficon2 from '/public/Ficon2.svg';
 
 const FeaturesSection = () => {
   return (
-    <section className="flex flex-col md:flex-row justify-center items-center w-screen">
+    <section className="flex flex-col md:flex-row justify-center items-center w-auto">
       {/* Left Column */}
       <div className="text-left max-w-lg md:ml-10 md:mr-[15%]"> 
         <h2 className="text-4xl font-bold mb-4">Discover Best savory</h2>

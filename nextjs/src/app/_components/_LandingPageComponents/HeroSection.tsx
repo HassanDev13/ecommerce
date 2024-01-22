@@ -7,7 +7,7 @@ import icon4 from "/public/Icon4.svg";
 const HeroSection: React.FC = () => {
   return (
     <section className="text-center py-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 w-auto">
         <div className="mx-auto">
           <div>
             <Image  src={icon2} alt="Your Image" width={100} height={100} />
