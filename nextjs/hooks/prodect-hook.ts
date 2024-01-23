@@ -2,7 +2,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import productService from "../services/prodect-service";
 
 const useAllProducts = (params: ProductQueryParams = {}) => {
-  return useQuery<Product[]>("products", () =>
+  return useQuery<Product[]>(['products' , params], () =>
     productService.getAllProducts(params)
   );
 };
@@ -17,6 +17,7 @@ const useAllProductsWithMutation = (params: ProductQueryParams = {}) => {
     {
       onSuccess: (data) => {
         queryClient.setQueryData("products", data);
+       
       },
     }
   );

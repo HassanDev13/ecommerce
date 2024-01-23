@@ -201,7 +201,7 @@ declare global {
   interface ProductQueryParams {
     search?: string;
     type?: "sugar" | "salt";
-    child_type?: "pastries" | "French pastries(viennoiseries)" | "Honey-dipped" | "Royal ice-coated" | "Ice sugar coated" | "No bake" | "Mini Oven" | undefined;
+    child_type?: string;
     min_price?: number;
     max_price?: number;
     min_rating?: number;
