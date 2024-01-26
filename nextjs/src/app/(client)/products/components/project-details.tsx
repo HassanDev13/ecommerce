@@ -11,7 +11,7 @@ import { useCardContext } from "../../../../../context/CardContext";
 import Rating from "../../profile/rating";
 
 export const ProjectDetails = () => {
-  const { isCreateSheetOpen, setIsCreateProductOpen, product } =
+  const { isCreateSheetOpen, setIsCreateProductOpen, product  } =
     useProductContext();
   const { setCardProducts } = useCardContext();
   return (

@@ -24,7 +24,7 @@ const useArtisanById = (params: number) => {
   );
 };
 const useAllArtisans = (params: ArtisanQueryParams = {}) => {
-  return useQuery<Artisan[]>("artisans", () =>
+  return useQuery<Artisan[]>(["artisans", params], () =>
     userService.getAllArtisan(params)
   );
 };

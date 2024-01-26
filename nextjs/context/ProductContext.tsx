@@ -13,13 +13,16 @@ interface ProductContextType {
   setIsUpdateProductOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isDeleteDialogOpen: boolean;
   setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  
+  isSheetProductOrdersOpen: boolean;
+  setIsSheetProductOrdersOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export const ProductProvider: React.FC<ProductContextProps> = ({ children }) => {
   const [product, setProduct] = useState<Product | null>(null);
+  const [isSheetProductOrdersOpen, setIsSheetProductOrdersOpen] = useState<boolean>(false);
 
   const [isCreateSheetOpen, setIsCreateProductOpen] = useState<boolean>(false);
   const [isUpdateSheetOpen, setIsUpdateProductOpen] = useState<boolean>(false);
@@ -27,6 +30,8 @@ export const ProductProvider: React.FC<ProductContextProps> = ({ children }) => 
   return (
     <ProductContext.Provider value={
       {
+        isSheetProductOrdersOpen,
+        setIsSheetProductOrdersOpen,
         product,
         setProduct,
         isCreateSheetOpen,

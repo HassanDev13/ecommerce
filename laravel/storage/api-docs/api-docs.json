@@ -2146,7 +2146,12 @@
                     },
                     "orderStatus": {
                         "description": "Order status",
-                        "type": "string"
+                        "enum": [
+                            "unprocessed",
+                            "accepted",
+                            "refused",
+                            "assigned"
+                        ]
                     },
                     "deliveryAddress": {
                         "description": "Delivery address",

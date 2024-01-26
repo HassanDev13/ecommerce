@@ -34,7 +34,8 @@ import { Loader2Icon, LoaderIcon } from "lucide-react";
 import { debounce } from "lodash";
 
 const SearchBar = () => {
-  const { products, setProducts, setPrams, setFilterOn } = useProductContext();
+  const { products, setProducts, setPrams, setPramsArtisan } =
+    useProductContext();
   const { mutate } = useAllProductsWithMutation();
   const productSchema = z.object({
     search: z.string().max(255).optional(),
@@ -63,8 +64,6 @@ const SearchBar = () => {
 
   const onSubmitProduct = (values: z.infer<typeof productSchema>) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-
-    console.log("filter values", values);
     const prams = {
       search: values.search,
       type: values.type,
@@ -81,16 +80,31 @@ const SearchBar = () => {
 
   const onSubmitArtisan = (values: z.infer<typeof artisanSchema>) => {
     console.log("Artisan Form Values", values);
-    // Perform actions based on form data
+    const prams: ArtisanQueryParams = {
+      address: values.address,
+      business_name : values.search,
+      min_rating : values.rating
+    };
+    setPramsArtisan(prams);
   };
 
   const resetProductForm = () => {
-    formProduct.reset();
+    formProduct.reset({
+      search: undefined,
+      type: undefined,
+      subtypeSugar: undefined,
+      subtypeSalt: undefined,
+      minPrice: undefined,
+      maxPrice: undefined,
+      rating: undefined,
+      sortBy: undefined,
+    });
     setPrams({});
   };
 
   const resetArtisanForm = () => {
     formArtisan.reset();
+    setPramsArtisan({})
   };
 
   return (
@@ -294,25 +308,27 @@ const SearchBar = () => {
                   )}
                 />
 
-                <Button
-                  type="submit"
-                  className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 "
-                >
-                  {formProduct.formState.isSubmitting ? (
-                    <span className="flex items-center">
-                      Loading <LoaderIcon className="ml-2 animate-spin" />
-                    </span>
-                  ) : (
-                    "Search Products"
-                  )}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={resetProductForm}
-                  className="mt-4 ml-5 font-bold hover:bg-gray-200"
-                >
-                  Reset
-                </Button>
+                <div className="flex justify-between">
+                  <Button
+                    type="submit"
+                    className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 "
+                  >
+                    {formProduct.formState.isSubmitting ? (
+                      <span className="flex items-center">
+                        Loading <LoaderIcon className="ml-2 animate-spin" />
+                      </span>
+                    ) : (
+                      "Search Products"
+                    )}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={resetProductForm}
+                    className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 "
+                  >
+                    Search Reset
+                  </Button>
+                </div>
               </form>
             </Form>
           </AccordionContent>
@@ -355,7 +371,7 @@ const SearchBar = () => {
 
                 {/* Add other form fields for artisans */}
                 <FormField
-                  control={formProduct.control}
+                  control={formArtisan.control}
                   name="rating"
                   render={({ field }) => (
                     <FormItem>
@@ -367,10 +383,15 @@ const SearchBar = () => {
                     </FormItem>
                   )}
                 />
-
-                <Button type="submit" className="mt-4 font-bold">
+                <div className="flex justify-between">
+                <Button type="submit"   className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 ">
                   Search Artisans
                 </Button>
+                <Button onClick={resetArtisanForm}  className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 ">
+                  Reset Search
+                </Button>
+                </div>
+                
               </form>
             </Form>
           </AccordionContent>

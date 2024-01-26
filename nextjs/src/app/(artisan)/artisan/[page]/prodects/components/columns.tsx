@@ -91,7 +91,7 @@ export const columns: ColumnDef<Product>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const { setIsUpdateProductOpen, setProduct, setIsDeleteDialogOpen } =
+      const { setIsUpdateProductOpen, setProduct, setIsDeleteDialogOpen , setIsSheetProductOrdersOpen} =
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useProductContext();
       const rowData = row.original;
@@ -107,6 +107,14 @@ export const columns: ColumnDef<Product>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setProduct(rowData);
+                setIsSheetProductOrdersOpen(true);
+              }}
+            >
+              show orders
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
                 setProduct(rowData);
