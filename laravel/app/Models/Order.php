@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *      ),
  *      @OA\Property(
  *          property="orderStatus",
- *          enum={"unprocessed", "accepted","refused";"assigned"},
+ *          enum={"unprocessed", "accepted","refused","assigned"},
  *          description="Order status"
  *      ),
  *      @OA\Property(

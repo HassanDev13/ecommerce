@@ -146,6 +146,7 @@ declare global {
     updated_at: string;
     user: User;
     orders: Order[];
+    ratings : Rating[]
    
   }
 
@@ -194,14 +195,12 @@ declare global {
   interface ArtisanQueryParams {
     business_name?: string;
     address?: string;
-    type?: "sugar" | "salt";
-    child_type?: string;
     min_rating?: number;
   }
   interface ProductQueryParams {
     search?: string;
-    type?: "sugar" | "salt";
-    child_type?: "pastries" | "French pastries(viennoiseries)" | "Honey-dipped" | "Royal ice-coated" | "Ice sugar coated" | "No bake" | "Mini Oven" | undefined;
+    type?: "sugar" | "salt" ;
+    child_type?: string;
     min_price?: number;
     max_price?: number;
     min_rating?: number;

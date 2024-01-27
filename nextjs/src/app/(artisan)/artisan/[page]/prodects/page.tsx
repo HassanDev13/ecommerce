@@ -8,6 +8,8 @@ import { ProductProvider } from "../../../../../../context/ProductContext";
 import { DataTable } from "./components/data-table";
 import { useArtisanById } from "../../../../../../hooks/user-hook";
 import { useAuth } from "../../../../../../hooks/auth";
+import { ProjectDetails } from "@/app/(client)/products/components/project-details";
+import { ProjectOrderDetails } from "./components/prodect-order";
 
 export default function Products() {
   const { logout, user } = useAuth({ middleware: "auth" });
@@ -26,16 +28,19 @@ export default function Products() {
     return <div>Error loading products</div>;
   }
 
- return (
-  <>
-    <ProductProvider>
-      <div className="h-screen w-full">
-        <DataTable data={products?.user?.products ?? []} columns={columns} />
-        <CreateProduct />
-        <UpdateProduct />
-        <DeleteProduct />
-      </div>
-    </ProductProvider>
-  </>
-);
+  return (
+    <>
+      <ProductProvider>
+        <div className="h-screen w-full">
+         
+          <DataTable data={products?.user.products ?? []} columns={columns} />
+          <CreateProduct />
+          <UpdateProduct />
+          <DeleteProduct />
+          <ProjectDetails/>
+          <ProjectOrderDetails/>
+        </div>
+      </ProductProvider>
+    </>
+  );
 }

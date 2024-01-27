@@ -25,42 +25,23 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useAllProducts } from "../../../hooks/prodect-hook";
+import {
+  useAllProducts,
+  useAllProductsWithMutation,
+} from "../../../hooks/prodect-hook";
 import { useProductContext } from "../../../context/ProductClientContext";
 import { Loader2Icon, LoaderIcon } from "lucide-react";
 import { debounce } from "lodash";
 
-
-
 const SearchBar = () => {
-  const { products, setProducts,setPrams , setFilterOn} = useProductContext();
+  const { products, setProducts, setPrams, setPramsArtisan } =
+    useProductContext();
+  const { mutate } = useAllProductsWithMutation();
   const productSchema = z.object({
     search: z.string().max(255).optional(),
     type: z.enum(["sugar", "salt"]).optional(),
-    subtypeSugar: z
-      .enum([
-        "pastries",
-        "French pastries(viennoiseries)",
-        "Honey-dipped",
-        "Royal ice-coated",
-        "Ice sugar coated",
-        "No bake",
-        "Mini Oven",
-      ])
-      .optional(),
-    subtypeSalt: z
-      .enum([
-        "Mini Pizza",
-        "Coka",
-        "Maekouda",
-        "Mhadjeb",
-        "Bourek",
-        "Soufflé",
-        "Mini Tacos",
-        "Mini Hamburger",
-        "Cheese cones",
-      ])
-      .optional(),
+    subtypeSugar: z.string().optional(),
+    subtypeSalt: z.string().optional(),
     minPrice: z.coerce.number().positive().optional(),
     maxPrice: z.coerce.number().positive().optional(),
     rating: z.coerce.number().lte(5, "Must be 5 or less").optional(),
@@ -74,17 +55,15 @@ const SearchBar = () => {
   });
 
   const formProduct = useForm<z.infer<typeof productSchema>>({
-    resolver: zodResolver(productSchema)
+    resolver: zodResolver(productSchema),
   });
 
   const formArtisan = useForm<z.infer<typeof artisanSchema>>({
     resolver: zodResolver(artisanSchema),
   });
- 
+
   const onSubmitProduct = (values: z.infer<typeof productSchema>) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    
-    console.log("filter values", values);
     const prams = {
       search: values.search,
       type: values.type,
@@ -93,41 +72,40 @@ const SearchBar = () => {
       min_price: values.minPrice,
       min_rating: values.rating,
       sort_by: values.sortBy,
-    }
-    setPrams(prams)
-    setFilterOn(true);
+    };
+    setPrams(prams);
+
     // Perform actions based on form data
   };
 
   const onSubmitArtisan = (values: z.infer<typeof artisanSchema>) => {
     console.log("Artisan Form Values", values);
-    // Perform actions based on form data
+    const prams: ArtisanQueryParams = {
+      address: values.address,
+      business_name : values.search,
+      min_rating : values.rating
+    };
+    setPramsArtisan(prams);
   };
 
-const resetProductForm = debounce(() => {
-  formProduct.reset({
-    search: "",
-    type: undefined,
-    subtypeSugar: undefined,
-    subtypeSalt: undefined,
-    minPrice: undefined,
-    maxPrice: undefined,
-    rating: undefined,
-    sortBy: undefined,
-  });
-
-  
-
-  setFilterOn(false);
-  setPrams({});
-  console.log("Product Form Values Reset:", formProduct.getValues()); // Log the reset values
-}, 100);
-
+  const resetProductForm = () => {
+    formProduct.reset({
+      search: undefined,
+      type: undefined,
+      subtypeSugar: undefined,
+      subtypeSalt: undefined,
+      minPrice: undefined,
+      maxPrice: undefined,
+      rating: undefined,
+      sortBy: undefined,
+    });
+    setPrams({});
+  };
 
   const resetArtisanForm = () => {
     formArtisan.reset();
+    setPramsArtisan({})
   };
-
 
   return (
     <aside className=" fixed top-0 left-0 overflow-y-auto h-full w-[20%] mt-[6%] border-r-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300">
@@ -169,7 +147,6 @@ const resetProductForm = debounce(() => {
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent>
-                          
                             <SelectItem value="sugar">Sugary</SelectItem>
                             <SelectItem value="salt">Salty</SelectItem>
                           </SelectContent>
@@ -319,8 +296,10 @@ const resetProductForm = debounce(() => {
                             <SelectValue placeholder="Sort By" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Price">Price</SelectItem>
-                            <SelectItem value="Rating">Rating</SelectItem>
+                            <SelectItem value="price_per_piece">
+                              Price
+                            </SelectItem>
+                            <SelectItem value="rating">Rating</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -329,22 +308,27 @@ const resetProductForm = debounce(() => {
                   )}
                 />
 
-                <Button type="submit" className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 ">
-              {formProduct.formState.isSubmitting ? (
-                <span className="flex items-center">
-                  Loading <LoaderIcon className="ml-2 animate-spin" />
-                </span>
-              ) : (
-                'Search Products'
-              )}
-            </Button>
-            <Button
-              type="button"
-              onClick={resetProductForm}
-              className="mt-4 ml-5 font-bold hover:bg-gray-200"
-            >
-              Reset
-            </Button>
+                <div className="flex justify-between">
+                  <Button
+                    type="submit"
+                    className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 "
+                  >
+                    {formProduct.formState.isSubmitting ? (
+                      <span className="flex items-center">
+                        Loading <LoaderIcon className="ml-2 animate-spin" />
+                      </span>
+                    ) : (
+                      "Search Products"
+                    )}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={resetProductForm}
+                    className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 "
+                  >
+                    Search Reset
+                  </Button>
+                </div>
               </form>
             </Form>
           </AccordionContent>
@@ -387,7 +371,7 @@ const resetProductForm = debounce(() => {
 
                 {/* Add other form fields for artisans */}
                 <FormField
-                  control={formProduct.control}
+                  control={formArtisan.control}
                   name="rating"
                   render={({ field }) => (
                     <FormItem>
@@ -399,10 +383,15 @@ const resetProductForm = debounce(() => {
                     </FormItem>
                   )}
                 />
-
-                <Button type="submit" className="mt-4 font-bold">
+                <div className="flex justify-between">
+                <Button type="submit"   className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 ">
                   Search Artisans
                 </Button>
+                <Button onClick={resetArtisanForm}  className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 ">
+                  Reset Search
+                </Button>
+                </div>
+                
               </form>
             </Form>
           </AccordionContent>
