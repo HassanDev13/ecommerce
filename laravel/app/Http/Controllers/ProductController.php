@@ -255,6 +255,8 @@ class ProductController extends Controller
             'user_id' => 'required|integer'
         ]);
 
+        Log::info('validatedData', ['validatedData' => $validatedData]);
+
         $product = Product::create($validatedData);
         return response()->json(['products' => $product], 201);
     }
@@ -339,12 +341,13 @@ class ProductController extends Controller
         $validatedData = $request->validate([
             'name' => 'string',
             'description' => 'string',
-            'pricePerPiece' => 'numeric',
-            'minOrder' => 'integer',
-            'type' => 'string|in:sugar,salt',
-            'childType' => 'string',
+            'price_per_piece' => 'required|numeric',
+            'min_order' => 'required|integer',
+            'type' => 'required|string|in:sugar,salt',
+            'child_type' => 'required|string',
             'images' => 'json',
         ]);
+
 
         $product = Product::findOrFail($id);
         $product->update($validatedData);
