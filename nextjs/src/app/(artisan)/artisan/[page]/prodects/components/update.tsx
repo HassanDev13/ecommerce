@@ -100,7 +100,8 @@ export default function UpdateProduct() {
         <SheetHeader>
           <SheetTitle>Update product</SheetTitle>
         </SheetHeader>
-        <Form {...formAct}>
+        <Form {
+          ...formAct}>
           <form onSubmit={formAct.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={formAct.control}

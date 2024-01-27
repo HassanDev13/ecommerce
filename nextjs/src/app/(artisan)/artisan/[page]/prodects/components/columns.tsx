@@ -87,8 +87,6 @@ export const columns: ColumnDef<Product>[] = [
     header: "averageRating",
     cell: ({ row }) => {
       const averageRating = row.original.averageRating;
-      console.log("Row Data:", row.original); // Log the entire row
-      console.log("Average Rating:", averageRating);
 
       // Check if averageRating is defined and display the Rating component
       return (
