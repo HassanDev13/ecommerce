@@ -21,7 +21,7 @@ export const ProjectOrderDetails = () => {
           <SheetTitle>{product?.name}</SheetTitle>
         </SheetHeader>
         <div className="flex flex-col justify-start items-center space-y-4">
-          {product?.orders?.length}
+        
           {product?.orders.map((order) => (
             <div
               key={order.id}

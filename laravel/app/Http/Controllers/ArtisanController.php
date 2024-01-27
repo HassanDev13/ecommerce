@@ -186,6 +186,10 @@ class ArtisanController extends Controller
                 'user',
                 'user.products',
                 'user.products.orders',
+                'user.products.orders.consumer',
+                'user.products.orders.consumer.user',
+             
+
                 'user.products.images',
                 'ratings',
                 'orders',
