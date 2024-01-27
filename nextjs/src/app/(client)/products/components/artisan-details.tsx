@@ -29,12 +29,16 @@ export const ArtisanDetails = () => {
           </div>
 
           <div className="w-full flex justify-between">
-            <p className="text-sm">Price per piece</p>
-            <p className="text-sm text-bold">{artisan?.open_at} DA</p>
+            <p className="text-sm">Open At</p>
+            <p className="text-sm text-bold bg-green-200 p-1 w-fit rounded-lg">{artisan?.open_at}</p>
           </div>
           <div className="w-full flex justify-between">
-            <p className="text-sm">Min Order</p>
-            <p className="text-sm text-bold">{artisan?.close_at}</p>
+            <p className="text-sm">Close At</p>
+            <p className="text-sm text-bold bg-green-200 p-1 w-fit rounded-lg">{artisan?.close_at}</p>
+          </div>
+          <div className="w-full flex justify-between">
+            <p className="text-sm">Location</p>
+            <p className="text-sm text-bold bg-green-200 p-1 w-fit rounded-lg">{artisan?.user.address}</p>
           </div>
           <div className="w-full flex justify-between">
             <h1>Rating </h1>

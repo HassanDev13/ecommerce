@@ -71,7 +71,7 @@ export default function UpdateProduct() {
   async function onSubmit(values: z.infer<typeof productSchema>) {
     if (user && user.id && product && product.id) {
       console.log(values, user?.id);
-      const productId = product?.id;
+      const productId = product?.id.toString();
       const updatedProductData: Partial<Product> = { ...values };
       updateProduct.mutate(
         { productId, updatedProductData },

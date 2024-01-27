@@ -57,9 +57,7 @@ export const columns: ColumnDef<Product>[] = [
             width={100}
             alt="image"
             src={
-              process.env.NEXT_PUBLIC_URL_IMAGE +
-            
-              row.original.images[0].path
+              process.env.NEXT_PUBLIC_URL_IMAGE + row.original.images[0].path
             }
           />
         ) : (
@@ -78,11 +76,9 @@ export const columns: ColumnDef<Product>[] = [
     header: "Price Per Piece",
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("price_per_piece")}</div>
-
-      
     ),
   },
-    {
+  {
     accessorKey: "averageRating",
     header: "averageRating",
     cell: ({ row }) => {
@@ -96,8 +92,26 @@ export const columns: ColumnDef<Product>[] = [
       );
     },
   },
+  {
+    accessorKey: "type",
+    header: "type",
+    cell: ({ row }) => {
+      const type = row.original.type;
 
+      // Check if averageRating is defined and display the Rating component
+      return <div className="text-sm text-bold bg-green-200 p-1 w-fit rounded-lg">{type}</div>;
+    },
+  },
+  {
+    accessorKey: "child",
+    header: "sub type",
+    cell: ({ row }) => {
+      const type = row.original.child_type;
 
+      // Check if averageRating is defined and display the Rating component
+      return <div className="text-sm text-bold bg-red-200 p-1 w-fit rounded-lg">{type}</div>;
+    },
+  },
   {
     accessorKey: "min_order",
     header: () => <div className="text-right">Min order</div>,
@@ -110,7 +124,12 @@ export const columns: ColumnDef<Product>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const { setIsUpdateProductOpen, setProduct, setIsDeleteDialogOpen , setIsSheetProductOrdersOpen} =
+      const {
+        setIsUpdateProductOpen,
+        setProduct,
+        setIsDeleteDialogOpen,
+        setIsSheetProductOrdersOpen,
+      } =
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useProductContext();
       const rowData = row.original;
