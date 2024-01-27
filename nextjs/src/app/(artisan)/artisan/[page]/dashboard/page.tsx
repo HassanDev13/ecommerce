@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
 
   // Extract sugary and salty percentages for the charts
   const doughnutData = {
-    labels: [`Sugary (${sugaryPercentage.toFixed(2)}%)`, `Salty (${saltyPercentage.toFixed(2)}%)`],
+    labels: [`Sugary (${sugaryPercentage.toFixed(0)}%)`, `Salty (${saltyPercentage.toFixed(0)}%)`],
     datasets: [
       {
         data: [sugaryPercentage, saltyPercentage],

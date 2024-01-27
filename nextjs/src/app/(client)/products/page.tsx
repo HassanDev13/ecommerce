@@ -11,10 +11,8 @@ import {
   useAllProducts,
   useAllProductsWithMutation,
 } from "../../../../hooks/prodect-hook";
-import { CardList } from "./components/card-list";
 import { ProjectDetails } from "./components/project-details";
 import { date } from "zod";
-import { useAllOrders } from "../../../../hooks/order-hook";
 import { useAllArtisans } from "../../../../hooks/user-hook";
 import Rating from "../profile/rating";
 
@@ -44,9 +42,9 @@ const Products = () => {
   }
 
   return (
-    <section className="flex min-h-screen  w-auto">
+    <section className="flex min-h-screen w-[auto] ml-[20%]">
       <SearchBar />
-      <div className=" p-4 w-full  flex flex-col space-y-2">
+      <div className=" p-4 w-full  flex flex-col space-y-2 ">
       <h1 className="text-xxl font-bold">Artisans</h1>
         <div className="w-full h-fit grid grid-cols-5 gap-4">
           {allArtisans?.map((artisan, index) => (

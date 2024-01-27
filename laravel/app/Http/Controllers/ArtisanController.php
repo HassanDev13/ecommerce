@@ -178,13 +178,14 @@ class ArtisanController extends Controller
      *     ),
      * )
      */
-    public function show(string $id)
+   public function show(string $id)
     {
         Log::info('Showing Delivery Personnel with id: ' . $id);
         try {
             $artisan = Artisan::with([
                 'user',
                 'user.products',
+                'user.products.orders',
                 'user.products.images',
                 'ratings',
                 'orders',
@@ -195,13 +196,22 @@ class ArtisanController extends Controller
                 'orders.products.user',
                 'orders.products.user.artisan'
             ])->findOrFail($id, ['id', 'created_at', 'updated_at', 'user_id']);
+            // Calculate average rating
+
+            // Calculate average rating for each product
+            foreach ($artisan->user->products as $product) {
+                $averageRating = $product->calculateAverageRating();
+
+                // Add average rating to the product data
+                $product->averageRating = $averageRating;
+            }
+
 
             return response()->json(['artisan' => $artisan]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'Delivery Personnel not found'], 404);
         }
     }
-
     /**
      * Update the specified resource in storage.
      *

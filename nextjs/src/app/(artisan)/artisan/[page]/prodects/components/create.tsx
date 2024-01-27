@@ -313,6 +313,7 @@ enum SaltChildType {
                     accept="image/*"
                     multiple
                     onChange={handleImageChange}
+                    required
                   />
                 </FormControl>
                 <FormMessage />

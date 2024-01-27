@@ -31,14 +31,14 @@ export default function ShowOrderProduct() {
               width={60}
               height={60}
               src={process.env.NEXT_PUBLIC_URL_IMAGE + product.images[0].path}
-              alt="Picture of the author"
+              alt="Picture of the product"
               className="w-full h-full rounded-lg"
             />
             </div>
 
             <div >
              
-              <h1>{product.name} , Quantity {product.pivot.quantity}</h1>
+              <h1>{product.name} | Quantity :{product.pivot.quantity}</h1>
               <p>Artisan Location : {product.user.address}</p>
             </div>
           </div>

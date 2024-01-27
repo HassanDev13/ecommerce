@@ -118,7 +118,7 @@ export function DataTable<TData, TValue>({
               setIsCreateProductOpen(true)
             }}
           >
-            Add Prodects
+            Add Products
           </Button>
         </div>
       </div>

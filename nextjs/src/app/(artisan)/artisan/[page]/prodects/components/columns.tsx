@@ -14,6 +14,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { useProductContext } from "../../../../../../../context/ProductContext";
 import Image from "next/image";
+import Rating from "@/app/(client)/profile/rating";
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -77,8 +78,28 @@ export const columns: ColumnDef<Product>[] = [
     header: "Price Per Piece",
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("price_per_piece")}</div>
+
+      
     ),
   },
+    {
+    accessorKey: "averageRating",
+    header: "averageRating",
+    cell: ({ row }) => {
+      const averageRating = row.original.averageRating;
+      console.log("Row Data:", row.original); // Log the entire row
+      console.log("Average Rating:", averageRating);
+
+      // Check if averageRating is defined and display the Rating component
+      return (
+        <div className="flex space-x-1">
+          <Rating initialValue={averageRating || 0} desabled={true} />
+        </div>
+      );
+    },
+  },
+
+
   {
     accessorKey: "min_order",
     header: () => <div className="text-right">Min order</div>,

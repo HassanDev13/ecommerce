@@ -130,7 +130,7 @@ const resetProductForm = debounce(() => {
 
 
   return (
-    <aside className=" overflow-y-auto max-h-screen  w-[25%]  border-r-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300">
+    <aside className=" fixed top-0 left-0 overflow-y-auto h-full w-[20%] mt-[6%] border-r-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300">
       <Accordion type="single" defaultValue="item-1" className="m-2">
         <AccordionItem value="item-1">
           <AccordionTrigger>Filter by product</AccordionTrigger>

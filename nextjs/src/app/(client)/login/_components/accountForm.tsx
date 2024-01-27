@@ -53,7 +53,7 @@ export function AccountForm({
       if (user.user_type == "Consumer") {
         router.push("/profile");
       } else if (user.user_type == "Artisan") {
-        router.push("/artisan/products");
+        router.push("/artisan/dashboard");
       } else if (user.user_type == "DeliveryPersonnel") {
         router.push("/delivery");
       }
