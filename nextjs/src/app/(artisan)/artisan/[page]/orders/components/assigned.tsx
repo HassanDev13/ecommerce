@@ -26,7 +26,7 @@ export default function Assigned() {
           <SheetTitle>Assigned #{order?.id} to :</SheetTitle>
         </SheetHeader>
 
-        <div className="py-4">
+        <div className="py-4 space-y-2">
           {delivery?.map((item, index) => (
             <div
               key={index}
@@ -38,12 +38,13 @@ export default function Assigned() {
                   <h1 className="text-sm font-bold">{item.user.last_name}</h1>
                 </div>
                 <p className="text-sm">
-                  {item.availability === 1 ? "Available" : "Not Available"}
+                  {item.availability ? "Available" : "Not Available"}
                 </p>
               </div>
 
               <div className="flex space-x-2">
                 <Button
+                  disabled={!item.availability}
                   onClick={() => {
                     if (order?.id)
                       data.mutate(

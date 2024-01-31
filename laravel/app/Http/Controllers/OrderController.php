@@ -54,9 +54,9 @@ class OrderController extends Controller
         // artisan can see all orders
         // consumer can see only his orders
         // delivery personnel can see only his orders
-      
 
-      
+
+
 
         switch ($user->user_type) {
             case "Artisan":
@@ -78,6 +78,7 @@ class OrderController extends Controller
                         },
                         'deliveryPersonnel'
                     ])
+                    ->orderBy('created_at', 'desc')
                     ->get();
 
 
@@ -85,13 +86,17 @@ class OrderController extends Controller
                 return response()->json(['orders' => $orders]);
             case "Consumer":
                 $orders = Order::where('consumer_id', $user->consumer->id)
+
                     ->with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])
+                    ->orderBy('created_at', 'desc')
                     ->get();
                 return response()->json(['orders' => $orders]);
             default:
                 $orders = Order::where('delivery_personnel_id', $user->deliveryPersonnel->id)
                     ->with(['consumer', 'consumer.user', 'products', 'products.images', 'deliveryPersonnel', 'products.user', 'products.user.artisan'])
+                    ->orderBy('created_at', 'desc')
                     ->get();
+
                 return response()->json(['orders' => $orders]);
         }
     }

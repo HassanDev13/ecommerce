@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * @OA\Schema(
  *      schema="DeliveryPersonnel",
@@ -36,8 +37,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class DeliveryPersonnel extends Model
 {
-    use HasFactory,SoftDeletes;
-    protected $fillable = ['user_id','availability'];
+    use HasFactory, SoftDeletes;
+    protected $fillable = ['user_id', 'availability'];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -46,5 +47,8 @@ class DeliveryPersonnel extends Model
     {
         return $this->hasMany(Order::class);
     }
+    public function orderedOrders()
+    {
+        return $this->hasMany(Order::class)->orderBy('created_at', 'desc');
+    }
 }
-

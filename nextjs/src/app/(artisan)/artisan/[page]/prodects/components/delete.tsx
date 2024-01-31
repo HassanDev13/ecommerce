@@ -20,7 +20,7 @@ export default function DeleteProduct() {
     const deleteBtn = () => {
         if (product) {
             console.log('delete product', product.id);
-            deleteProduct.mutate(product.id, {
+            deleteProduct.mutate(String(product.id), {
                 onSuccess: () => {
                     setIsDeleteDialogOpen(false);
                     toast({

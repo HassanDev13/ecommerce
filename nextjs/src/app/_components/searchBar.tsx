@@ -37,11 +37,38 @@ const SearchBar = () => {
   const { products, setProducts, setPrams, setPramsArtisan } =
     useProductContext();
   const { mutate } = useAllProductsWithMutation();
+  enum SugarChildType {
+    PASTRIES = "pastries",
+    FRENCH_PASTRIES = "French pastries(viennoiseries)",
+    HONEY_DIPPED = "Honey-dipped",
+    ROYAL_ICE_COATED = "Royal ice-coated",
+    ICE_SUGAR_COATED = "Ice sugar coated",
+    NO_BAKE = "No bake",
+    MINI_OVEN = "Mini Oven",
+  }
+
+  enum SaltChildType {
+    MINI_PIZZA = "Mini Pizza",
+    COKA = "Coka",
+    MAEKOUDA = "Maekouda",
+    MHADJEB = "Mhadjeb",
+    BOUREK = "Bourek",
+    SOUFFLE = "Soufflé",
+    MINI_TACOS = "Mini Tacos",
+    MINI_HAMBURGER = "Mini Hamburger",
+    CHEESE_CONES = "Cheese cones",
+  }
   const productSchema = z.object({
     search: z.string().max(255).optional(),
     type: z.enum(["sugar", "salt"]).optional(),
-    subtypeSugar: z.string().optional(),
-    subtypeSalt: z.string().optional(),
+    child_type: z
+      .string()
+      .refine((value): value is SugarChildType | SaltChildType => {
+        return (
+          Object.values(SugarChildType).includes(value as SugarChildType) ||
+          Object.values(SaltChildType).includes(value as SaltChildType)
+        );
+      }),
     minPrice: z.coerce.number().positive().optional(),
     maxPrice: z.coerce.number().positive().optional(),
     rating: z.coerce.number().lte(5, "Must be 5 or less").optional(),
@@ -67,7 +94,7 @@ const SearchBar = () => {
     const prams = {
       search: values.search,
       type: values.type,
-      child_type: values.subtypeSugar,
+      child_type: values.child_type,
       max_price: values.maxPrice,
       min_price: values.minPrice,
       min_rating: values.rating,
@@ -82,8 +109,8 @@ const SearchBar = () => {
     console.log("Artisan Form Values", values);
     const prams: ArtisanQueryParams = {
       address: values.address,
-      business_name : values.search,
-      min_rating : values.rating
+      business_name: values.search,
+      min_rating: values.rating,
     };
     setPramsArtisan(prams);
   };
@@ -92,8 +119,8 @@ const SearchBar = () => {
     formProduct.reset({
       search: undefined,
       type: undefined,
-      subtypeSugar: undefined,
-      subtypeSalt: undefined,
+      child_type: undefined,
+   
       minPrice: undefined,
       maxPrice: undefined,
       rating: undefined,
@@ -103,12 +130,12 @@ const SearchBar = () => {
   };
 
   const resetArtisanForm = () => {
-    formArtisan.reset();
-    setPramsArtisan({})
+    formArtisan.reset({});
+    setPramsArtisan({});
   };
 
   return (
-    <aside className="  overflow-y-auto h-full w-[30%]  border-r-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300">
+    <aside className="  overflow-y-auto h-full w-[30%]  ">
       <Accordion type="single" defaultValue="item-1" className="m-2">
         <AccordionItem value="item-1">
           <AccordionTrigger>Filter by product</AccordionTrigger>
@@ -160,39 +187,27 @@ const SearchBar = () => {
                 {formProduct.watch().type === "sugar" ? (
                   <FormField
                     control={formProduct.control}
-                    name="subtypeSugar"
+                    name="child_type"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>SugarSubType</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select type" />
+                              <SelectValue placeholder="Select a Child type" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="pastries">pastries</SelectItem>
-                              <SelectItem value="French pastries(viennoiseries)">
-                                French pastries(viennoiseries)
+                          </FormControl>
+                          <SelectContent>
+                            {Object.values(SugarChildType).map((value) => (
+                              <SelectItem key={value} value={value}>
+                                {value}
                               </SelectItem>
-                              <SelectItem value="Honey-dipped">
-                                Honey-dipped
-                              </SelectItem>
-                              <SelectItem value="Royal ice-coated">
-                                Royal ice-coated
-                              </SelectItem>
-                              <SelectItem value="Ice sugar coated">
-                                Ice sugar coated
-                              </SelectItem>
-                              <SelectItem value="No bake">No bake</SelectItem>
-                              <SelectItem value="Mini Oven">
-                                Mini Oven
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -200,39 +215,27 @@ const SearchBar = () => {
                 ) : (
                   <FormField
                     control={formProduct.control}
-                    name="subtypeSalt"
+                    name="child_type"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>SaltSubType</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select type" />
+                              <SelectValue placeholder="Select a Child type" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Mini Pizza">
-                                Mini Pizza
+                          </FormControl>
+                          <SelectContent>
+                            {Object.values(SaltChildType).map((value) => (
+                              <SelectItem key={value} value={value}>
+                                {value}
                               </SelectItem>
-                              <SelectItem value="Coka">Coka</SelectItem>
-                              <SelectItem value="Maekouda">Maekouda</SelectItem>
-                              <SelectItem value="Mhadjeb">Mhadjeb</SelectItem>
-                              <SelectItem value="Bourek">Bourek</SelectItem>
-                              <SelectItem value="Soufflé">Soufflé</SelectItem>
-                              <SelectItem value="Mini Tacos">
-                                Mini Tacos
-                              </SelectItem>
-                              <SelectItem value="Mini Hamburger">
-                                Mini Hamburger
-                              </SelectItem>
-                              <SelectItem value="Cheese cones">
-                                Mhadjeb
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -308,7 +311,7 @@ const SearchBar = () => {
                   )}
                 />
 
-                <div className="flex justify-between">
+                <div className="flex justify-start space-x-2">
                   <Button
                     type="submit"
                     className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 "
@@ -383,15 +386,20 @@ const SearchBar = () => {
                     </FormItem>
                   )}
                 />
-                <div className="flex justify-between">
-                <Button type="submit"   className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 ">
-                  Search Artisans
-                </Button>
-                <Button onClick={resetArtisanForm}  className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 ">
-                  Reset Search
-                </Button>
+                <div className="flex justify-start space-x-2">
+                  <Button
+                    type="submit"
+                    className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 "
+                  >
+                    Search Artisans
+                  </Button>
+                  <Button
+                    onClick={resetArtisanForm}
+                    className="mt-4 font-bold hover:bg-gray-200 bg-yellow-400 "
+                  >
+                    Reset Search
+                  </Button>
                 </div>
-                
               </form>
             </Form>
           </AccordionContent>

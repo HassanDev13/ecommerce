@@ -125,12 +125,14 @@ class ProductController extends Controller
         if ($maxPrice) {
             $query->where('price_per_piece', '<=', $maxPrice);
         }
-
+        // idea is to make a [x,x+1]
         // Apply min_rating filter if provided
         $minRating = $request->input('min_rating');
+        $maxRating = $minRating + 1;
         if ($minRating) {
             $query->withAvg('ratings', 'rating')
-                ->having('ratings_avg_rating', '>=', $minRating);
+            ->havingRaw('? <= ratings_avg_rating AND ratings_avg_rating < ?', [$minRating, $maxRating]);
+               
         }
 
         // Apply sorting if provided

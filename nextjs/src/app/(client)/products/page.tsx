@@ -116,7 +116,7 @@ const ResultSection = () => {
                     initialValue={artisan.average_rating ?? 0}
                     desabled={true}
                   />
-                  <p>({artisan.average_rating ?? 0})</p>
+                  <p>({artisan.ratings.length ?? 0})</p>
                 </div>
 
                 <Button

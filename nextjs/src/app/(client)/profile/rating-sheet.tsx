@@ -64,7 +64,13 @@ export const RatingSheet = () => {
     });
   };
   const handleRatingChangeDeliveryBoy = (value: number) => {
-    console.log(`Rating changed to: ${value}`);
+    if(!order?.delivery_personnel_id){
+      toast({
+        title: "error",
+        description: `Rating changed to: ${value} d id ${order?.delivery_personnel_id} / ${order?.delivery_personnel.id}`,
+      });
+    }
+    console.log(`Rating changed to: ${value} d id ${order?.delivery_personnel_id}`);
     if(!user) return toast({
       title: "error",
       description: "Please login to add rating",
@@ -72,7 +78,7 @@ export const RatingSheet = () => {
     
     const rating: SendRating = {
       rating: value,
-      product_id: order?.delivery_personnel_id,
+      delivery_personnel_id : order?.delivery_personnel_id,
       consumer_id: user.id,
       ratingType: "DeliveryPersonnel",
     };
@@ -119,9 +125,7 @@ export const RatingSheet = () => {
             <h1>Delivery boy rating</h1>
             <Rating initialValue={0} onChange={handleRatingChangeDeliveryBoy} />
           </div>
-          <Button className="w-full" onClick={() => {}}>
-            Submit rating
-          </Button>
+         
         </div>
       </SheetContent>
     </Sheet>

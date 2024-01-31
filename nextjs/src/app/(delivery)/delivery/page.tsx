@@ -20,7 +20,7 @@ export default function Page() {
   return (
     <div>
       <OrderArtisanProvider>
-        <DataTable data={data?.orders!} columns={columns} />
+        <DataTable data={data && data.orders ? data.orders.slice().reverse() : []} columns={columns} />
         <ShowOrderProduct />
       </OrderArtisanProvider>
     </div>

@@ -10,7 +10,7 @@ import {
 } from "../../../../context/profileContext";
 import { RatingSheet } from "./rating-sheet";
 import { cn } from "@/lib/utils";
-import { OrderProvider } from "../../../../context/OrderContext";
+import { OrderProvider, useOrderContext } from "../../../../context/OrderContext";
 
 const Profile = () => {
   const orders = useAllOrders();
@@ -79,12 +79,14 @@ export default Page;
 
 function ButtonProduct({ product, order }: { product: Product; order: Order }) {
   const { setIsRateOpen, setProduct } = useProfileContext();
+  const {setOrder} = useOrderContext();
   return (
     <div className={cn("flex   pb-4 text-left w-full")}>
       <Button
-        //disabled={order.order_status=="unprocessed"}
+        disabled={order.order_status!="delivered"}
         className="w-full"
         onClick={() => {
+          setOrder(order);
           setProduct(product);
           setIsRateOpen(true);
         }}

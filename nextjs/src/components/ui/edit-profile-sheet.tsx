@@ -43,8 +43,16 @@ export const EditProfileSheet = () => {
     phone_number: z.optional(z.string()),
     user_type: z.enum(["Consumer", "Artisan", "DeliveryPersonnel"]),
     business_name: z.optional(z.string()),
-    open_at: z.optional(z.string()),
-    close_at:  z.optional(z.string()),
+    open_at: z
+      .string()
+      .refine((value) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(value), {
+        message: "open_at must be in the format H:i",
+      }),
+    close_at: z
+      .string()
+      .refine((value) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(value), {
+        message: "close_at must be in the format H:i",
+      }),
     availability: z.optional(z.boolean()),
   });
 
@@ -60,7 +68,7 @@ export const EditProfileSheet = () => {
       user_type: "Consumer", // Default value based on your use case
       business_name: user?.artisan?.business_name,
       open_at: user?.artisan?.open_at,
-      close_at:  user?.artisan?.close_at,
+      close_at: user?.artisan?.close_at,
       availability: user?.delivery_personnel?.availability,
     },
   });
@@ -93,9 +101,7 @@ export const EditProfileSheet = () => {
           toast({
             title: "Success",
             description: "Profile updated successfully",
-        
           });
-          
         },
         onError: (error) => {
           console.log("Error while updating profile", error);
@@ -121,159 +127,157 @@ export const EditProfileSheet = () => {
           <SheetTitle>Edit Prodile</SheetTitle>
         </SheetHeader>
         <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmitProfile)}
-                className="space-y-4 p-2"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>First name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter search term" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="first_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>First name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter search term" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="last_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Last name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <form
+            onSubmit={form.handleSubmit(onSubmitProfile)}
+            className="space-y-4 p-2"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter search term" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="first_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter search term" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="last_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Last name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Address" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>phoneNumber</FormLabel>
+                  <FormControl>
+                    <Input placeholder="phoneNumber" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {form.watch().user_type === "Artisan" && (
+              <>
                 <FormField
                   control={form.control}
-                  name="address"
+                  name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Address</FormLabel>
+                      <FormLabel>Bio</FormLabel>
                       <FormControl>
-                        <Input placeholder="Address" {...field} />
+                        <Textarea
+                          placeholder="Tell us a little bit about your bessniess"
+                          className="resize-none"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="phone_number"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>phoneNumber</FormLabel>
-                      <FormControl>
-                        <Input placeholder="phoneNumber" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {form.watch().user_type === "Artisan" && (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Bio</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Tell us a little bit about your bessniess"
-                              className="resize-none"
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <div className="flex space-x-2">
-                      <FormField
-                        control={form.control}
-                        name="open_at"
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel>Open at</FormLabel>
-                            <FormControl>
-                              <Input {...field} type="time" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="close_at"
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel>Close at</FormLabel>
-                            <FormControl>
-                              <Input {...field} type="time" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </>
-                )}
-                {form.watch().user_type === "DeliveryPersonnel" && (
+                <div className="flex space-x-2">
                   <FormField
                     control={form.control}
-                    name="availability"
+                    name="open_at"
                     render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-base">
-                            Availability
-                          </FormLabel>
-                          <FormDescription>
-                            Your Default status will be available ?
-                          </FormDescription>
-                        </div>
+                      <FormItem className="flex-1">
+                        <FormLabel>Open at</FormLabel>
                         <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            aria-readonly
-                          />
+                          <Input {...field} type="time" />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
+
+                  <FormField
+                    control={form.control}
+                    name="close_at"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Close at</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="time" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </>
+            )}
+            {form.watch().user_type === "DeliveryPersonnel" && (
+              <FormField
+                control={form.control}
+                name="availability"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Availability</FormLabel>
+                      <FormDescription>
+                        Your Default status will be available ?
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        aria-readonly
+                      />
+                    </FormControl>
+                  </FormItem>
                 )}
-                <Button
-                  type="submit"
-                  className="mt-4 w-full font-bold g-yellow-700"
-                >
-                  Update
-                </Button>
-              </form>
-            </Form>
+              />
+            )}
+            <Button
+              type="submit"
+              className="mt-4 w-full font-bold g-yellow-700"
+            >
+              Update
+            </Button>
+          </form>
+        </Form>
       </SheetContent>
     </Sheet>
   );

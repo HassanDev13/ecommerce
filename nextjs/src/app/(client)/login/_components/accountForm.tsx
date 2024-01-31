@@ -51,7 +51,7 @@ export function AccountForm({
   const userFlow = () => {
     if (user) {
       if (user.user_type == "Consumer") {
-        router.push("/profile");
+        router.push("/products");
       } else if (user.user_type == "Artisan") {
         router.push("/artisan/dashboard");
       } else if (user.user_type == "DeliveryPersonnel") {

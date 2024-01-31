@@ -41,6 +41,27 @@ const productSchema = z.object({
 });
 
 export default function UpdateProduct() {
+  enum SugarChildType {
+    PASTRIES = "pastries",
+    FRENCH_PASTRIES = "French pastries(viennoiseries)",
+    HONEY_DIPPED = "Honey-dipped",
+    ROYAL_ICE_COATED = "Royal ice-coated",
+    ICE_SUGAR_COATED = "Ice sugar coated",
+    NO_BAKE = "No bake",
+    MINI_OVEN = "Mini Oven",
+  }
+
+  enum SaltChildType {
+    MINI_PIZZA = "Mini Pizza",
+    COKA = "Coka",
+    MAEKOUDA = "Maekouda",
+    MHADJEB = "Mhadjeb",
+    BOUREK = "Bourek",
+    SOUFFLE = "Soufflé",
+    MINI_TACOS = "Mini Tacos",
+    MINI_HAMBURGER = "Mini Hamburger",
+    CHEESE_CONES = "Cheese cones",
+  }
   const { user } = useAuth({ middleware: "auth" });
 
   const { isUpdateSheetOpen, setIsUpdateProductOpen, product } =
@@ -187,53 +208,63 @@ export default function UpdateProduct() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={formAct.control}
-              name="child_type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a Child type" />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    {formAct.watch("type") === "sugar" ? (
-                    <SelectContent>
-                      <SelectItem value="PASTRIES">PASTRIES</SelectItem>
-                      <SelectItem value="FRENCH_PASTRIES">French pastries(viennoiseries)</SelectItem>
-                      <SelectItem value="HONEY_DIPPED">Honey-dipped</SelectItem>
-                      <SelectItem value="ROYAL_ICE_COATED">Royal ice-coated</SelectItem>
-                      <SelectItem value="ICE_SUGAR_COATED">Ice sugar coated</SelectItem>
-                      <SelectItem value="NO_BAKE">No bake</SelectItem>
-                      <SelectItem value="MINI_OVEN">Mini Oven</SelectItem>
-                    </SelectContent>
-                  ) : (
-                    <SelectContent>
-                      <SelectItem value="MINI_PIZZA">Mini Pizza</SelectItem>
-                      <SelectItem value="COKA">Coka</SelectItem>
-                      <SelectItem value="MAEKOUDA">Maekouda</SelectItem>
-                      <SelectItem value="MHADJEB">Mhadjeb</SelectItem>
-                      <SelectItem value="BOUREK">Bourek</SelectItem>
-                      <SelectItem value="SOUFFLE">Soufflé</SelectItem>
-                      <SelectItem value="MINI_TACOS">Mini Tacos</SelectItem>
-                      <SelectItem value="MINI_HAMBURGER">Mini Hamburger</SelectItem>
-                      <SelectItem value="CHEESE_CONES">Cheese cones</SelectItem>
-                    </SelectContent>
-                  )}
-
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+           {formAct.watch().type === "sugar" ? (
+              <FormField
+                control={formAct.control}
+                name="child_type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>SugarSubType</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a Child type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.values(SugarChildType).map((value) => (
+                          <SelectItem key={value} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              <FormField
+                control={formAct.control}
+                name="child_type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>SaltSubType</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a Child type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.values(SaltChildType).map((value) => (
+                          <SelectItem key={value} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <Button className="w-full" type="submit">
               Submit
             </Button>
