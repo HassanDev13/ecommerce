@@ -68,7 +68,7 @@ const SearchBar = () => {
           Object.values(SugarChildType).includes(value as SugarChildType) ||
           Object.values(SaltChildType).includes(value as SaltChildType)
         );
-      }),
+      }).optional(),
     minPrice: z.coerce.number().positive().optional(),
     maxPrice: z.coerce.number().positive().optional(),
     rating: z.coerce.number().lte(5, "Must be 5 or less").optional(),
