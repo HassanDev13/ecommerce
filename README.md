@@ -1,5 +1,5 @@
 # ecommerce
-Welcome to our E-commerce Platform , an innovative and comprehensive solution that seamlessly connects consumers, artisans, and delivery professionals in the vibrant world of online commerce..
+Welcome to our E-commerce Platform , an innovative and comprehensive solution that seamlessly connects consumers, artisans, and delivery professionals in the vibrant world of online commerce.
 
 ## Screenshots
 ![Consumer](screenshots/home.png)
